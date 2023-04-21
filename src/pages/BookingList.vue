@@ -57,7 +57,6 @@ export default {
           })
     },
     normalizeDate(date){
-
       return moment(new Date(date[0],date[1],date[2])).locale('ru').format("Do MMM YY")
     }
   },

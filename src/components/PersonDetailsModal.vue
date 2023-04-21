@@ -37,7 +37,7 @@
             <div class="row">
 
               <div class="col-md-4">
-                <label for="last_name" :class="{ 'text-danger' : clientError.lastName || !person.lastName}">Фамилия:</label>
+                <label for="last_name" :class="{ 'text-danger' : clientError.lastName }">Фамилия:</label>
                 <input type="text"
                        id="last_name"
                        v-model="person.lastName"
@@ -45,7 +45,7 @@
                        class="form-control"
                        @input="validateLastName"
                        :class="{
-                         'is-invalid border-danger text-danger' : clientError.lastName || !person.lastName,
+                         'is-invalid border-danger text-danger' : clientError.lastName ,
                         'is-valid border-success' : !clientError.lastName && person.lastName
                        }"
                 />
@@ -53,7 +53,7 @@
               </div>
 
               <div class="col-md-4">
-                <label for="first_name" :class="{ 'text-danger' : clientError.firstName || !person.firstName}">Имя:</label>
+                <label for="first_name" :class="{ 'text-danger' : clientError.firstName }">Имя:</label>
                 <input type="text"
                        id="first_name"
                        v-model="person.firstName"
@@ -61,7 +61,7 @@
                        class="form-control"
                        @input="validateFirstName"
                        :class="{
-                         'is-invalid border-danger text-danger' : clientError.firstName || !person.firstName,
+                         'is-invalid border-danger text-danger' : clientError.firstName ,
                          'is-valid border-success' : !clientError.firstName && person.firstName
                        }"
                 />
@@ -69,7 +69,7 @@
               </div>
 
               <div class="col-md-4">
-                <label for="middle_name" :class="{ 'text-danger' : clientError.middleName || !person.middleName}">Отчество:</label>
+                <label for="middle_name" :class="{ 'text-danger' : clientError.middleName }">Отчество:</label>
                 <input type="text"
                        id="middle_name"
                        v-model="person.middleName"
@@ -77,7 +77,7 @@
                        class="form-control "
                        @input="validateMiddleName"
                        :class="{
-                         'is-invalid border-danger text-danger' : clientError.middleName || !person.middleName,
+                         'is-invalid border-danger text-danger' : clientError.middleName ,
                          'is-valid border-success' : !clientError.middleName && person.middleName
                          }"
                 />
@@ -88,20 +88,21 @@
 
             <div class="row">
 
-              <div class="col-md-6" :class="{ 'text-danger' : clientError.phoneNumber || !person.phoneNumber }">
+              <div class="col-md-6" :class="{ 'text-danger' : clientError.phoneNumber }">
                 <label for="phone_number" >Номер телефона:</label>
                 <PhoneNumberInput
                        v-model="person.phoneNumber"
                        @input="validatePhoneNumber"
+                       :disabled="isAuthorized"
                        :class="{
-                         'is-invalid border-danger text-danger' : clientError.phoneNumber || !person.phoneNumber,
+                         'is-invalid border-danger text-danger' : clientError.phoneNumber ,
                         'is-valid border-success' : !clientError.phoneNumber && person.phoneNumber
                        }"
                 />
               </div>
 
               <div class="col-md-6">
-                <label for="post" :class="{ 'text-danger' : clientError.post || !person.post}">Должность:</label>
+                <label for="post" :class="{ 'text-danger' : clientError.post }">Должность:</label>
                 <vue-select
                     id="post"
                     v-model="person.post"
@@ -110,12 +111,12 @@
                     required
                     @change="validatePost"
                     :class="{
-                      'select-invalid is-invalid border-danger' : clientError.post || !person.post,
+                      'select-invalid is-invalid border-danger' : clientError.post ,
                       'select-valid is-valid border-success' : !clientError.post && person.post
                     }"
                 />
-              </div>
               <p v-if="clientError.post" class="text-danger">{{ clientError.post }}</p>
+              </div>
             </div>
             <div v-if="person.post=='Студент'">
               <label for="institute" :class="{ 'text-danger' : clientError.institute || !person.institute}">Институт:</label>
@@ -125,6 +126,7 @@
                   class="form-control"
                   v-model="person.institute"
                   @input="validateInstitute"
+                  required
                   :class="{
                     'is-invalid border-danger text-danger' : clientError.institute || !person.institute,
                     'is-valid border-success' : !clientError.institute && person.institute
@@ -229,16 +231,17 @@ export default {
     close() {
       this.$emit('close');
     },
-    submitBooking(){
-      if(!this.isAuthorized) {
-        this.setLoginFormShow(true);
+    submitBooking() {
+      if (!this.validateBeforeSubmitting()) {
+          return;
       }
       else {
-        // if(this.phoneNumber!==this.person.phoneNumber){
-        //   alert("Вы хотите войти под новым аккаунтом?")
-        // }
-        this.$emit('submitBooking', this.person, this.comment)
+        if (!this.isAuthorized) {
+          this.setLoginFormShow(true);
+        }
+        else this.$emit('submitBooking', this.person, this.comment)
       }
+
     },
     validateFirstName(){
       if (!this.person.firstName) {
@@ -299,10 +302,29 @@ export default {
         this.clientError.post = null;
       }
     },
+    validateCourse(){
+      if (!this.person.course) {
+        this.clientError.course = 'Поле обязательно для заполнения';
+      } else {
+        this.clientError.course = null;
+      }
+    },
     showLoginForm(){
       this.setLoginFormShow(true)
       document.body.classList.add('modal-open');
     },
+    validateBeforeSubmitting(){
+      let isValid = true;
+      if(this.person.post===null){
+        this.clientError.post = "Пожалуйста выберите должность";
+        isValid = false;
+      }
+      else if(this.person.post==='Студент' && ( this.person.course===0 || this.person.course===null )) {
+        this.clientError.course = "Пожалуйста выберите курс";
+        isValid = false;
+      }
+      return isValid;
+    }
   },
   computed: {
     ...mapState({
@@ -319,6 +341,14 @@ export default {
      setTimeout(() =>{
         this.phoneNumber = this.getPhoneNumber
     },200)
+  },
+  watch: {
+    'person.post': function (){
+      this.validatePost()
+    },
+    'person.course': function (){
+      this.validateCourse()
+    },
   }
 }
 </script>
@@ -330,7 +360,7 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;

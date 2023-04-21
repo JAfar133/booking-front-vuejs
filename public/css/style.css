@@ -80,23 +80,23 @@ input:focus, select:focus, button:focus, textarea:focus {
     cursor: auto;
 }
 .disabled {
-    background-color: #EDEDED;
+    background-color: #FCFCFC;
 }
 body.modal-open {
     overflow-y: hidden;
 }
 /* Анимация */
 .modal-enter-active, .modal-leave-active {
-    transition: opacity 0.6s;
+    transition: opacity 0.5s;
 }
 .modal-enter, .modal-leave-to {
     opacity: 0;
 }
 .success-modal-leave-active {
-    transition: opacity 0.9s;
+    transition: opacity 0.5s;
 }
 .success-modal-enter-active {
-    transition: opacity 0.9s;
+    transition: opacity 0.5s;
 }
 .success-modal-leave-to {
     opacity: 0;

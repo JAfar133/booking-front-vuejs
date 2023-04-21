@@ -1,9 +1,11 @@
 <template>
   <vue-date-picker
       time-picker
+      locale="ru"
       mode-height="120"
       model-type="HH:mm"
       minutes-increment="30"
+      auto-apply
       :min-time="minTime"
       :max-time="maxTime"
       :start-time="minTime"

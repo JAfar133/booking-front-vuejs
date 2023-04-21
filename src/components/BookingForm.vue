@@ -9,7 +9,7 @@
     >
       <div class="">
         <label for="date-in">Дата:</label>
-        <date-picker-input v-model="booking.date"/>
+        <date-picker-input v-model="booking.date" :markers="markers"/>
       </div>
       <div class="check-date">
         <label for="time-start">Начало:</label>
@@ -64,17 +64,20 @@ import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import '@vuepic/vue-datepicker/dist/main.css'
+// import moment from "moment";
 
 import axios from 'axios'
 import {ref} from 'vue'
 import personDetailsModal from "@/components/PersonDetailsModal.vue";
 
 
+
 export default {
   computed: {
     personDetailsModal() {
       return personDetailsModal
-    }
+    },
+
   },
   components:{
     TimePickerInput, SuccessModal,
@@ -87,16 +90,20 @@ export default {
       required: true
     },
     date: {
-      type:Object,
+      type: String,
       required: false
+    },
+    bookings: {
+      type: Array,
+      required: true
     }
   },
-  data(){
+  data() {
     return {
       booking: {
         id: null,
         place: null,
-        date: this.date,
+        date: null,
         timeStart: null,
         timeEnd: null,
         comment: '',
@@ -106,7 +113,8 @@ export default {
       },
       showModal: ref(false),
       bookingError: '',
-      successModal: ref(false)
+      successModal: ref(false),
+      markers: []
     }
   },
   mounted() {
@@ -121,6 +129,9 @@ export default {
     },
     closeSuccessModal(){
       this.successModal = false;
+    },
+    getNormalizedDate(date){
+      return new Date(date[0], date[1] - 1, date[2]+1).toISOString().slice(0, 10)
     },
     async valid(){
       this.bookingError = []
@@ -139,9 +150,7 @@ export default {
       this.booking.comment = comment;
       axios.post('http://localhost:8080/booking/save', this.booking)
           .then((response) =>{
-            response.data.date = new Date(response.data.date[0],
-                response.data.date[1], response.data.date[2])
-            this.booking = response.data
+            this.booking = this.getNormalizedDate(response.data.date)
             this.showModal = false;
             this.successModal = true;
           })
@@ -150,6 +159,30 @@ export default {
             this.bookingError.push(error.response.data)
           })
     },
+    pushMarker(booking){
+      const normalizedDate = this.getNormalizedDate(booking.date)
+      let isContain = false;
+      const timeStart = booking.timeStart.substring(0,5);
+      const timeEnd = booking.timeEnd.substring(0,5);
+      let address = booking.place.address.includes('Курчатова') ? "Курчатова" : "Гоголя";
+      this.markers.forEach(m=>{
+        if(m.date === normalizedDate){
+          m.tooltip.push({text: booking.place.name +", "+ address + " ["+timeStart+"-"+timeEnd+"]"
+            , color: booking.confirmed ? "red" : "blue"})
+          if(booking.confirmed) m.color = "red"
+          isContain = true;
+        }
+      })
+      if(!isContain){
+        this.markers.push({
+          date: this.getNormalizedDate(booking.date),
+          type: 'line',
+          tooltip: [{text: booking.place.name+", "+ address + " ["+timeStart+"-"+timeEnd+"]"
+            , color: booking.confirmed ? "red" : "blue"},],
+          color: booking.confirmed ? "red" : "blue"
+        })
+      }
+    },
     focus(){
       const bookingForm = document.getElementById('booking-form');
       bookingForm.focus();
@@ -157,14 +190,17 @@ export default {
   },
   watch: {
     date() {
-      this.booking.date = this.date
+      // TODO
+      // this.booking.date = this.date
       this.focus()
     },
     'booking.date' : function (newVal) {
       this.$emit('changeDate',newVal)
+    },
+    bookings(){
+      this.bookings.forEach(b=>this.pushMarker(b));
     }
   },
-
 
 }
 </script>

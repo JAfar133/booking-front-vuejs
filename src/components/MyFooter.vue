@@ -149,10 +149,7 @@ export default {
   border: none;
   border-radius: 0 2px 2px 0;
 }
-.footer-section .copyright-option {
-  background: rgba(16, 20, 31, 0.2);
-  padding: 20px 0;
-}
+
 .footer-section .copyright-option ul li {
   list-style: none;
   display: inline-block;

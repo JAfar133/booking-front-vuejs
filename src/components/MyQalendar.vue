@@ -1,7 +1,5 @@
 <template>
-  <h3 id="title" class="text-center mt-5">Календарь бронирований</h3>
-  <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
-  <hr>
+
   <div class="select mt-5">
     <div class="">
       <label>Фильтр </label>
@@ -43,7 +41,6 @@
 
 <script>
 import {Qalendar} from "qalendar";
-import axios from "axios";
 import VueSelect from "vue-select";
 export default {
   name: "MyQalendar",
@@ -53,8 +50,12 @@ export default {
       required: true
     },
     date: {
-      type: Object,
+      type: String,
       required: false
+    },
+    bookings: {
+      type: Array,
+      required: true
     }
   },
   components: {
@@ -64,7 +65,6 @@ export default {
     return {
       place: null,
       filterPicked: false,
-      bookings: [],
       events: [],
       dayClicked: null,
       qalendarIsLoading: false,
@@ -94,19 +94,6 @@ export default {
   methods: {
     optionLabel(option){
       return option.name+ " на " + option.address.split(", Севастополь")[0]
-    },
-    getBookings(){
-      axios.get('http://localhost:8080/booking')
-          .then(response =>{
-            this.events = [];
-            this.bookings = response.data;
-            this.bookings.forEach(b=> {
-              this.eventPush(b);
-            })
-          })
-          .catch(error => {
-            console.log(error);
-          });
     },
     eventPush(b){
         const [year, month, day] = b.date;
@@ -177,7 +164,6 @@ export default {
   },
   mounted() {
     this.$nextTick(() =>{
-      this.getBookings();
       this.addDisabledClass();
     })
   },
@@ -199,6 +185,10 @@ export default {
       this.dayClicked = this.date;
     },
     bookings(){
+      this.events = [];
+      this.bookings.forEach(b=> {
+        this.eventPush(b);
+      })
       this.filtered()
     }
   }

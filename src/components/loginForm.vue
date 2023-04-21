@@ -27,6 +27,8 @@
             <PhoneNumberInput
                 v-model="person.phoneNumber"
                 @input="validatePhoneNumber"
+
+                :disabled="isDisabled"
                 :class="{
                   'is-invalid border-danger' : clientError.phoneNumber,
                   'is-valid' : !clientError.phoneNumber && person.phoneNumber
@@ -178,7 +180,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;

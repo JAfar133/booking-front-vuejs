@@ -1,11 +1,11 @@
 <template>
   <transition name="modal">
-      <div class="modal-backdrop alert alert-success">
+      <div class="modal-backdrop alert alert-primary">
         <div class="modal"
              role="dialog"
         >
           <header
-              class="modal-header alert alert-success"
+              class="modal-header alert alert-primary"
               id="modalTitle"
           >
             <h4>Успешно</h4>
@@ -25,7 +25,7 @@
           <footer class="modal-footer">
             <button
                 type="button"
-                class="btn btn-success"
+                class="btn btn-primary"
                 @click="close"
             >
               ОК

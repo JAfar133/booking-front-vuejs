@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="col-xl-4 col-lg-4 offset-xl-2 offset-lg-1 booking">
-            <BookingForm :places="places" :date="date" @changeDate="$emit('changeDate',$event)"/>
+            <BookingForm :places="places" :date="date" :bookings="bookings" @changeDate="$emit('changeDate',$event)"/>
         </div>
       </div>
     </div>
@@ -32,8 +32,12 @@ export default {
       required:true
     },
     date: {
-      type: Object,
+      type: String,
       required: false
+    },
+    bookings: {
+      type: Array,
+      required: true
     }
   },
   methods: {
