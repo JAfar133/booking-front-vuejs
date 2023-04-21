@@ -1,0 +1,107 @@
+html, body {
+    height: 100%;
+    font-family: "Cabin", sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    color: #111111;
+    font-weight: 400;
+    font-family: "Lora", serif !important;
+}
+h1 {
+    font-size: 70px;
+}
+h2 {
+    font-size: 36px;
+}
+h3 {
+    font-size: 30px;
+}
+h4 {
+    font-size: 24px;
+}
+h5 {
+    font-size: 18px;
+}
+h6 {
+    font-size: 16px;
+}
+p {
+    font-size: 16px;
+    font-family: "Cabin", sans-serif !important;;
+    color: #6b6b6b;
+    font-weight: 400;
+    line-height: 26px;
+    margin: 0 0 15px 0;
+}
+img {
+    max-width: 100%;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+a:hover, a:focus {
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+}
+input:focus, select:focus, button:focus, textarea:focus {
+    outline: none;
+}
+.date-input input{
+    height:50px !important;
+}
+
+.hero-slider, .vue-carousel, .vue-carousel__list, .vue-carousel__item, .slide, .slide img {
+    height: 100%;
+
+}
+.hero-slider img {
+    width: 100vw;
+    object-fit: cover;
+    object-position: center;
+    max-height: 100%;
+}
+.hero-slider ol {
+
+}
+.calendar-month__weekday:not(.disabled):hover, .calendar-week__day:not(.disabled):hover {
+    background-color: #ECECFF;
+    cursor: pointer;
+ }
+.calendar-month__weekday:target, .calendar-week__day:target {
+    background-color: green;
+}
+.active, .active:hover {
+    background-color: #ECECFF;
+    cursor: auto;
+}
+.disabled {
+    background-color: #EDEDED;
+}
+body.modal-open {
+    overflow-y: hidden;
+}
+/* Анимация */
+.modal-enter-active, .modal-leave-active {
+    transition: opacity 0.6s;
+}
+.modal-enter, .modal-leave-to {
+    opacity: 0;
+}
+.success-modal-leave-active {
+    transition: opacity 0.9s;
+}
+.success-modal-enter-active {
+    transition: opacity 0.9s;
+}
+.success-modal-leave-to {
+    opacity: 0;
+}
+/*.modal-enter, .modal-leave-to {*/
+/*    transform: translateX(10px);*/
+/*    opacity: 0;*/
+/*}*/

@@ -1,0 +1,347 @@
+<template>
+  <header class="header-section">
+    <div class="top-nav">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <ul class="tn-left">
+              <li><i class="fa fa-phone"></i> +7 (978) 130 0282</li>
+              <li><i class="fa fa-envelope"></i> info.wolve@gmail.com</li>
+            </ul>
+          </div>
+          <div class="col-lg-6">
+            <div class="tn-right">
+              <div class="top-social">
+                <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-item">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2">
+            <div class="logo">
+              <a href="/">
+                <img src="/img/logo.png" alt="">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-10">
+            <div class="nav-menu">
+              <nav class="mainmenu">
+                <ul>
+                  <li><a href="/">Домашняя страница</a></li>
+                  <li class="rooms-li"><a href="/rooms">Помещения</a></li>
+                  <li><a href="/contact">Контакты</a></li>
+                  <li v-if="!isAuthorized"><button class="btn btn-outline-primary" @click="showLoginForm">Войти</button></li>
+                  <li v-else><a href="/me">Профиль</a>
+                    <ul class="dropdown">
+                      <li><a href="/bookings">Мои бронирования</a></li>
+                      <li style="background: #cfcfcf;">
+                        <button class="menu-btn btn btn-link" @click="logout">
+                          Выйти
+                        </button></li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-html="signhtml"></div>
+    <LoginForm
+        v-show="loginFormShow"
+        @close="closeLoginForm"
+    />
+  </header>
+</template>
+
+<script>
+import LoginForm from "@/components/loginForm.vue";
+import {mapActions, mapMutations, mapState} from "vuex";
+
+export default {
+  components:{
+    LoginForm
+  },
+  name: "MyHeader",
+  data() {
+    return {
+      signhtml: null
+    }
+  },
+  methods: {
+    ...mapMutations({
+      setCustomer: 'setPerson',
+      setPersonId: 'setPersonId',
+      setIsAuthorized: 'setIsAuthorized',
+      setLoginFormShow: 'setLoginFormShow'
+    }),
+    ...mapActions({
+      deletePersonFromCookie: 'deletePersonFromCookie',
+    }),
+    closeLoginForm(){
+      this.setLoginFormShow(false)
+      document.body.classList.remove('modal-open');
+    },
+    showLoginForm() {
+      this.setLoginFormShow(true)
+      document.body.classList.add('modal-open');
+    },
+    logout(){
+      this.deletePersonFromCookie()
+      this.$router.push('/')
+    }
+  },
+  computed: {
+    ...mapState({
+      personId: state => state.person.personId,
+      person: state => state.person.person,
+      isAuthorized: state => state.person.isAuthorized,
+      loginFormShow: state => state.person.loginFormShow
+    })
+  }
+}
+</script>
+
+<style scoped>
+
+ul, ol {
+  padding: 0;
+  margin: 0;
+}
+
+/*---------------------
+  Header
+-----------------------*/
+
+.header-section.header-normal .menu-item {
+  -webkit-box-shadow: 0px 12px 15px rgba(36, 11, 12, 0.05);
+  box-shadow: 0px 12px 15px rgba(36, 11, 12, 0.05);
+}
+.top-nav {
+  border-bottom: 1px solid #e5e5e5;
+}
+.top-nav .tn-left li {
+  list-style: none;
+  display: inline-block;
+  font-size: 16px;
+  color: #19191a;
+  font-weight: 500;
+  padding: 14px 0 12px;
+  margin-right: 64px;
+  position: relative;
+}
+.top-nav .tn-left li:after {
+  position: absolute;
+  right: -32px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: #e5e5e5;
+  content: "";
+}
+.top-nav .tn-left li:last-child {
+  margin-right: 0;
+}
+.top-nav .tn-left li:last-child:after {
+  display: none;
+}
+.top-nav .tn-left li i {
+  color: #216DDF;
+  margin-right: 4px;
+}
+.top-nav .tn-right {
+  text-align: right;
+}
+.top-nav .tn-right .top-social {
+  display: inline-block;
+  margin-right: 35px;
+  padding: 13px 0;
+}
+.top-nav .tn-right .top-social a {
+  display: inline-block;
+  font-size: 16px;
+  color: #19191a;
+  margin-left: 15px;
+}
+
+
+.top-nav .tn-right .language-option img {
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.top-nav .tn-right .language-option span {
+  font-size: 16px;
+  color: #19191a;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.top-nav .tn-right .language-option .flag-dropdown {
+  position: absolute;
+  left: 0;
+  top: 60px;
+  width: 100px;
+  background: #ffffff;
+  display: block;
+  padding: 10px 15px;
+  -webkit-box-shadow: 0px 9px 10px rgba(25, 25, 26, 0.2);
+  box-shadow: 0px 9px 10px rgba(25, 25, 26, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  z-index: 99;
+}
+.top-nav .tn-right .language-option .flag-dropdown ul li, button {
+  list-style: none;
+  text-align: left;
+}
+.top-nav .tn-right .language-option .flag-dropdown ul li a {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #19191a;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.top-nav .tn-right .language-option .flag-dropdown ul li a:hover {
+  color: #216DDF;
+}
+.menu-item {
+  position: relative;
+  z-index: 6;
+}
+.menu-item .logo {
+  padding: 25px 0;
+}
+.menu-item .logo a {
+  display: inline-block;
+}
+.menu-item .nav-menu {
+  text-align: right;
+}
+.menu-item .nav-menu .mainmenu {
+  display: inline-block;
+}
+.menu-item .nav-menu .mainmenu li {
+  list-style: none;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+.menu-item .nav-menu .mainmenu li.active a:after {
+  opacity: 1;
+}
+.menu-item .nav-menu .mainmenu li:hover>a:after {
+  opacity: 1;
+}
+.menu-item .nav-menu .mainmenu li:hover .dropdown {
+  top: 77px;
+  opacity: 1;
+  visibility: visible;
+}
+.menu-item .nav-menu .mainmenu li a {
+  font-size: 16px;
+  color: #19191a;
+  margin-right: 42px;
+  font-weight: 500;
+  display: inline-block;
+  padding: 27px 0;
+  position: relative;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.menu-item .nav-menu .mainmenu li a:after {
+  position: absolute;
+  left: 0;
+  top: 52px;
+  width: 100%;
+  height: 2px;
+  background: #216DDF;
+  content: "";
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.menu-item .nav-menu .mainmenu li .dropdown {
+  position: absolute;
+  left: 0;
+  top: 97px;
+  width: 180px;
+  background: #ffffff;
+  z-index: 9;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0px 9px 15px rgba(25, 25, 26, 0.05);
+  box-shadow: 0px 9px 15px rgba(25, 25, 26, 0.05);
+}
+.menu-item .nav-menu .mainmenu li .dropdown li {
+  list-style: none;
+  display: block;
+}
+.menu-item .nav-menu .mainmenu li .dropdown li a {
+  font-size: 16px;
+  color: #19191a;
+  display: block;
+  text-align: left;
+  padding: 8px 15px;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.menu-item .nav-menu .mainmenu li .dropdown li a:hover {
+  color: #216DDF;
+}
+.menu-item .nav-menu .mainmenu li .dropdown li a:after {
+  display: none;
+}
+
+.menu-item .nav-menu .nav-right i {
+  font-size: 16px;
+  color: #19191a;
+  cursor: pointer;
+}
+.canvas-open {
+  display: none;
+}
+.offcanvas-menu-wrapper {
+  display: none;
+}
+.dropdown button {
+  color:#000;
+  text-decoration: none;
+  width: 100%;
+}
+.dropdown button:hover {
+  color: #216DDF;
+}
+/*---------------------
+  Hero
+-----------------------*/
+
+
+
+@media only screen and (max-width: 991px) {
+  .header-section {
+    display: none;
+  }
+}
+</style>
