@@ -4,6 +4,7 @@ import VueMain from "@/pages/VueMain.vue";
 import BookingList from "@/pages/BookingList.vue";
 import PersonData from "@/pages/PersonData.vue";
 import VueCookies from "vue-cookies";
+import MyRooms from "@/pages/MyRooms.vue";
 
 const routes = [
     {
@@ -20,6 +21,11 @@ const routes = [
         component: PersonData,
         meta: { requiresAuth: true }
     },
+    {
+        path: '/rooms',
+        component: MyRooms
+    }
+
 ]
 
 const router = createRouter({
@@ -28,9 +34,8 @@ const router = createRouter({
 })
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        const userId = VueCookies.get('userId');
-        console.log(userId)
-        if (!userId) {
+        const token = VueCookies.get('access_token');
+        if (!token && token !== undefined) {
             next({
                 path: '/',
                 query: { redirect: to.fullPath }

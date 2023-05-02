@@ -1,43 +1,41 @@
 <template>
-  <MyHeader/>
-  <div class="container booking-list" v-if="bookings.length">
-    <input type="checkbox" v-model="allSelected" @change="selectBookings=bookings"><label>Выбрать все</label>
-    <div
-        class="card-item"
-        v-for="(booking,idx) in bookings"
-        :key="booking.id"
-    >
-      <input type="checkbox" :value="booking" v-model="selectBookings">
-      <div class="card">
-        <div class="card-header">
-          <h5>№ {{ idx }}</h5>
-          <h5>Дата заказа {{ new Date(booking.bookedAt).toLocaleString() }}</h5>
-        </div>
-        <div class="card-body">
-          <h4>{{ booking.place.name }}, {{ booking.place.address }}</h4>
-          <h5> Бронирование на {{ normalizeDate(booking.date) }}, с {{ booking.timeStart.substring(0,5) }} по {{ booking.timeEnd.substring(0,5) }} </h5>
-          <h5 :class="{ 'confirmed': booking.confirmed }" style="color: red">
-            {{ booking.confirmed ? 'Бронирование подтверждено ': 'Мы скоро с вами свяжемся для подтверждения бронирования' }}
-          </h5>
+  <div class="container booking-list" >
+    <div class="" v-if="bookings.length">
+      <input type="checkbox" v-model="allSelected" @change="selectBookings=bookings"><label>Выбрать все</label>
+      <div
+          class="card-item"
+          v-for="(booking,idx) in bookings"
+          :key="booking.id"
+      >
+        <input type="checkbox" :value="booking" v-model="selectBookings">
+        <div class="card">
+          <div class="card-header">
+            <h5>№ {{ idx }}</h5>
+            <h5>Дата заказа {{ new Date(booking.bookedAt).toLocaleString() }}</h5>
+          </div>
+          <div class="card-body">
+            <h4>{{ booking.place.name }}, {{ booking.place.address }}</h4>
+            <h5> Бронирование на {{ normalizeDate(booking.date) }}, с {{ booking.timeStart.substring(0,5) }} по {{ booking.timeEnd.substring(0,5) }} </h5>
+            <h5 :class="{ 'confirmed': booking.confirmed }" style="color: red">
+              {{ booking.confirmed ? 'Бронирование подтверждено ': 'Мы скоро с вами свяжемся для подтверждения бронирования' }}
+            </h5>
+          </div>
         </div>
       </div>
     </div>
+    <div class="container" style="min-height: 95vh" v-else>
+      <h1>У вас нет забронированных помещений</h1>
+    </div>
   </div>
-  <div class="container" v-else>
-    <h1>У вас нет забронированных помещений</h1>
-  </div>
-  <my-footer/>
+
 </template>
 
 <script>
-import MyHeader from "@/components/MyHeader.vue";
 import {mapState} from "vuex";
 import axios from "axios";
 import moment from "moment";
-import MyFooter from "@/components/MyFooter.vue";
 export default {
   name: "BookingList",
-  components: {MyFooter, MyHeader},
   data(){
     return {
       bookings: [],
@@ -99,6 +97,7 @@ export default {
   .booking-list {
     margin-top: 100px;
     padding-bottom: 50px;
+    min-height: 100vh;
   }
   input[type=checkbox]{
     margin-right: 20px;

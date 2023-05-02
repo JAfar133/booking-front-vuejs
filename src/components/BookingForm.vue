@@ -50,9 +50,14 @@
 
     <person-details-modal
       v-show="showModal"
-      @close="closePersonDetailsModal"
+      @personDetailsModalClose="closePersonDetailsModal"
       @submitBooking="submitBooking"
+      @verifyPhoneNumber="verifyPhoneNumber=true"
       :bookingError="bookingError"
+    />
+    <change-phone-modal
+        v-show="verifyPhoneNumber"
+        @close="verifyPhoneNumber=false"
     />
   </div>
 </template>
@@ -64,12 +69,13 @@ import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import '@vuepic/vue-datepicker/dist/main.css'
+import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
 // import moment from "moment";
 
 import axios from 'axios'
 import {ref} from 'vue'
 import personDetailsModal from "@/components/PersonDetailsModal.vue";
-
+import {mapMutations, mapState} from "vuex";
 
 
 export default {
@@ -77,10 +83,16 @@ export default {
     personDetailsModal() {
       return personDetailsModal
     },
-
+    ...mapState({
+      personId: state => state.person.personId,
+      person: state => state.person.person,
+      isAuthorized: state => state.person.isAuthorized,
+      loginFormShow: state => state.person.loginFormShow,
+      access_token: state => state.person.access_token
+    }),
   },
   components:{
-    TimePickerInput, SuccessModal,
+    TimePickerInput, SuccessModal, ChangePhoneModal,
     VueSelect, PersonDetailsModal, DatePickerInput
   },
   name: "BookingForm",
@@ -114,13 +126,24 @@ export default {
       showModal: ref(false),
       bookingError: '',
       successModal: ref(false),
-      markers: []
+      markers: [],
+      verifyPhoneNumber: false
     }
   },
   mounted() {
-
+    this.$nextTick(() =>{
+      if(this.markers.length===0){
+        this.bookings.forEach(b=>this.pushMarker(b));
+      }
+    })
   },
   methods: {
+    ...mapMutations({
+      setCustomer: 'setPerson',
+      setPersonId: 'setPersonId',
+      setIsAuthorized: 'setIsAuthorized',
+      setLoginFormShow: 'setLoginFormShow'
+    }),
     optionLabel(option){
       return option.name+ " на " + option.address.split(", Севастополь")[0]
     },
@@ -131,13 +154,13 @@ export default {
       this.successModal = false;
     },
     getNormalizedDate(date){
-      return new Date(date[0], date[1] - 1, date[2]+1).toISOString().slice(0, 10)
+      return new Date(date[0], date[1] - 1, date[2] + 1).toISOString().slice(0, 10)
     },
     async valid(){
       this.bookingError = []
       axios.post('http://localhost:8080/booking/valid-booking', this.booking)
           .then(() =>{
-            this.showModal = true;
+              this.showModal = true;
           })
           .catch(error => {
             console.log(error)
@@ -148,9 +171,15 @@ export default {
       this.bookingError = []
       this.booking.customer = customer;
       this.booking.comment = comment;
-      axios.post('http://localhost:8080/booking/save', this.booking)
+      axios.post('http://localhost:8080/booking/save', this.booking,
+          {
+            headers: {
+              'Authorization': 'Bearer ' + this.access_token
+            }
+          }
+      )
           .then((response) =>{
-            this.booking = this.getNormalizedDate(response.data.date)
+            this.booking.date = this.getNormalizedDate(response.data.date)
             this.showModal = false;
             this.successModal = true;
           })
@@ -190,8 +219,7 @@ export default {
   },
   watch: {
     date() {
-      // TODO
-      // this.booking.date = this.date
+      this.booking.date = this.date
       this.focus()
     },
     'booking.date' : function (newVal) {
@@ -209,10 +237,11 @@ export default {
   @import "vue-select/dist/vue-select.css";
 
   .booking-form {
-    width: 500px;
+    width: 600px;
     background: #ffffff;
     padding: 44px 40px 50px 40px;
     border-radius: 4px;
+    border: 2px solid rgba(119,221,231,0.5);;
     z-index: 7;
   }
   .booking-form h3 {
@@ -262,7 +291,7 @@ export default {
 
   @media only screen and (max-width: 1510px) {
     .booking-form {
-      width:400px;
+      width:500px;
     }
   }
   @media only screen and (max-width: 991px) {

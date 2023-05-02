@@ -1,42 +1,43 @@
 <template>
-
-  <div class="select mt-5">
-    <div class="">
-      <label>Фильтр </label>
-      <vue-select
-          v-model="place"
-          :options="places"
-          :get-option-label="(option) => optionLabel(option)"
-          required
-          placeholder="Выберите помещение"
-          id="room"
-          class="nice-select"
-      />
-    </div>
-    <div class="mt-2">
-      <div class="row">
-        <div class="col-md-3">
-          <input type="radio" id="all" :value="false" v-model="filterPicked">
-          <label for="all">Все</label>
-        </div>
-        <div class="col-md-3">
-          <input type="radio" id="confirmed" :value="true" v-model="filterPicked">
-          <label for="confirmed">Только подтвержденные</label>
+  <div>
+    <div class="select mt-5">
+      <div class="">
+        <label>Фильтр </label>
+        <vue-select
+            v-model="place"
+            :options="places"
+            :get-option-label="(option) => optionLabel(option)"
+            required
+            placeholder="Выберите помещение"
+            id="room"
+            class="nice-select"
+        />
+      </div>
+      <div class="mt-2">
+        <div class="row">
+          <div class="">
+            <input type="radio" id="all" :value="false" v-model="filterPicked">
+            <label for="all">Все</label>
+          </div>
+          <div class="">
+            <input type="radio" id="confirmed" :value="true" v-model="filterPicked">
+            <label for="confirmed">Только подтвержденные</label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <Qalendar
-      :events="events"
-      :config="config"
-      @day-was-clicked="clickEvent"
-      :is-loading="qalendarIsLoading"
-      @updated-mode="updateMode"
-      @interval-was-clicked="updateMode"
-      @updated-period="updateMode"
-  >
-  </Qalendar>
+    <Qalendar
+        :events="events"
+        :config="config"
+        @day-was-clicked="clickEvent"
+        :is-loading="qalendarIsLoading"
+        @updated-mode="updateMode"
+        @interval-was-clicked="updateMode"
+        @updated-period="updateMode"
+    >
+    </Qalendar>
+  </div>
 </template>
 
 <script>
@@ -105,7 +106,7 @@ export default {
           with: b.customer.lastName + " " +b.customer.firstName[0]+"."+b.customer.middleName[0],
           time: { start: timeStart, end: timeEnd },
           topic: !b.confirmed ? "Бронь еще не подтверждена" : "Бронь подтверждена",
-          color: b.confirmed ? "blue" : "red",
+          color: b.confirmed ? "red" : "blue",
           isEditable: false,
           id: b.id,
           description: "Заявка на бронирование от " + new Date(b.bookedAt).toLocaleString()
@@ -164,12 +165,16 @@ export default {
   },
   mounted() {
     this.$nextTick(() =>{
+      this.qalendarIsLoading = true;
       this.addDisabledClass();
+      this.qalendarIsLoading = false;
     })
   },
   watch: {
     place() {
+      this.qalendarIsLoading = true;
       this.filtered()
+      this.qalendarIsLoading = false;
     },
     filterPicked(){
       this.filtered()

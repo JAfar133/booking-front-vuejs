@@ -105,3 +105,19 @@ body.modal-open {
 /*    transform: translateX(10px);*/
 /*    opacity: 0;*/
 /*}*/
+::selection {
+    background-color: rgba(119,221,231,0.5);
+}
+::-webkit-scrollbar {
+    width: 10px; /* задаем ширину скроллбара */
+}
+::-webkit-scrollbar-track {
+    display: none; /* скрываем саму полосу скроллбара */
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(119,221,231,0.5); /* задаем цвет ползунка скроллбара с прозрачностью 0.5 */
+    border-radius: 10px; /* задаем скругление углов ползунка */
+}
+/*.fa-yandex {*/
+/*    background-image: url('/img/tg.png');*/
+/*}*/

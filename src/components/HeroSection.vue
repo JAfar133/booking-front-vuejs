@@ -8,7 +8,7 @@
             <p>Здесь вы можете забронировать помещения в севастополе</p>
           </div>
         </div>
-        <div class="col-xl-4 col-lg-4 offset-xl-2 offset-lg-1 booking">
+        <div class="col-lg-4 offset-lg-1 booking">
             <BookingForm :places="places" :date="date" :bookings="bookings" @changeDate="$emit('changeDate',$event)"/>
         </div>
       </div>

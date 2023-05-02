@@ -1,6 +1,6 @@
 <template>
   <header class="header-section">
-    <div class="top-nav">
+    <div class="top-nav bg-light">
       <div class="container">
         <div class="row">
           <div class="col-lg-6">
@@ -37,14 +37,23 @@
                 <ul>
                   <li><a href="/">Домашняя страница</a></li>
                   <li class="rooms-li"><a href="/rooms">Помещения</a></li>
-                  <li><a href="/contact">Контакты</a></li>
-                  <li v-if="!isAuthorized"><button class="btn btn-outline-primary" @click="showLoginForm">Войти</button></li>
-                  <li v-else><a href="/me">Профиль</a>
+                  <li v-if="!isAuthorized">
+                    <button class="btn btn-link"
+                            @click="showLoginForm">
+                      Войти&nbsp;<i class="fa fa-sign-in"></i>
+                    </button></li>
+                  <li v-else><a href="/me" >Профиль
+                    <i v-if="!person.phoneNumber_confirmed" title="Номер телефона не подтвержден" class="text-danger fa fa-warning"></i>
+                  </a>
                     <ul class="dropdown">
+                      <li>
+                        <a v-if="person.firstName" href="/me">Привет, <b>{{ person.firstName }}</b></a>
+                        <a v-else href="/me">Редактировать</a>
+                      </li>
                       <li><a href="/bookings">Мои бронирования</a></li>
                       <li style="background: #cfcfcf;">
                         <button class="menu-btn btn btn-link" @click="logout">
-                          Выйти
+                          Выйти&nbsp;<i class="fa fa-sign-out"></i>
                         </button></li>
                     </ul>
                   </li>
@@ -56,9 +65,14 @@
       </div>
     </div>
     <div v-html="signhtml"></div>
+    <SigninForm
+        v-show="signinFormShow"
+        @close="closeSigninForm"
+    />
     <LoginForm
         v-show="loginFormShow"
         @close="closeLoginForm"
+        @signin="signin"
     />
   </header>
 </template>
@@ -66,15 +80,17 @@
 <script>
 import LoginForm from "@/components/loginForm.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
+import SigninForm from "@/components/SigninForm.vue";
 
 export default {
   components:{
+    SigninForm,
     LoginForm
   },
   name: "MyHeader",
   data() {
     return {
-      signhtml: null
+      signinFormShow: false
     }
   },
   methods: {
@@ -91,9 +107,17 @@ export default {
       this.setLoginFormShow(false)
       document.body.classList.remove('modal-open');
     },
+    closeSigninForm(){
+      this.signinFormShow = false;
+    },
     showLoginForm() {
       this.setLoginFormShow(true)
       document.body.classList.add('modal-open');
+    },
+    signin(){
+      this.setLoginFormShow(false)
+      this.signinFormShow = true;
+
     },
     logout(){
       this.deletePersonFromCookie()
@@ -125,6 +149,7 @@ ul, ol {
 .header-section.header-normal .menu-item {
   -webkit-box-shadow: 0px 12px 15px rgba(36, 11, 12, 0.05);
   box-shadow: 0px 12px 15px rgba(36, 11, 12, 0.05);
+  border-bottom: 1px solid rgba(36, 11, 12, 0.5);
 }
 .top-nav {
   border-bottom: 1px solid #e5e5e5;
@@ -222,6 +247,7 @@ ul, ol {
 .menu-item {
   position: relative;
   z-index: 6;
+  border-bottom: 1px solid rgba(36, 11, 12, 0.05);
 }
 .menu-item .logo {
   padding: 25px 0;
@@ -333,6 +359,7 @@ ul, ol {
 .dropdown button:hover {
   color: #216DDF;
 }
+
 /*---------------------
   Hero
 -----------------------*/

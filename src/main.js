@@ -21,7 +21,7 @@ app.component(VueCarousel.name,VueCarousel)
 app.use(store)
     .use(VueRouter)
     .use(router)
-    .use(VueCookies, { expires: '100d' })
+    .use(VueCookies, { expires: '7d' })
     .mount('#app')
 
 

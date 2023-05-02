@@ -18,7 +18,7 @@
               <button
                   type="button"
                   class="btn-close"
-                  @click="close"
+                  @click="personDetailsModalClose"
               >
               </button>
           </header>
@@ -32,7 +32,7 @@
             </div>
 
             <div v-if="bookingError.length" class="alert alert-danger mt-2">
-              <span :key="error.length" v-for="error in bookingError"> {{ error }}</span>
+              <span> {{ bookingError }}</span>
             </div>
             <div class="row">
 
@@ -89,18 +89,24 @@
             <div class="row">
 
               <div class="col-md-6" :class="{ 'text-danger' : clientError.phoneNumber }">
-                <label for="phone_number" >Номер телефона:</label>
+                <label for="phone_number" >
+                  <i v-if="!person.phoneNumber_confirmed
+                        && !clientError.phoneNumber
+                        && person.phoneNumber"
+                     class="fa fa-warning text-danger"
+                     title="Номер телефона не подтвержден"></i>
+                  Номер телефона:
+                </label>
                 <PhoneNumberInput
                        v-model="person.phoneNumber"
                        @input="validatePhoneNumber"
-                       :disabled="isAuthorized"
+                       :disabled="person.phoneNumber_confirmed"
                        :class="{
                          'is-invalid border-danger text-danger' : clientError.phoneNumber ,
                         'is-valid border-success' : !clientError.phoneNumber && person.phoneNumber
                        }"
                 />
               </div>
-
               <div class="col-md-6">
                 <label for="post" :class="{ 'text-danger' : clientError.post }">Должность:</label>
                 <vue-select
@@ -177,7 +183,7 @@
               <button
                   type="button"
                   class="btn btn-secondary"
-                  @click="close"
+                  @click="personDetailsModalClose"
               >
                 Закрыть
               </button>
@@ -196,11 +202,11 @@ import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 export default {
   components: {
     PhoneNumberInput,
-    VueSelect
+    VueSelect,
   },
   props: {
     bookingError: {
-      type: Array,
+      type: String,
     },
 
   },
@@ -217,7 +223,7 @@ export default {
         course: null,
         structure:null
       },
-      phoneNumber: this.getPhoneNumber
+      phoneNumber: this.getPhoneNumber,
     }
   },
   name: "PersonDetailsModal",
@@ -228,8 +234,8 @@ export default {
       setIsAuthorized: 'setIsAuthorized',
       setLoginFormShow: 'setLoginFormShow'
     }),
-    close() {
-      this.$emit('close');
+    personDetailsModalClose() {
+      this.$emit('personDetailsModalClose');
     },
     submitBooking() {
       if (!this.validateBeforeSubmitting()) {
@@ -239,7 +245,12 @@ export default {
         if (!this.isAuthorized) {
           this.setLoginFormShow(true);
         }
-        else this.$emit('submitBooking', this.person, this.comment)
+        else {
+          if(!this.person.phoneNumber_confirmed){
+            this.$emit('verifyPhoneNumber')
+          }
+          else this.$emit('submitBooking', this.person, this.comment)
+        }
       }
 
     },
@@ -247,7 +258,7 @@ export default {
       if (!this.person.firstName) {
         this.clientError.firstName = 'Имя обязательно для заполнения';
       } else if (this.person.firstName.length < 3) {
-        this.clientError.firstName = 'Имя должно содержать не менее 2 символов';
+        this.clientError.firstName = 'Имя должно содержать не менее 1 символа';
       } else {
         this.clientError.firstName = null;
       }
@@ -271,7 +282,7 @@ export default {
       }
     },
     validatePhoneNumber() {
-      const regex = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
+      const regex = /^(\+7|7|8)?[\s-]?\(?[3489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/;
       if (!regex.test(this.person.phoneNumber)) {
         this.clientError.phoneNumber = 'Номер телефона введен неправильно'
       } else {
@@ -364,6 +375,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
   }
 
   .modal {

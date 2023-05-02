@@ -22,9 +22,12 @@ export default {
     }
   },
   methods: {
-    updateInput(event){
-      this.$emit('update:modelValue',event.target.value)
+    updateInput() {
+      const unmaskedValue = this.$refs.phoneInput.inputmask.unmaskedvalue(); // получаем значение без маски
+      const formattedValue = `+7${unmaskedValue}`; // добавляем префикс +7 к значению без маски
+      this.$emit("update:modelValue", formattedValue); // эмитируем событие с отформатированным значением
     }
+
   },
   mounted() {
     Inputmask({
