@@ -5,6 +5,7 @@ import BookingList from "@/pages/BookingList.vue";
 import PersonData from "@/pages/PersonData.vue";
 import VueCookies from "vue-cookies";
 import MyRooms from "@/pages/MyRooms.vue";
+import BookingPage from "@/pages/BookingPage.vue";
 
 const routes = [
     {
@@ -24,6 +25,10 @@ const routes = [
     {
         path: '/rooms',
         component: MyRooms
+    },
+    {
+        path: '/booking',
+        component: BookingPage
     }
 
 ]

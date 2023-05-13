@@ -1,6 +1,7 @@
 <template>
   <div class="booking-form" id="booking-form" tabindex="0">
     <h3>Бронирование помещений </h3>
+    <p>Пожалуйста выберите дату, время и место бронирования</p>
     <form action="/"
           id="validationForm"
           method="post"
@@ -48,13 +49,13 @@
       Ваша заявка будет рассмотрена в ближайшее время
     </success-modal>
 
-    <person-details-modal
-      v-show="showModal"
-      @personDetailsModalClose="closePersonDetailsModal"
-      @submitBooking="submitBooking"
-      @verifyPhoneNumber="verifyPhoneNumber=true"
-      :bookingError="bookingError"
-    />
+<!--    <person-details-modal-->
+<!--      v-show="showModal"-->
+<!--      @personDetailsModalClose="closePersonDetailsModal"-->
+<!--      @submitBooking="submitBooking"-->
+<!--      @verifyPhoneNumber="verifyPhoneNumber=true"-->
+<!--      :bookingError="bookingError"-->
+<!--    />-->
     <change-phone-modal
         v-show="verifyPhoneNumber"
         @close="verifyPhoneNumber=false"
@@ -64,17 +65,15 @@
 
 <script>
 import VueSelect from 'vue-select';
-import PersonDetailsModal from "@/components/PersonDetailsModal.vue";
+// import PersonDetailsModal from "@/components/PersonDetailsModal.vue";
+import personDetailsModal from "@/components/PersonDetailsModal.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import '@vuepic/vue-datepicker/dist/main.css'
 import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
-// import moment from "moment";
-
 import axios from 'axios'
 import {ref} from 'vue'
-import personDetailsModal from "@/components/PersonDetailsModal.vue";
 import {mapMutations, mapState} from "vuex";
 
 
@@ -88,12 +87,15 @@ export default {
       person: state => state.person.person,
       isAuthorized: state => state.person.isAuthorized,
       loginFormShow: state => state.person.loginFormShow,
-      access_token: state => state.person.access_token
+      access_token: state => state.person.access_token,
+      booking: state => state.booking.booking
     }),
   },
   components:{
     TimePickerInput, SuccessModal, ChangePhoneModal,
-    VueSelect, PersonDetailsModal, DatePickerInput
+    VueSelect,
+    // PersonDetailsModal,
+    DatePickerInput
   },
   name: "BookingForm",
   props: {
@@ -101,8 +103,8 @@ export default {
       type: Object,
       required: true
     },
-    date: {
-      type: String,
+    place: {
+      type: Object,
       required: false
     },
     bookings: {
@@ -112,17 +114,6 @@ export default {
   },
   data() {
     return {
-      booking: {
-        id: null,
-        place: null,
-        date: null,
-        timeStart: null,
-        timeEnd: null,
-        comment: '',
-        customer: null,
-        confirmed: false,
-        bookedAt: null
-      },
       showModal: ref(false),
       bookingError: '',
       successModal: ref(false),
@@ -212,18 +203,10 @@ export default {
         })
       }
     },
-    focus(){
-      const bookingForm = document.getElementById('booking-form');
-      bookingForm.focus();
-    },
   },
   watch: {
-    date() {
-      this.booking.date = this.date
-      this.focus()
-    },
-    'booking.date' : function (newVal) {
-      this.$emit('changeDate',newVal)
+    place(){
+      this.booking.place = this.place
     },
     bookings(){
       this.bookings.forEach(b=>this.pushMarker(b));

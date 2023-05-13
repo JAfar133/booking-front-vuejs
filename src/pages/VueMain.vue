@@ -1,25 +1,30 @@
 <template>
-  <HeroSection :places="places" :date="date" :bookings="bookings" @changeDate="changeDate"/>
+  <HeroSection :places="places" :bookings="bookings" :place="place"/>
   <div class="main-section ">
+<!--    <about-us-section/>-->
+
     <div class="qalendar-title">
       <h3 id="title" class="text-center">Календарь бронирований</h3>
       <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
     </div>
     <hr class="w-100">
+
     <div class="qalendar container">
-      <my-qalendar :places="places" :bookings="bookings" @dayClicked="dayClicked" :date="date"></my-qalendar>
+      <my-qalendar :places="places" :bookings="bookings"></my-qalendar>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import HeroSection from "@/components/HeroSection.vue";
 import MyQalendar from "@/components/MyQalendar.vue";
 import {mapActions, mapMutations} from "vuex";
+import { getRoomHalls, getBookings} from '@/mainApi';
+// import AboutUsSection from "@/components/AboutUsSection.vue";
 export default {
   name: 'VueMain',
   components: {
+    // AboutUsSection,
     MyQalendar,
     HeroSection
   },
@@ -27,10 +32,9 @@ export default {
   data() {
     return {
       places: [],
-      date: null,
       sessionPerson: null,
       bookings: [],
-      yandex: null
+      place: null
     }
   },
   methods: {
@@ -45,46 +49,17 @@ export default {
     ...mapActions({
       saveTokenToCookie: 'saveTokenToCookie',
     }),
-    getRoomHalls(){
-      axios.get('http://localhost:8080/roomHall')
-          .then(response =>{
-            this.places = response.data;
-          })
-          .catch(error => {
-            console.log(error);
-          })
-    },
-    getBookings(){
-      axios.get('http://localhost:8080/booking')
-          .then(response =>{
-            this.bookings = response.data.sort(this.bookingSort);
-          })
-          .catch(error => {
-            console.log(error);
+    getRoomHalls() {
+      getRoomHalls()
+          .then(data => {
+            this.places = data;
           });
     },
-    bookingSort(a, b){
-      const placeA = a.place;
-      const placeB = b.place;
-      if (placeA.name < placeB.name) {
-        return -1;
-      }
-      if (placeA.name > placeB.name) {
-        return 1;
-      }
-      if (placeA.address < placeB.address) {
-        return -1;
-      }
-      if (placeA.address > placeB.address) {
-        return 1;
-      }
-      return 0;
-    },
-    dayClicked(day) {
-      this.date = day;
-    },
-    changeDate(date){
-      this.date = date;
+    getBookings() {
+      getBookings()
+          .then(data => {
+            this.bookings = data;
+          });
     },
     getTokensFromParams() {
       const uri = window.location.href.split('?');

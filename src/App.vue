@@ -1,6 +1,6 @@
 <template>
   <my-header/>
-  <div class="py-5">
+  <div class="">
     <router-view></router-view>
   </div>
   <my-footer/>

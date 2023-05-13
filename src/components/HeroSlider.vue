@@ -16,8 +16,12 @@ export default {
   data() {
     return {
       data: [
-        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-2.jpg" alt=""></div>',
-        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-3.jpg" alt=""></div>',
+        // '<div class="slide" ><img class="hero-img" src="/img/hero/hero-2.jpg" alt=""></div>',
+        // '<div class="slide" ><img class="hero-img" src="/img/hero/hero-3.jpg" alt=""></div>',
+        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-4.png" alt=""></div>',
+        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-5.png" alt=""></div>',
+        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-6.png" alt=""></div>',
+        '<div class="slide" ><img class="hero-img" src="/img/hero/hero-7.jpg" alt=""></div>',
       ],
     }
   },
@@ -35,5 +39,6 @@ export default {
     display: block;
     position: absolute;
   }
+
 
 </style>

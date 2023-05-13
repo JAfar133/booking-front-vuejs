@@ -14,6 +14,11 @@
       class="date-input"
       autocomplete="off"
       >
+    <template #calendar-header="{ index, day }">
+      <div :class="index === 6 ? 'color' : ''">
+        {{ day }}
+      </div>
+    </template>
   </vue-date-picker >
 </template>
 
@@ -35,5 +40,14 @@ export default {
 </script>
 
 <style scoped>
-
+label {
+  font-size: 14px;
+  color: #707079;
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 15px;
+}
+.color{
+  color: lightgray;
+}
 </style>

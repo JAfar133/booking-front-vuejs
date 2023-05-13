@@ -1,7 +1,15 @@
 <template>
   <div class="container booking-list" >
     <div class="" v-if="bookings.length">
-      <input type="checkbox" v-model="allSelected" @change="selectBookings=bookings"><label>Выбрать все</label>
+      <input type="checkbox"
+             v-model="allSelected"
+             @change="allSelectedInput">
+      <label>Выбрать все</label>
+      <button
+          v-if="selectBookings.length>0"
+          class="btn btn-outline-danger mx-3"
+          @click="deleteBooking"
+      >Удалить выбранное</button>
       <div
           class="card-item"
           v-for="(booking,idx) in bookings"
@@ -10,7 +18,7 @@
         <input type="checkbox" :value="booking" v-model="selectBookings">
         <div class="card">
           <div class="card-header">
-            <h5>№ {{ idx }}</h5>
+            <h5>№ {{ idx+1 }}</h5>
             <h5>Дата заказа {{ new Date(booking.bookedAt).toLocaleString() }}</h5>
           </div>
           <div class="card-body">
@@ -44,6 +52,26 @@ export default {
     }
   },
   methods: {
+    deleteBooking(){
+      axios.post(`http://localhost:8080/booking/delete-all`,this.selectBookings,
+          {
+            headers: {
+              'Authorization': 'Bearer ' + this.access_token
+            }
+          }
+      )
+          .then(response => {
+            this.bookings = []
+            console.log(response.data)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    },
+    allSelectedInput(){
+      this.selectBookings = this.bookings;
+      if(!this.allSelected) this.selectBookings = [];
+    },
     getBookings() {
       axios.get(`http://localhost:8080/person/get-bookings/${this.personId}`)
           .then(response => {
@@ -55,13 +83,14 @@ export default {
           })
     },
     normalizeDate(date){
-      return moment(new Date(date[0],date[1],date[2])).locale('ru').format("Do MMM YY")
+      return moment(new Date(date[0],date[1],date[2])).locale('ru').format("Do MMM YYYY")
     }
   },
   computed: {
     ...mapState({
       personId: state => state.person.personId,
-      person: state => state.person.person
+      person: state => state.person.person,
+      access_token: state => state.person.access_token
     })
   },
   mounted() {

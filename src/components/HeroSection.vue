@@ -5,11 +5,14 @@
         <div class="col-lg-6">
           <div class="hero-text">
             <h1>Бронирование помещений</h1>
-            <p>Здесь вы можете забронировать помещения в севастополе</p>
+            <p>Здесь вы можете забронировать помещения в Севастополе</p>
           </div>
         </div>
         <div class="col-lg-4 offset-lg-1 booking">
-            <BookingForm :places="places" :date="date" :bookings="bookings" @changeDate="$emit('changeDate',$event)"/>
+            <BookingForm :places="places"
+                         :place="place"
+                         :bookings="bookings"
+            />
         </div>
       </div>
     </div>
@@ -31,8 +34,8 @@ export default {
       type: Object,
       required:true
     },
-    date: {
-      type: String,
+    place: {
+      type: Object,
       required: false
     },
     bookings: {
@@ -41,51 +44,64 @@ export default {
     }
   },
   methods: {
-    changeDate(date){
-      console.log(date);
-    }
+
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
   .hero-section {
     position: relative;
     padding-top: 60px;
     padding-bottom: 100px;
-  }
-  .hero-section .container {
-    position: relative;
-    z-index: 5;
-  }
-  .hero-text {
-    padding-top: 145px;
-  }
-  .hero-text h1 {
-    font-size: 80px;
-    line-height: 90px;
-    color: #ffffff;
-    margin-bottom: 16px;
-  }
-  .hero-text p {
-    font-size: 18px;
-    color: #ffffff;
-    line-height: 28px;
-    margin-bottom: 35px;
-  }
-  @media only screen and (max-width: 550px) {
-    .hero-text h1 {
-      font-size: 60px;
+
+    .container {
+      position: relative;
+      z-index: 5;
+    }
+    .hero-text {
+      padding-top: 170px;
+      font-family: 'Alice', serif !important;
+      h1 {
+        font-size: 85px;
+        line-height: 90px;
+        color: #fff;
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 22px;
+        color: #fff;
+        line-height: 28px;
+        margin-bottom: 35px;
+        margin-top: 30px;
+        font-family: 'Alice', serif !important;
+      }
+    }
+    @media screen and (max-width: 550px) {
+      .hero-text {
+        h1 {
+
+          font-size: 60px;
+        }
+      }
+    }
+    @media screen and (max-width: 400px) {
+      .hero-text {
+        h1 {
+          font-size: 50px;
+        }
+      }
+    }
+    @media screen and (max-width: 325px) {
+      .hero-text {
+        h1 {
+          font-size: 40px;
+        }
+      }
     }
   }
-  @media only screen and (max-width: 400px) {
-    .hero-text h1 {
-      font-size: 50px;
-    }
-  }
-  @media only screen and (max-width: 325px) {
-    .hero-text h1 {
-      font-size: 40px;
-    }
-  }
+
+
 </style>

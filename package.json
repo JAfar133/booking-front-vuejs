@@ -25,6 +25,7 @@
     "qalendar": "^2.5.0",
     "sass-loader": "^13.2.2",
     "style-loader": "^3.3.2",
+    "toastr": "^2.1.4",
     "vue": "^3.2.47",
     "vue-carousel": "^0.18.0",
     "vue-cookies": "^1.8.3",

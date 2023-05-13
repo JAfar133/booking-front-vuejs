@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row py-5">
 <!--    <div class="menu col mt-5">-->
 <!--      <ul class="mt-5">-->
 <!--        <li>Личная информация</li>-->
@@ -13,113 +13,119 @@
           Чтобы совершать бронирования, пожалуйста заполните все данные</p>
       </div>
         <div class="main-info card mt-5">
-          <h4>Основная информация</h4>
-              <label for="last_name" :class="{ 'text-danger' : clientError.lastName || !person.lastName}">Фамилия:</label>
-              <input type="text"
-                     id="last_name"
-                     v-model="person.lastName"
-                     required
-                     class="form-control"
-                     @input="validateLastName"
-                     :class="{ 'is-invalid border-danger text-danger' : clientError.lastName || !person.lastName,
-                               'is-valid border-success' : !clientError.lastName && person.lastName }"
-              />
-              <p v-if="clientError.lastName" class="text-danger">{{ clientError.lastName }}</p>
-
-              <label for="first_name" :class="{ 'text-danger' : clientError.firstName || !person.firstName}">Имя:</label>
-              <input type="text"
-                     id="first_name"
-                     v-model="person.firstName"
-                     required
-                     class="form-control"
-                     @input="validateFirstName"
-                     :class="{
-                           'is-invalid border-danger text-danger' : clientError.firstName || !person.firstName,
-                           'is-valid border-success' : !clientError.firstName && person.firstName
-                         }"
-              />
-              <p v-if="clientError.firstName" class="text-danger">{{ clientError.firstName }}</p>
-
-              <label for="middle_name" :class="{ 'text-danger' : clientError.middleName || !person.middleName}">Отчество:</label>
-              <input type="text"
-                     id="middle_name"
-                     v-model="person.middleName"
-                     required
-                     class="form-control "
-                     @input="validateMiddleName"
-                     :class="{
-                           'is-invalid border-danger text-danger' : clientError.middleName || !person.middleName,
-                           'is-valid border-success' : !clientError.middleName && person.middleName
-                           }"
-              />
-              <p v-if="clientError.middleName" class="text-danger">{{ clientError.middleName }}</p>
-
-
-              <label for="post" :class="{ 'text-danger' : clientError.post || !person.post }">Должность:</label>
-              <vue-select
-                  id="post"
-                  v-model="person.post"
-                  :options="['Студент','Работник']"
-                  placeholder="Выберите должность"
-                  required
-                  @change="validatePost"
-                  :class="{
-                          'select-invalid is-invalid border-danger' : clientError.post || !person.post,
-                          'select-valid is-valid border-success' : !clientError.post && person.post
-                        }"
-              />
-              <p v-if="clientError.post" class="text-danger">{{ clientError.post }}</p>
-
-          <div v-if="person.post=='Студент'">
-            <label for="institute" :class="{ 'text-danger' : clientError.institute || !person.institute}">Институт:</label>
-            <input
-                type="text"
-                id="institute"
-                class="form-control"
-                v-model="person.institute"
-                @input="validateInstitute"
-                :class="{
-                        'is-invalid border-danger text-danger' : clientError.institute || !person.institute,
-                        'is-valid border-success' : !clientError.institute && person.institute
-                        }"
-            />
-            <p v-if="clientError.institute " class="text-danger">{{ clientError.institute }}</p>
-
-            <label for="course" :class="{ 'text-danger' : clientError.course || !person.course}">Курс:</label>
-            <vue-select
-                id="course"
-                v-model="person.course"
-                :options="[1,2,3,4,5]"
-                placeholder="Выберите Курс"
-                :class="{
-                          'select-invalid is-invalid border-danger' : clientError.course || !person.course,
-                          'select-valid is-valid border-success' : !clientError.course && person.course
-                        }"
-            />
-            <p v-if="clientError.course " class="text-danger">{{ clientError.course }}</p>
-
-          </div>
-          <div v-else-if="person.post=='Работник'" :class="{ 'text-danger' : clientError.structure || !person.structure}">
-            <label for="structure">Структура:</label>
-            <input
-                type="text"
-                id="structure"
-                v-model="person.structure"
-                class="form-control"
-                @input="validateStructure"
-                :class="{
-                        'is-invalid border-danger text-danger' : clientError.structure || !person.structure,
-                        'is-valid border-success' : !clientError.structure && person.structure
-                      }"
-            />
-            <p v-if="clientError.structure" class="text-danger">{{ clientError.structure }}</p>
-          </div>
-          <button class="btn btn-outline-primary float-end w-100 mt-5"
-                  style="height: 50px"
-            @click="saveChange"
+          <form action=""
+                method="post"
+                @submit.prevent="saveChange"
           >
-            Сохранить
-          </button>
+            <h4>Основная информация</h4>
+                <label for="last_name" :class="{ 'text-danger' : clientError.lastName || !person.lastName}">Фамилия:</label>
+                <input type="text"
+                       id="last_name"
+                       v-model="person.lastName"
+                       required
+                       class="form-control"
+                       @input="validateLastName"
+                       :class="{ 'is-invalid border-danger text-danger' : clientError.lastName || !person.lastName,
+                                 'is-valid border-success' : !clientError.lastName && person.lastName }"
+                />
+                <p v-if="clientError.lastName" class="text-danger">{{ clientError.lastName }}</p>
+
+                <label for="first_name" :class="{ 'text-danger' : clientError.firstName || !person.firstName}">Имя:</label>
+                <input type="text"
+                       id="first_name"
+                       v-model="person.firstName"
+                       required
+                       class="form-control"
+                       @input="validateFirstName"
+                       :class="{
+                             'is-invalid border-danger text-danger' : clientError.firstName || !person.firstName,
+                             'is-valid border-success' : !clientError.firstName && person.firstName
+                           }"
+                />
+                <p v-if="clientError.firstName" class="text-danger">{{ clientError.firstName }}</p>
+
+                <label for="middle_name" :class="{ 'text-danger' : clientError.middleName || !person.middleName}">Отчество:</label>
+                <input type="text"
+                       id="middle_name"
+                       v-model="person.middleName"
+                       required
+                       class="form-control "
+                       @input="validateMiddleName"
+                       :class="{
+                             'is-invalid border-danger text-danger' : clientError.middleName || !person.middleName,
+                             'is-valid border-success' : !clientError.middleName && person.middleName
+                             }"
+                />
+                <p v-if="clientError.middleName" class="text-danger">{{ clientError.middleName }}</p>
+
+
+                <label for="post" :class="{ 'text-danger' : !person.post }">Должность:</label>
+                <vue-select
+                    id="post"
+                    v-model="person.post"
+                    :options="['Студент','Работник']"
+                    placeholder="Выберите должность"
+                    required
+                    :class="{
+                            'select-invalid is-invalid border-danger' : !person.post,
+                            'select-valid is-valid border-success' : person.post
+                          }"
+                />
+                <p v-if="!person.post" class="text-danger">{{ clientError.post }}</p>
+
+            <div v-if="person.post=='Студент'">
+              <label for="institute" :class="{ 'text-danger' : clientError.institute || !person.institute}">Институт:</label>
+              <input
+                  type="text"
+                  id="institute"
+                  class="form-control"
+                  v-model="person.institute"
+                  @input="validateInstitute"
+                  required
+                  :class="{
+                          'is-invalid border-danger text-danger' : clientError.institute || !person.institute,
+                          'is-valid border-success' : !clientError.institute && person.institute
+                          }"
+              />
+              <p v-if="clientError.institute " class="text-danger">{{ clientError.institute }}</p>
+
+              <label for="course" :class="{ 'text-danger' : !person.course}">Курс:</label>
+              <vue-select
+                  id="course"
+                  v-model="person.course"
+                  :options="[1,2,3,4,5]"
+                  placeholder="Выберите Курс"
+                  :class="{
+                            'select-invalid is-invalid border-danger' : !person.course,
+                            'select-valid is-valid border-success' :  person.course
+                          }"
+              />
+              <p v-if="!person.course" class="text-danger">{{ clientError.course }}</p>
+
+            </div>
+            <div v-else-if="person.post=='Работник'" >
+              <label for="structure" :class="{ 'text-danger' : clientError.structure || !person.structure}">Структура:</label>
+              <input
+                  type="text"
+                  id="structure"
+                  v-model="person.structure"
+                  required
+                  class="form-control"
+                  @input="validateStructure"
+                  :class="{
+                          'is-invalid border-danger text-danger' : clientError.structure || !person.structure,
+                          'is-valid border-success' : !clientError.structure && person.structure
+                        }"
+              />
+              <p v-if="clientError.structure" class="text-danger">{{ clientError.structure }}</p>
+            </div>
+            <button class="btn btn-outline-primary float-end w-100 mt-5"
+                    style="height: 50px"
+                    type="submit"
+            >
+              Сохранить
+            </button>
+          </form>
         </div>
         <div class="contact-info card mt-5">
           <h4>Контактная информация</h4>
@@ -270,13 +276,6 @@ export default {
         this.clientError.structure = null;
       }
     },
-    validatePost(){
-      if (!this.person.post) {
-        this.clientError.post = 'Поле обязательно для заполнения';
-      } else {
-        this.clientError.post = null;
-      }
-    },
     changeEmail(){
 
     },
@@ -304,8 +303,32 @@ export default {
         this.clientError.post = "Пожалуйста выберите должность";
         isValid = false;
       }
-      else if(this.person.post==='Студент' && ( this.person.course===0 || this.person.course===null )) {
-        this.clientError.course = "Пожалуйста выберите курс";
+      else if(this.person.post==='Студент') {
+        if(this.person.course===0 || this.person.course===null){
+          this.clientError.course = "Пожалуйста выберите курс";
+          isValid = false;
+        }
+        if(this.person.institute === null){
+          this.clientError.institute = "Пожалуйста заполните это поле";
+          isValid = false;
+        }
+      }
+      else if(this.person.post==='Работник') {
+        if(this.person.structure === null){
+          this.clientError.structure = "Пожалуйста заполните это поле";
+          isValid = false;
+        }
+      }
+      else if(this.person.firstName === null){
+        this.clientError.firstName = "Пожалуйста заполните это поле";
+        isValid = false;
+      }
+      else if(this.person.lastName === null){
+        this.clientError.lastName = "Пожалуйста заполните это поле";
+        isValid = false;
+      }
+      else if(this.person.middleName === null){
+        this.clientError.middleName = "Пожалуйста заполните это поле";
         isValid = false;
       }
       return isValid;

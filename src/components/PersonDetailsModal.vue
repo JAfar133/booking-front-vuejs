@@ -254,11 +254,17 @@ export default {
       }
 
     },
+    checkAlphabetic(input) {
+      const letters = /^[a-zA-Zа-яА-Я ]+(?:-[a-zA-Zа-яА-Я ]+)*$/;
+      return letters.test(input)
+    },
     validateFirstName(){
       if (!this.person.firstName) {
         this.clientError.firstName = 'Имя обязательно для заполнения';
       } else if (this.person.firstName.length < 3) {
         this.clientError.firstName = 'Имя должно содержать не менее 1 символа';
+      } else if(!this.checkAlphabetic(this.person.firstName)){
+        this.clientError.firstName = 'Имя не допустимо';
       } else {
         this.clientError.firstName = null;
       }
@@ -268,6 +274,8 @@ export default {
         this.clientError.lastName = 'Фамилия обязательно для заполнения';
       } else if (this.person.lastName.length < 2) {
         this.clientError.lastName = 'Фамилия должно содержать не менее 1 символов';
+      } else if(!this.checkAlphabetic(this.person.lastName)){
+        this.clientError.lastName = 'Фамилия не допустима';
       } else {
         this.clientError.lastName = null;
       }
@@ -277,6 +285,8 @@ export default {
         this.clientError.middleName = 'Отчество обязательно для заполнения';
       } else if (this.person.middleName.length < 3) {
         this.clientError.middleName = 'Отчество должно содержать не менее 2 символов';
+      } else if(!this.checkAlphabetic(this.person.middleName)){
+        this.clientError.middleName = 'Отчество не допустимо';
       } else {
         this.clientError.middleName = null;
       }

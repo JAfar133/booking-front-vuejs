@@ -129,9 +129,9 @@
               <div class="social google" @click="googleAuthorizated" title="Работает только с впн...">
                 <img src="/img/google.svg" alt="google" class="icon google">
               </div>
-<!--              <div class="social" @click="vkAuthorizated">-->
-<!--                <img src="/img/vk.svg" alt="vk" class="icon vk">-->
-<!--              </div>-->
+              <div class="social" @click="vkAuthorizated">
+                <img src="/img/vk.svg" alt="vk" class="icon vk">
+              </div>
             </div>
             <hr style="opacity: 10%">
           </div>
@@ -403,9 +403,7 @@ label {
 .social:hover {
   cursor: pointer;
 }
-.google:hover{
-  cursor: auto;
-}
+
 .icon{
   width:40px;
   border-radius: 5px;

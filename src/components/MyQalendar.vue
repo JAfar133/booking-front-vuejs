@@ -43,16 +43,13 @@
 <script>
 import {Qalendar} from "qalendar";
 import VueSelect from "vue-select";
+import {mapMutations, mapState} from "vuex";
 export default {
   name: "MyQalendar",
   props: {
     places: {
       type: Object,
       required: true
-    },
-    date: {
-      type: String,
-      required: false
     },
     bookings: {
       type: Array,
@@ -117,15 +114,16 @@ export default {
       currentDate.setHours(0)
       if(new Date(date).getTime() >= currentDate.getTime() && new Date(date).getDay()!==0){
         this.dayClicked = date
-        this.$emit('dayClicked',this.dayClicked)
-
+        this.setDate(date)
       }
     },
     updateMode(){
-      this.addDisabledClass()
+      setTimeout(()=> {
+        this.addDisabledClass()
+        this.activeDayCell()
+      },100);
     },
     addDisabledClass(){
-        setTimeout(function() {
           const currentDate = new Date();
 
           const weeks = document.querySelectorAll('.calendar-month__weeks');
@@ -147,10 +145,8 @@ export default {
               }
             });
           });
-      },100);
     },
     filtered(){
-      this.addDisabledClass();
       this.events=[]
         this.bookings.forEach(b=> {
           if(this.place === null || b.place.id === this.place.id){
@@ -162,6 +158,19 @@ export default {
           }
         });
     },
+    activeDayCell(){
+      if(this.dayClicked!==null){
+        const dayid = "#day-"+this.dayClicked;
+        window.$(dayid).addClass("active");
+      }
+    },
+    ...mapMutations({
+      setDate: 'setDate'
+    }),
+    focus(){
+      const bookingForm = document.getElementById('booking-form');
+      bookingForm.focus();
+    },
   },
   mounted() {
     this.$nextTick(() =>{
@@ -169,6 +178,18 @@ export default {
       this.addDisabledClass();
       this.qalendarIsLoading = false;
     })
+  },
+  updated() {
+    this.$nextTick(function (){
+      this.activeDayCell();
+      this.addDisabledClass();
+    })
+  },
+  computed: {
+    ...mapState({
+      booking: state => state.booking.booking,
+      bookingDate: state => state.booking.booking.date
+    }),
   },
   watch: {
     place() {
@@ -184,10 +205,7 @@ export default {
       const oldDayId = "#day-"+oldValue;
       window.$(newDayId).addClass("active");
       window.$(oldDayId).removeClass("active");
-
-    },
-    date(){
-      this.dayClicked = this.date;
+      this.focus()
     },
     bookings(){
       this.events = [];
@@ -196,6 +214,11 @@ export default {
       })
       this.filtered()
     }
+  },
+  created() {
+    this.$watch('bookingDate', (newValue) => {
+      this.dayClicked = newValue
+    });
   }
 }
 </script>
