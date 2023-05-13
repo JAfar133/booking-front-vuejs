@@ -12,7 +12,17 @@
             <BookingForm :places="places"
                          :place="place"
                          :bookings="bookings"
-            />
+                         class="booking-form"
+                         @bookingIsValid="$emit('bookingIsValid')"
+            >
+              <template v-slot:booking-form-header>
+                <h3>Бронирование помещений </h3>
+                <p>Пожалуйста выберите дату, время и место бронирования</p>
+              </template>
+              <template v-slot:booking-from-button-text>
+                Продолжить
+              </template>
+            </BookingForm>
         </div>
       </div>
     </div>
@@ -56,7 +66,9 @@ export default {
     position: relative;
     padding-top: 60px;
     padding-bottom: 100px;
-
+    .booking-form{
+      width: 600px;
+    }
     .container {
       position: relative;
       z-index: 5;

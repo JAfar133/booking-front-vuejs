@@ -23,6 +23,9 @@ export const bookingModule = {
         },
         setDate(state, date){
             state.booking.date = date
+        },
+        setCustomer(state, customer){
+            state.booking.customer = customer
         }
 
     },

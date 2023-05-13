@@ -1,7 +1,6 @@
 <template>
   <div class="booking-form" id="booking-form" tabindex="0">
-    <h3>Бронирование помещений </h3>
-    <p>Пожалуйста выберите дату, время и место бронирования</p>
+    <slot name="booking-form-header"></slot>
     <form action="/"
           id="validationForm"
           method="post"
@@ -42,7 +41,9 @@
         </div>
 
       </div>
-      <input type="submit" id="booking-submit-btn" class="btn btn-primary" value="Продолжить"/>
+      <button type="submit" id="booking-submit-btn" class="btn btn-primary">
+        <slot name="booking-from-button-text">Забронировать</slot>
+      </button>
     </form>
 
     <success-modal v-show="successModal" @close="closeSuccessModal">
@@ -65,8 +66,7 @@
 
 <script>
 import VueSelect from 'vue-select';
-// import PersonDetailsModal from "@/components/PersonDetailsModal.vue";
-import personDetailsModal from "@/components/PersonDetailsModal.vue";
+// import PersonDetailsModal from "@/components/PersonDetails.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
@@ -78,19 +78,7 @@ import {mapMutations, mapState} from "vuex";
 
 
 export default {
-  computed: {
-    personDetailsModal() {
-      return personDetailsModal
-    },
-    ...mapState({
-      personId: state => state.person.personId,
-      person: state => state.person.person,
-      isAuthorized: state => state.person.isAuthorized,
-      loginFormShow: state => state.person.loginFormShow,
-      access_token: state => state.person.access_token,
-      booking: state => state.booking.booking
-    }),
-  },
+
   components:{
     TimePickerInput, SuccessModal, ChangePhoneModal,
     VueSelect,
@@ -121,19 +109,14 @@ export default {
       verifyPhoneNumber: false
     }
   },
-  mounted() {
-    this.$nextTick(() =>{
-      if(this.markers.length===0){
-        this.bookings.forEach(b=>this.pushMarker(b));
-      }
-    })
-  },
+
   methods: {
     ...mapMutations({
       setCustomer: 'setPerson',
       setPersonId: 'setPersonId',
       setIsAuthorized: 'setIsAuthorized',
-      setLoginFormShow: 'setLoginFormShow'
+      setLoginFormShow: 'setLoginFormShow',
+      setBooking: 'setBooking'
     }),
     optionLabel(option){
       return option.name+ " на " + option.address.split(", Севастополь")[0]
@@ -151,7 +134,7 @@ export default {
       this.bookingError = []
       axios.post('http://localhost:8080/booking/valid-booking', this.booking)
           .then(() =>{
-              this.showModal = true;
+              this.$emit('bookingIsValid')
           })
           .catch(error => {
             console.log(error)
@@ -204,6 +187,28 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$nextTick(() =>{
+      if(this.markers.length===0){
+        this.bookings.forEach(b=>this.pushMarker(b));
+      }
+      const booking = JSON.parse(localStorage.getItem('booking'));
+      booking && this.setBooking(booking);
+    })
+  },
+  computed: {
+    // personDetailsModal() {
+    //   return personDetailsModal
+    // },
+    ...mapState({
+      personId: state => state.person.personId,
+      person: state => state.person.person,
+      isAuthorized: state => state.person.isAuthorized,
+      loginFormShow: state => state.person.loginFormShow,
+      access_token: state => state.person.access_token,
+      booking: state => state.booking.booking
+    }),
+  },
   watch: {
     place(){
       this.booking.place = this.place
@@ -220,11 +225,9 @@ export default {
   @import "vue-select/dist/vue-select.css";
 
   .booking-form {
-    width: 600px;
     background: #ffffff;
     padding: 44px 40px 50px 40px;
     border-radius: 4px;
-    border: 2px solid rgba(119,221,231,0.5);;
     z-index: 7;
   }
   .booking-form h3 {
@@ -258,7 +261,7 @@ export default {
 
   }
 
-  .booking-form input[type="submit"] {
+  .booking-form button {
     display: block;
     font-size: 14px;
     text-transform: uppercase;

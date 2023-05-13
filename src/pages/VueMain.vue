@@ -1,5 +1,5 @@
 <template>
-  <HeroSection :places="places" :bookings="bookings" :place="place"/>
+  <HeroSection :places="places" :bookings="bookings" :place="place" @bookingIsValid="bookingIsValid"/>
   <div class="main-section ">
 <!--    <about-us-section/>-->
 
@@ -18,7 +18,7 @@
 <script>
 import HeroSection from "@/components/HeroSection.vue";
 import MyQalendar from "@/components/MyQalendar.vue";
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import { getRoomHalls, getBookings} from '@/mainApi';
 // import AboutUsSection from "@/components/AboutUsSection.vue";
 export default {
@@ -49,6 +49,10 @@ export default {
     ...mapActions({
       saveTokenToCookie: 'saveTokenToCookie',
     }),
+    bookingIsValid(){
+      localStorage.setItem('booking', JSON.stringify(this.booking))
+      window.location.href="/booking"
+    },
     getRoomHalls() {
       getRoomHalls()
           .then(data => {
@@ -81,11 +85,16 @@ export default {
   },
   mounted() {
     this.$nextTick(function (){
-      console.log("from mounted")
       this.getTokensFromParams();
       this.getRoomHalls();
       this.getBookings();
+
     });
+  },
+  computed:{
+    ...mapState({
+      booking: state => state.booking.booking
+    })
   }
 }
 </script>

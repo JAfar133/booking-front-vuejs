@@ -115,6 +115,7 @@ export default {
       if(new Date(date).getTime() >= currentDate.getTime() && new Date(date).getDay()!==0){
         this.dayClicked = date
         this.setDate(date)
+        this.focus()
       }
     },
     updateMode(){
@@ -205,7 +206,6 @@ export default {
       const oldDayId = "#day-"+oldValue;
       window.$(newDayId).addClass("active");
       window.$(oldDayId).removeClass("active");
-      this.focus()
     },
     bookings(){
       this.events = [];
