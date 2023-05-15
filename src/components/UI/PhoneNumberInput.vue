@@ -2,7 +2,6 @@
   <input type="text"
          :value="modelValue"
          @input="updateInput"
-         id="phone_number"
          ref="phoneInput"
          class="form-control"
          autocomplete="off"

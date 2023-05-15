@@ -39,6 +39,9 @@
 <script>
 export default {
   name: "SuccessModal",
+  emits: {
+      close: null,
+  },
   methods: {
     close() {
       this.$emit('close');

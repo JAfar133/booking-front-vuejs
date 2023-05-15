@@ -18,14 +18,6 @@ export default {
       showPersonInfo: 'showPersonInfo',
       saveTokenToCookie: 'saveTokenToCookie',
     }),
-    // ...mapMutations({
-    //   setCustomer: 'setPerson',
-    //   setPersonId: 'setPersonId',
-    //   setIsAuthorized: 'setIsAuthorized',
-    //   setLoginFormShow: 'setLoginFormShow',
-    //   setAccessToken: 'setAccessToken',
-    //   setRefreshToken: 'setRefreshToken'
-    // }),
   },
   mounted() {
     this.$nextTick(() => {

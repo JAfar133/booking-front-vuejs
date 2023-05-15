@@ -27,7 +27,6 @@
               <PhoneNumberInput
                   v-model="person.phoneNumber"
                   @input="validatePhoneNumber"
-                  id="phone_number"
                   :class="{
                     'is-invalid border-danger' : clientError.phoneNumber,
                     'is-valid' : !clientError.phoneNumber && person.phoneNumber
@@ -90,6 +89,9 @@ export default {
   components: {
     PhoneNumberInput
   },
+  emits: {
+    close: null,
+  },
   data() {
     return {
       person:{
@@ -100,7 +102,7 @@ export default {
       clientError: {
         email: null,
         phoneNumber: null,
-        password: null
+        password: null,
       },
       errorMessage: null
     }
@@ -118,6 +120,10 @@ export default {
       saveTokenToCookie: 'saveTokenToCookie',
     }),
     signup(){
+      this.validatePhoneNumber();
+      this.validateEmail();
+      this.validatePassword();
+      if(this.hasError()) return
       axios.post('http://localhost:8080/auth/signin',this.person)
           .then(response=>{
             this.setAccessToken(response.data.access_token)
@@ -131,6 +137,14 @@ export default {
             this.errorMessage = error.response.data;
           })
     },
+    hasError() {
+        for (const key in this.clientError) {
+            if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
+                return true;
+            }
+        }
+        return false;
+    },
     validatePhoneNumber(){
       const regex = /^(\+7|7|8)?[\s-]?\(?[3489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/;
       if (!regex.test(this.person.phoneNumber)) {
@@ -139,11 +153,16 @@ export default {
         this.clientError.phoneNumber = null;
       }
     },
-    validateEmail(){
 
+    validateEmail(){
+        if(this.person.email === null) this.clientError.email = "обязательно"
+        else if(!this.person.email.includes('@')) this.clientError.email = "неверная почта"
+        else this.clientError.email = null;
     },
     validatePassword(){
-
+        if(this.person.password === null) this.clientError.password = "обязательно"
+        else if(this.person.password.length < 8) this.clientError.password = "длина должна быть более 7 символов"
+        else this.clientError.password = null;
     },
     close(){
       this.$emit('close')

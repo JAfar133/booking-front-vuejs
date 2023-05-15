@@ -1,6 +1,6 @@
 <template>
-  <transition name="success-modal">
-    <div class="modal-backdrop">
+  <transition name="success-modal" >
+    <div class="modal-backdrop" >
       <div class="modal"
            :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
@@ -62,7 +62,7 @@
           <div class="email-login-form" v-else>
             <div class="mb-3 text-center" v-if="!isCodeInputShow" >Введите почту и пароль</div>
             <div>
-              <label for="phone_number" >Почта:</label>
+              <label for="phone_number" v-if="clientError.email" :class="{'text-danger': clientError.email}">Почта:</label>
               <input
                   type="text"
                   v-model="authPerson.email"
@@ -74,7 +74,8 @@
                     }"
                   @input="validateEmail"
               >
-              <label for="phone_number" class="mt-4">Пароль:</label>
+              <p v-if="clientError.email" class="text-danger">{{ clientError.email }}</p>
+              <label for="phone_number" class="mt-4" :class="{'text-danger': clientError.password}">Пароль:</label>
               <input
                   type="password"
                   v-model="authPerson.password"
@@ -85,6 +86,7 @@
                     }"
                   @input="validatePassword"
               >
+                <p v-if="clientError.password" class="text-danger">{{ clientError.password }}</p>
             </div>
           </div>
         </section>
@@ -150,12 +152,17 @@ import VueCookies from "vue-cookies";
 export default {
   name: "loginForm",
   components: {PhoneNumberInput},
-
+  emits: {
+    close: null,
+    signin: null,
+  },
   data() {
     return {
       clientError: {
         phoneNumber: null,
-        code: null
+        code: null,
+        password: null,
+        email: null
       },
       errorMessage:null,
       isCodeInputShow: false,
@@ -180,22 +187,31 @@ export default {
     ...mapActions({
       saveTokenToCookie: 'saveTokenToCookie',
     }),
+     
     yandexAuthorizated(){
       window.location='http://localhost:8080/oauth2/authorize/yandex';
+      localStorage.setItem('currHref',window.location.pathname)
     },
     googleAuthorizated(){
       window.location='http://localhost:8080/oauth2/authorize/google';
+      localStorage.setItem('currHref',window.location.pathname)
     },
     githubAuthorizated(){
       window.location='http://localhost:8080/oauth2/authorize/github';
+      localStorage.setItem('currHref',window.location.pathname)
     },
     vkAuthorizated(){
       window.location='http://localhost:8080/oauth2/authorize/vk';
+      localStorage.setItem('currHref',window.location.pathname)
     },
     login(){
+      this.validateEmail()
+      this.validatePassword()
+      if(this.clientError.email || this.clientError.password) return
       this.errorMessage = ""
       axios.post('http://localhost:8080/auth/login/email',this.authPerson)
           .then(response => {
+            console.log("HERE")
             this.setAccessToken(response.data.access_token)
             this.setRefreshToken(response.data.refresh_token)
             this.saveTokenToCookie()
@@ -230,10 +246,14 @@ export default {
       }
     },
     validateEmail(){
-
+        if(this.authPerson.email === null) this.clientError.email = "обязательно"
+        else if(!this.authPerson.email.includes('@')) this.clientError.email = "неверная почта"
+        else this.clientError.email = null;
     },
     validatePassword(){
-
+        if(this.authPerson.password === null) this.clientError.password = "обязательно"
+        else if(this.authPerson.password.length < 8) this.clientError.password = "длина должна быть более 7 символов"
+        else this.clientError.password = null;
     },
     codeInput() {
         this.clientError.code = null;

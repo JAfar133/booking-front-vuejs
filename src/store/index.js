@@ -7,4 +7,5 @@ export default createStore({
         person: personModule,
         booking: bookingModule
     }
+    
 })

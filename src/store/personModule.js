@@ -73,7 +73,6 @@ export const personModule = {
         showPersonInfo({commit,state, dispatch}){
             const cookieAccessToken = VueCookies.get('access_token')
             const cookieRefreshToken = VueCookies.get('refresh_token')
-            console.log(cookieAccessToken)
             if (cookieAccessToken) {
                 commit('setAccessToken',cookieAccessToken)
                 commit('setRefreshToken', cookieRefreshToken)
@@ -83,7 +82,6 @@ export const personModule = {
                     }
                 })
                     .then((response) =>{
-                        console.log(response.data)
                         const person = {
                             id: response.data.id,
                             lastName: response.data.lastName ?? state.person.lastName,
@@ -102,12 +100,14 @@ export const personModule = {
                         commit('setPerson', person);
                         commit('setPersonId', response.data.id)
                         commit('setIsAuthorized',true);
+                        return true;
                     })
                     .catch(error => {
                         console.log(error)
-                        if(cookieRefreshToken !== undefined && cookieRefreshToken !== null){
+                        if(cookieRefreshToken){
                             dispatch('refreshToken')
                         }
+                        return false;
                     })
             }
         },

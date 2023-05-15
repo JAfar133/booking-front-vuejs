@@ -50,8 +50,8 @@ export default {
       saveTokenToCookie: 'saveTokenToCookie',
     }),
     bookingIsValid(){
-      localStorage.setItem('booking', JSON.stringify(this.booking))
-      window.location.href="/booking"
+      localStorage.setItem('booking', JSON.stringify(this.booking));
+      window.location.href="/booking";
     },
     getRoomHalls() {
       getRoomHalls()
@@ -65,27 +65,10 @@ export default {
             this.bookings = data;
           });
     },
-    getTokensFromParams() {
-      const uri = window.location.href.split('?');
-      if (uri.length === 2) {
-        const variables = uri[1].split("&");
-        let accessToken = '';
-        let refreshToken = '';
-        accessToken = variables[0].split('access_token=')[1];
-        refreshToken = variables[1].split('refresh_token=')[1];
-        if (accessToken !== '' && accessToken !== undefined
-            && refreshToken !== '' && refreshToken !== undefined) {
-          this.setAccessToken(accessToken);
-          this.setRefreshToken(refreshToken);
-          this.saveTokenToCookie();
-          window.location = "/";
-        }
-      }
-    },
+
   },
   mounted() {
     this.$nextTick(function (){
-      this.getTokensFromParams();
       this.getRoomHalls();
       this.getBookings();
 

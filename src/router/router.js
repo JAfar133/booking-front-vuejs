@@ -3,14 +3,15 @@ import {createRouter, createWebHistory} from "vue-router";
 import VueMain from "@/pages/VueMain.vue";
 import BookingList from "@/pages/BookingList.vue";
 import PersonData from "@/pages/PersonData.vue";
-import VueCookies from "vue-cookies";
 import MyRooms from "@/pages/MyRooms.vue";
 import BookingPage from "@/pages/BookingPage.vue";
+import store from "@/store";
+import VueCookies from "vue-cookies";
 
 const routes = [
     {
         path: '/',
-        component: VueMain
+        component: VueMain,
     },
     {
         path: '/bookings',
@@ -29,7 +30,26 @@ const routes = [
     {
         path: '/booking',
         component: BookingPage
-    }
+    },
+    {
+        path: '/oauth',
+        component: VueMain,
+        beforeEnter: (to, from, next) => {
+            const accessToken = to.query.access_token;
+            const refreshToken = to.query.refresh_token;
+            const referer = localStorage.getItem("currHref");
+            if (accessToken && refreshToken) {
+                VueCookies.set('access_token', accessToken);
+                VueCookies.set('refresh_token', refreshToken);
+                store.dispatch('showPersonInfo')
+                // Перенаправляем пользователя на нужную страницу
+                next(referer);
+            } else {
+                // Если токены отсутствуют, перенаправляем пользователя на страницу авторизации
+                next('/');
+            }
+        }
+    },
 
 ]
 

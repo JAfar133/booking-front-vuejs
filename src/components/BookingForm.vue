@@ -50,13 +50,6 @@
       Ваша заявка будет рассмотрена в ближайшее время
     </success-modal>
 
-<!--    <person-details-modal-->
-<!--      v-show="showModal"-->
-<!--      @personDetailsModalClose="closePersonDetailsModal"-->
-<!--      @submitBooking="submitBooking"-->
-<!--      @verifyPhoneNumber="verifyPhoneNumber=true"-->
-<!--      :bookingError="bookingError"-->
-<!--    />-->
     <change-phone-modal
         v-show="verifyPhoneNumber"
         @close="verifyPhoneNumber=false"
@@ -66,7 +59,6 @@
 
 <script>
 import VueSelect from 'vue-select';
-// import PersonDetailsModal from "@/components/PersonDetails.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
@@ -82,10 +74,12 @@ export default {
   components:{
     TimePickerInput, SuccessModal, ChangePhoneModal,
     VueSelect,
-    // PersonDetailsModal,
     DatePickerInput
   },
   name: "BookingForm",
+  emits: {
+    bookingIsValid: null
+  },
   props: {
     places: {
       type: Object,
@@ -162,30 +156,30 @@ export default {
             this.bookingError.push(error.response.data)
           })
     },
-    pushMarker(booking){
-      const normalizedDate = this.getNormalizedDate(booking.date)
-      let isContain = false;
-      const timeStart = booking.timeStart.substring(0,5);
-      const timeEnd = booking.timeEnd.substring(0,5);
-      let address = booking.place.address.includes('Курчатова') ? "Курчатова" : "Гоголя";
-      this.markers.forEach(m=>{
-        if(m.date === normalizedDate){
-          m.tooltip.push({text: booking.place.name +", "+ address + " ["+timeStart+"-"+timeEnd+"]"
-            , color: booking.confirmed ? "red" : "blue"})
-          if(booking.confirmed) m.color = "red"
-          isContain = true;
+    pushMarker(booking) {
+        const normalizedDate = this.getNormalizedDate(booking.date);
+        const timeStart = booking.timeStart.substring(0, 5);
+        const timeEnd = booking.timeEnd.substring(0, 5);
+        const address = booking.place.address.includes('Курчатова') ? "Курчатова" : "Гоголя";
+        const marker = {
+            date: normalizedDate,
+            type: 'line',
+            tooltip: [{
+                text: booking.place.name + ", " + address + " [" + timeStart + "-" + timeEnd + "]",
+                color: booking.confirmed ? "red" : "blue"
+            }],
+            color: booking.confirmed ? "red" : "blue"
+        };
+        const existingMarker = this.markers.find(m => m.date === normalizedDate);
+        if (existingMarker) {
+            existingMarker.tooltip.push(marker.tooltip[0]);
+            if (booking.confirmed) {
+                existingMarker.color = "red";
+            }
+        } else {
+            this.markers.push(marker);
         }
-      })
-      if(!isContain){
-        this.markers.push({
-          date: this.getNormalizedDate(booking.date),
-          type: 'line',
-          tooltip: [{text: booking.place.name+", "+ address + " ["+timeStart+"-"+timeEnd+"]"
-            , color: booking.confirmed ? "red" : "blue"},],
-          color: booking.confirmed ? "red" : "blue"
-        })
-      }
-    },
+    }
   },
   mounted() {
     this.$nextTick(() =>{
@@ -228,7 +222,7 @@ export default {
     background: #ffffff;
     padding: 44px 40px 50px 40px;
     border-radius: 4px;
-    z-index: 7;
+    z-index: 1;
   }
   .booking-form h3 {
     color: #19191a;

@@ -193,6 +193,7 @@ import VueSelect from 'vue-select';
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import axios from "axios";
 import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
+import validate from "@/validation";
 export default {
   name: "PersonData",
   components: {ChangePhoneModal, VueSelect, PhoneNumberInput},
@@ -224,63 +225,53 @@ export default {
     ...mapGetters({
       getPerson: 'phoneNumber_confirmed'
     }),
+    hasError() {
+        for (const key in this.clientError) {
+            if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
+                return true;
+            }
+        }
+        return false;
+    },
+    ...validate,
     validateFirstName(){
-      if (!this.person.firstName) {
-        this.clientError.firstName = 'Имя обязательно для заполнения';
-      } else if (this.person.firstName.length < 3) {
-        this.clientError.firstName = 'Имя должно содержать не менее 1 символа';
-      } else {
-        this.clientError.firstName = null;
-      }
+        this.clientError.firstName = this.getNameError(this.person.firstName)
     },
     validateLastName(){
-      if (!this.person.lastName) {
-        this.clientError.lastName = 'Фамилия обязательно для заполнения';
-      } else if (this.person.lastName.length < 2) {
-        this.clientError.lastName = 'Фамилия должно содержать не менее 1 символов';
-      } else {
-        this.clientError.lastName = null;
-      }
+        this.clientError.lastName = this.getNameError(this.person.lastName)
     },
     validateMiddleName(){
-      if (!this.person.middleName) {
-        this.clientError.middleName = 'Отчество обязательно для заполнения';
-      } else if (this.person.middleName.length < 3) {
-        this.clientError.middleName = 'Отчество должно содержать не менее 2 символов';
-      } else {
-        this.clientError.middleName = null;
-      }
+        this.clientError.middleName = this.getNameError(this.person.middleName)
     },
     validatePhoneNumber() {
-      const regex = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
-      if (!regex.test(this.person.phoneNumber)) {
-        this.clientError.phoneNumber = 'Номер телефона введен неправильно'
-      } else {
-        this.clientError.phoneNumber = null
-      }
+        this.clientError.phoneNumber = this.getPhoneError(this.person.phoneNumber)
     },
     validateInstitute(){
-      if (this.person.post==='Студент' && !this.person.institute) {
-        this.clientError.institute = 'Поле обязательно для заполнения';
-      } else {
-        this.person.structure = null
-        this.clientError.institute = null;
-      }
+        this.clientError.institute = this.getInstituteError(this.person)
     },
     validateStructure(){
-      if (this.person.post==='Работник' && !this.person.structure) {
-        this.clientError.structure = 'Поле обязательно для заполнения';
-      } else {
-        this.person.institute = null;
-        this.person.course = null;
-        this.clientError.structure = null;
-      }
-    },
-    changeEmail(){
+        this.clientError.structure = this.getStructureError(this.person)
 
     },
+    validatePost(){
+        this.clientError.post = this.getPostError(this.person.post)
+    },
+    validateCourse(){
+        this.clientError.course = this.getCourseError(this.person)
+    },
+    validateAll(){
+        this.validateFirstName();
+        this.validateLastName();
+        this.validateMiddleName();
+        this.validatePhoneNumber();
+        this.validateInstitute();
+        this.validateStructure();
+        this.validatePost();
+        this.validateCourse();
+    },
     saveChange(){
-      if (!this.validateBeforeSubmitting()) {
+      this.validateAll();
+      if (this.hasError()) {
         return;
       }
       axios.patch(`http://localhost:8080/person`,this.person,
@@ -297,42 +288,7 @@ export default {
             console.log(error)
           })
     },
-    validateBeforeSubmitting(){
-      let isValid = true;
-      if(this.person.post===null){
-        this.clientError.post = "Пожалуйста выберите должность";
-        isValid = false;
-      }
-      else if(this.person.post==='Студент') {
-        if(this.person.course===0 || this.person.course===null){
-          this.clientError.course = "Пожалуйста выберите курс";
-          isValid = false;
-        }
-        if(this.person.institute === null){
-          this.clientError.institute = "Пожалуйста заполните это поле";
-          isValid = false;
-        }
-      }
-      else if(this.person.post==='Работник') {
-        if(this.person.structure === null){
-          this.clientError.structure = "Пожалуйста заполните это поле";
-          isValid = false;
-        }
-      }
-      else if(this.person.firstName === null){
-        this.clientError.firstName = "Пожалуйста заполните это поле";
-        isValid = false;
-      }
-      else if(this.person.lastName === null){
-        this.clientError.lastName = "Пожалуйста заполните это поле";
-        isValid = false;
-      }
-      else if(this.person.middleName === null){
-        this.clientError.middleName = "Пожалуйста заполните это поле";
-        isValid = false;
-      }
-      return isValid;
-    }  },
+  },
   watch: {
 
   },

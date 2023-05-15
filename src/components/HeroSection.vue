@@ -39,6 +39,9 @@ export default {
   components: {
     BookingForm,HeroSlider
   },
+  emits: {
+    bookingIsValid: null,
+  },
   props:{
     places: {
       type: Object,

@@ -26,7 +26,6 @@
               <phone-number-input
                   v-model="person.phoneNumber"
                   @input="validatePhoneNumber"
-                  id="phone_number"
                   @keydown.enter="next"
                   :disabled="isCodeInputShow"
                   :class="{
@@ -46,6 +45,7 @@
                     @input="codeInput"
                 >
               </div>
+                <p v-if="clientError.code" class="text-danger mt-1">{{ errorMessage }}</p>
             </div>
           </div>
 
@@ -84,6 +84,9 @@ export default {
   name: "changePhone",
   components:{
     phoneNumberInput
+  },
+  emits: {
+    close: null,
   },
   data() {
     return {
@@ -142,7 +145,7 @@ export default {
             this.close()
           })
           .catch((error) => {
-            this.clientError.code = "Неверный код";
+            this.clientError.code = error.response.data;
             console.log(error.response.data);
             this.errorMessage = error.response.data;
           });

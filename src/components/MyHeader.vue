@@ -35,7 +35,7 @@
             <div class="nav-menu">
               <nav class="mainmenu">
                 <ul>
-                  <li><a href="/">Домашняя страница</a></li>
+                  <li><a href="/">Главная</a></li>
                   <li class="rooms-li"><a href="/rooms">Помещения</a></li>
                   <li v-if="!isAuthorized">
                     <button class="btn btn-link"
@@ -64,7 +64,6 @@
         </div>
       </div>
     </div>
-    <div v-html="signhtml"></div>
     <SigninForm
         v-show="signinFormShow"
         @close="closeSigninForm"
@@ -91,6 +90,7 @@ export default {
   data() {
     return {
       signinFormShow: false
+
     }
   },
   methods: {
@@ -109,6 +109,7 @@ export default {
     },
     closeSigninForm(){
       this.signinFormShow = false;
+      document.body.classList.remove('modal-open');
     },
     showLoginForm() {
       this.setLoginFormShow(true)
@@ -120,8 +121,8 @@ export default {
 
     },
     logout(){
-      this.deletePersonFromCookie()
-      this.$router.push('/')
+      this.deletePersonFromCookie();
+      location.reload();
     }
   },
   computed: {
