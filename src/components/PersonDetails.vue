@@ -163,7 +163,7 @@
 
 <script>
 import VueSelect from 'vue-select';
-import {mapGetters, mapMutations, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import validate from '@/validation'
 export default {
@@ -200,7 +200,9 @@ export default {
       setIsAuthorized: 'setIsAuthorized',
       setLoginFormShow: 'setLoginFormShow'
     }),
-
+    ...mapActions({
+        showPersonInfo: 'showPersonInfo'
+    }),
     hasError() {
 
         for (const key in this.clientError) {
@@ -291,7 +293,9 @@ export default {
   },
   mounted() {
     this.$nextTick(()=>{
-        console.log("from mounted")
+        console.log("from mounted");
+        this.showPersonInfo();
+        console.log("from mounted "+ this.person);
         this.handleLoad()
     })
   },
