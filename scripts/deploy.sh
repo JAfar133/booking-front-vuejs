@@ -8,8 +8,9 @@ ssh -i ssh_key "$remote_user"@"$remote_host" << EOF
 echo "Starting deployment..."
 cd booking-front-vuejs
 git pull
-
+sudo apt-get update
 echo "Starting build..."
+npm i
 npm run build
 echo "App was built"
 
