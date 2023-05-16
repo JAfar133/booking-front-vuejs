@@ -32,7 +32,7 @@ import {mapMutations, mapState} from "vuex";
 import axios from "axios";
 import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
-
+import BASE_URL from '@/config.js';
 export default {
   name: "BookingPage",
   components: {
@@ -80,7 +80,7 @@ export default {
         else if(!this.person.phoneNumber_confirmed) this.changePhoneNumber = true
         else {
           this.setCustomer(this.person)
-          axios.post('http://localhost:8080/booking/save', this.booking,
+          axios.post(`${BASE_URL}/booking/save`, this.booking,
               {
                 headers: {
                   'Authorization': 'Bearer ' + this.access_token

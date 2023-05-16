@@ -194,6 +194,7 @@ import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import axios from "axios";
 import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
 import validate from "@/validation";
+import BASE_URL from '@/config.js';
 export default {
   name: "PersonData",
   components: {ChangePhoneModal, VueSelect, PhoneNumberInput},
@@ -274,7 +275,7 @@ export default {
       if (this.hasError()) {
         return;
       }
-      axios.patch(`http://localhost:8080/person`,this.person,
+      axios.patch(`${BASE_URL}/person`,this.person,
           {
             headers: {
               'Authorization': 'Bearer ' + this.access_token

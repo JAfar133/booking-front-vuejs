@@ -1,5 +1,6 @@
 import axios from "axios";
 import VueCookies from "vue-cookies";
+import BASE_URL from '@/config.js';
 export const personModule = {
     state: () => ({
         personId:null,
@@ -76,7 +77,7 @@ export const personModule = {
             if (cookieAccessToken) {
                 commit('setAccessToken',cookieAccessToken)
                 commit('setRefreshToken', cookieRefreshToken)
-                axios.get(`http://localhost:8080/person/showInfo`, {
+                axios.get(`${BASE_URL}/person/showInfo`, {
                     headers: {
                         'Authorization': 'Bearer ' + cookieAccessToken
                     }
@@ -121,7 +122,7 @@ export const personModule = {
         },
         refreshToken({commit, dispatch}) {
             const cookieRefreshToken = VueCookies.get('refresh_token')
-            axios.post(`http://localhost:8080/auth/refresh-token`, {},{
+            axios.post(`${BASE_URL}/auth/refresh-token`, {},{
                 headers: {
                     'Authorization': 'Bearer ' + cookieRefreshToken
                 }
@@ -161,7 +162,7 @@ export const personModule = {
 
         },
         logout({state}){
-            axios.post(`http://localhost:8080/auth/logout`, {},{
+            axios.post(`${BASE_URL}/auth/logout`, {},{
                 headers: {
                     'Authorization': 'Bearer ' + state.access_token
                 }

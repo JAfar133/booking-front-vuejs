@@ -42,6 +42,7 @@
 import {mapState} from "vuex";
 import axios from "axios";
 import moment from "moment";
+import BASE_URL from '@/config.js';
 export default {
   name: "BookingList",
   data(){
@@ -53,7 +54,7 @@ export default {
   },
   methods: {
     deleteBooking(){
-      axios.post(`http://localhost:8080/booking/delete-all`,this.selectBookings,
+      axios.post(`${BASE_URL}/booking/delete-all`,this.selectBookings,
           {
             headers: {
               'Authorization': 'Bearer ' + this.access_token
@@ -73,7 +74,7 @@ export default {
       if(!this.allSelected) this.selectBookings = [];
     },
     getBookings() {
-      axios.get(`http://localhost:8080/person/get-bookings/${this.personId}`)
+      axios.get(`${BASE_URL}/person/get-bookings/${this.personId}`)
           .then(response => {
             this.bookings = response.data
           })

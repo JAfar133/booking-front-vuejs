@@ -149,6 +149,7 @@ import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
 import axios from "axios";
 import VueCookies from "vue-cookies";
+import BASE_URL from '@/config.js';
 export default {
   name: "loginForm",
   components: {PhoneNumberInput},
@@ -189,19 +190,19 @@ export default {
     }),
      
     yandexAuthorizated(){
-      window.location='http://localhost:8080/oauth2/authorize/yandex';
+      window.location=`${BASE_URL}/oauth2/authorize/yandex`;
       localStorage.setItem('currHref',window.location.pathname)
     },
     googleAuthorizated(){
-      window.location='http://localhost:8080/oauth2/authorize/google';
+      window.location=`${BASE_URL}/oauth2/authorize/google`;
       localStorage.setItem('currHref',window.location.pathname)
     },
     githubAuthorizated(){
-      window.location='http://localhost:8080/oauth2/authorize/github';
+      window.location=`${BASE_URL}/oauth2/authorize/github`;
       localStorage.setItem('currHref',window.location.pathname)
     },
     vkAuthorizated(){
-      window.location='http://localhost:8080/oauth2/authorize/vk';
+      window.location=`${BASE_URL}/oauth2/authorize/vk`;
       localStorage.setItem('currHref',window.location.pathname)
     },
     login(){
@@ -209,7 +210,7 @@ export default {
       this.validatePassword()
       if(this.clientError.email || this.clientError.password) return
       this.errorMessage = ""
-      axios.post('http://localhost:8080/auth/login/email',this.authPerson)
+      axios.post(`${BASE_URL}/auth/login/email`,this.authPerson)
           .then(response => {
             console.log("HERE")
             this.setAccessToken(response.data.access_token)
@@ -259,7 +260,7 @@ export default {
         this.clientError.code = null;
     },
     sendSmsCode() {
-      axios.post(`http://localhost:8080/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
+      axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
           .then((response) => {
             this.smsCode = response.data;
             this.errorMessage = '';
@@ -270,7 +271,7 @@ export default {
           });
     },
     verify(){
-      axios.post(`http://localhost:8080/sms/verifyCode-and-auth?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}` )
+      axios.post(`${BASE_URL}/sms/verifyCode-and-auth?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}` )
           .then((response) => {
             this.setAccessToken(response.data.access_token)
             this.setRefreshToken(response.data.refresh_token)

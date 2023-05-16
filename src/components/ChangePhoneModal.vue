@@ -80,6 +80,7 @@
 import phoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapMutations, mapState} from "vuex";
 import axios from "axios";
+import BASE_URL from '@/config.js';
 export default {
   name: "changePhone",
   components:{
@@ -107,7 +108,7 @@ export default {
       setPhoneNumberConfirmed: 'setPhoneNumberConfirmed'
     }),
     sendSmsCode() {
-      axios.post(`http://localhost:8080/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
+      axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
           .then((response) => {
             this.smsCode = response.data;
             this.errorMessage = '';
@@ -131,7 +132,7 @@ export default {
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
     verify(){
-      axios.post(`http://localhost:8080/sms/verifyCode?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,{},
+      axios.post(`${BASE_URL}/sms/verifyCode?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,{},
       {
         headers: {
           'Authorization': 'Bearer ' + this.access_token

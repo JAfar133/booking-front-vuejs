@@ -83,7 +83,7 @@
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import axios from "axios";
 import {mapActions, mapMutations} from "vuex";
-
+import BASE_URL from '@/config.js';
 export default {
   name: "SigninForm",
   components: {
@@ -124,7 +124,7 @@ export default {
       this.validateEmail();
       this.validatePassword();
       if(this.hasError()) return
-      axios.post('http://localhost:8080/auth/signin',this.person)
+      axios.post(`${BASE_URL}/auth/signin`,this.person)
           .then(response=>{
             this.setAccessToken(response.data.access_token)
             this.setRefreshToken(response.data.refresh_token)

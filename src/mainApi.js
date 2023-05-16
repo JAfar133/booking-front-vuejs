@@ -1,7 +1,7 @@
 import axios from 'axios';
-
+import BASE_URL from '@/config.js';
 function getRoomHalls() {
-    return axios.get('http://195.133.49.102:8080/roomHall')
+    return axios.get(`${BASE_URL}/roomHall`)
         .then(response => response.data)
         .catch(error => {
             console.log(error);
@@ -10,7 +10,7 @@ function getRoomHalls() {
 }
 
 function getBookings() {
-    return axios.get('http://195.133.49.102:8080/booking')
+    return axios.get(`${BASE_URL}/booking`)
         .then(response => response.data.sort(bookingSort))
         .catch(error => {
             console.log(error);

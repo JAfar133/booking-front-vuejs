@@ -67,7 +67,7 @@ import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
 import axios from 'axios'
 import {ref} from 'vue'
 import {mapMutations, mapState} from "vuex";
-
+import BASE_URL from '@/config.js';
 
 export default {
 
@@ -126,7 +126,7 @@ export default {
     },
     async valid(){
       this.bookingError = []
-      axios.post('http://localhost:8080/booking/valid-booking', this.booking)
+      axios.post(`${BASE_URL}/booking/valid-booking`, this.booking)
           .then(() =>{
               this.$emit('bookingIsValid')
           })
@@ -139,7 +139,7 @@ export default {
       this.bookingError = []
       this.booking.customer = customer;
       this.booking.comment = comment;
-      axios.post('http://localhost:8080/booking/save', this.booking,
+      axios.post(`${BASE_URL}/booking/save`, this.booking,
           {
             headers: {
               'Authorization': 'Bearer ' + this.access_token
