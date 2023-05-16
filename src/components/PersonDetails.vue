@@ -258,14 +258,12 @@ export default {
 
     },
     handleLoad(){
-        this.$nextTick( ()=> {
-            if(this.person.lastName
-                && this.person.firstName
-                && this.person.middleName
-                && this.person.phoneNumber){
-                this.isContactFill = true;
-            }
-        });
+      if(this.person.lastName
+          && this.person.firstName
+          && this.person.middleName
+          && this.person.phoneNumber){
+          this.isContactFill = true;
+      }
     }
   },
   computed: {
@@ -291,7 +289,9 @@ export default {
 
   },
   mounted() {
-    this.handleLoad()
+    this.$nextTick(function(){
+        this.handleLoad()
+    })
   },
   watch: {
     'person.post': function (){
