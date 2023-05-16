@@ -8,10 +8,11 @@
                 <i class="fa fa-user-o" ></i>
                 <div>Контакты</div>
             </div>
-              <div v-if="isContactFill" class="form-section contact-form">
+              <div v-if="isContactFill"
+                   class="form-section contact-form">
                   <h3>{{ formattedPhoneNumber }}</h3>
                   <div>{{ person.lastName }} {{ person.firstName }} {{ person.middleName }}</div>
-                  <button @click="isContactFill=false" class="btn btn-link">Изменить</button>
+                  <button @click="contactFill=false" class="btn btn-link">Изменить</button>
               </div>
             <div v-else class="form-section contact-form">
                 <div v-if="!isAuthorized">
@@ -189,7 +190,7 @@ export default {
           course: null,
           structure: null,
       },
-      isContactFill: false
+      contactFill: true,
     }
   },
   name: "PersonDetailsModal",
@@ -259,15 +260,7 @@ export default {
       return !this.hasError();
 
     },
-    handleLoad(){
-      if(this.person.lastName
-          && this.person.firstName
-          && this.person.middleName
-          && this.person.phoneNumber){
-          console.log("from handleLoad: "+ this.person)
-          this.isContactFill = true;
-      }
-    }
+
   },
   computed: {
     ...mapState({
@@ -280,6 +273,13 @@ export default {
     ...mapGetters({
         getPhoneNumber: 'phoneNumber'
     }),
+    isContactFill() {
+        return this.person.lastName
+            && this.person.firstName
+            && this.person.middleName
+            && this.person.phoneNumber
+            && this.contactFill
+    },
     formattedPhoneNumber() {
         // Извлекаем только цифры из номера телефона
         const phoneNumberDigits = this.person.phoneNumber.replace(/\D/g, '');
@@ -292,12 +292,13 @@ export default {
 
   },
   mounted() {
-    this.$nextTick(()=>{
-        console.log("from mounted");
-        this.showPersonInfo();
-        console.log("from mounted "+ this.person);
-        this.handleLoad()
-    })
+    setTimeout(()=>{
+        this.contactFill =
+            this.person.lastName
+            && this.person.firstName
+            && this.person.middleName
+            && this.person.phoneNumber;
+    },100)
   },
   watch: {
     'person.post': function (){
@@ -306,15 +307,6 @@ export default {
     'person.course': function (){
       this.validateCourse()
     },
-  },
-  created() {
-      console.log("from created" + this.person)
-      this.handleLoad()
-      window.addEventListener('load', this.handleLoad);
-  },
-  unmounted() {
-      console.log("from unmounted")
-      window.removeEventListener('load', this.handleLoad);
   },
 }
 </script>
