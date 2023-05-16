@@ -262,6 +262,7 @@ export default {
           && this.person.firstName
           && this.person.middleName
           && this.person.phoneNumber){
+          console.log(this.person)
           this.isContactFill = true;
       }
     }
