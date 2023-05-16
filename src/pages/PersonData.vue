@@ -166,12 +166,13 @@
                    name="email"
                    id="email"
                    class="form-control"
-                   :disabled="person.provider"
+                   :disabled="true"
+                   @input="validateEmail"
                    v-model="person.email"
                    :class="{ 'is-invalid border-danger text-danger' : clientError.email || !person.email ,
                              'is-valid border-success' : !clientError.email && person.email }"
             >
-            <button v-if="!person.provider"
+            <button v-if="false"
                     class="btn btn-link mx-2"
                     @click="changeEmail"
             >
@@ -252,7 +253,6 @@ export default {
     },
     validateStructure(){
         this.clientError.structure = this.getStructureError(this.person)
-
     },
     validatePost(){
         this.clientError.post = this.getPostError(this.person.post)
@@ -260,22 +260,49 @@ export default {
     validateCourse(){
         this.clientError.course = this.getCourseError(this.person)
     },
+    validateEmail(){
+        if(this.person.email === null) this.clientError.email = "обязательно"
+        else if(!this.person.email.includes('@')) this.clientError.email = "неверная почта"
+        else this.clientError.email = null;
+    },
     validateAll(){
         this.validateFirstName();
         this.validateLastName();
         this.validateMiddleName();
         this.validatePhoneNumber();
-        this.validateInstitute();
-        this.validateStructure();
         this.validatePost();
-        this.validateCourse();
+        if(this.person.post==='Работник')
+          this.validateStructure();
+        else{
+            this.validateInstitute();
+            this.validateCourse();
+        }
+
     },
+    changeEmail(){
+        this.validateEmail()
+        if(this.clientError.email===null)
+            axios.post(`${BASE_URL}/person/update-email`,this.person,
+                    {
+                        headers: {
+                            'Authorization': 'Bearer ' + this.access_token
+                        }
+                    }
+                )
+                .then(()=>{
+                    alert("Данные сохранены")
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+  },
     saveChange(){
       this.validateAll();
+      console.log(this.clientError)
       if (this.hasError()) {
         return;
       }
-      axios.patch(`${BASE_URL}/person`,this.person,
+      axios.post(`${BASE_URL}/person`,this.person,
           {
             headers: {
               'Authorization': 'Bearer ' + this.access_token
