@@ -304,7 +304,8 @@ export default {
     },
   },
   created() {
-      console.log("from created")
+      console.log("from created" + this.person)
+      this.handleLoad()
       window.addEventListener('load', this.handleLoad);
   },
   unmounted() {
