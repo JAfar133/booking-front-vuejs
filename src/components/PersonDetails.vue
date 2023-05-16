@@ -298,7 +298,7 @@ export default {
             && this.person.firstName
             && this.person.middleName
             && this.person.phoneNumber;
-    },100)
+    },400)
   },
   watch: {
     'person.post': function (){
