@@ -6,7 +6,6 @@ ssh_port="22"
 
 ssh -i ssh_key "$remote_user"@"$remote_host" << EOF
 echo "Starting deployment..."
-
 cd booking-front-vuejs
 git pull
 
