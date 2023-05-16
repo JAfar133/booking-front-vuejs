@@ -262,7 +262,7 @@ export default {
           && this.person.firstName
           && this.person.middleName
           && this.person.phoneNumber){
-          console.log(this.person)
+          console.log("from handleLoad: "+ this.person)
           this.isContactFill = true;
       }
     }
@@ -290,7 +290,8 @@ export default {
 
   },
   mounted() {
-    this.$nextTick(function(){
+    this.$nextTick(()=>{
+        console.log("from mounted")
         this.handleLoad()
     })
   },
@@ -303,9 +304,11 @@ export default {
     },
   },
   created() {
+      console.log("from created")
       window.addEventListener('load', this.handleLoad);
   },
   unmounted() {
+      console.log("from unmounted")
       window.removeEventListener('load', this.handleLoad);
   },
 }
