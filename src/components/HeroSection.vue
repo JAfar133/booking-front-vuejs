@@ -93,7 +93,7 @@ export default {
         font-family: 'Alice', serif !important;
       }
     }
-    @media screen and (max-width: 1470px) {
+    @media only screen and (max-width: 1470px) {
       .hero-text {
         h1 {
           font-size: 60px;
@@ -103,7 +103,7 @@ export default {
         width:450px;
       }
     }
-    @media screen and (max-width: 1200px) {
+    @media only screen and (max-width: 1200px) {
       .hero-text {
         h1 {
 
@@ -114,7 +114,7 @@ export default {
         width:200px;
       }
     }
-    @media screen and (max-width: 991px) {
+    @media only screen and (max-width: 991px) {
       .hero-text {
         h1 {
           font-size: 50px;
@@ -127,7 +127,7 @@ export default {
         width:100%;
       }
     }
-    @media screen and (max-width: 550px) {
+    @media only screen and (max-width: 550px) {
       .hero-text {
         h1 {
           font-size: 45px;
@@ -138,7 +138,7 @@ export default {
         }
       }
     }
-    @media screen and (max-width: 400px) {
+    @media only screen and (max-width: 400px) {
       .hero-text {
         h1 {
           font-size: 44px;
@@ -148,7 +148,7 @@ export default {
         }
       }
     }
-    @media screen and (max-width: 325px) {
+    @media only screen and (max-width: 325px) {
       .hero-text {
         h1 {
           font-size: 40px;

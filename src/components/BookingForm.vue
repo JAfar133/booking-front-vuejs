@@ -1,11 +1,5 @@
 <template>
-	<v-progress-linear
-			indeterminate
-			color="cyan"
-			v-show="loaderShow"
-	></v-progress-linear>
   <div class="booking-form" id="booking-form" tabindex="0">
-
     <slot name="booking-form-header"></slot>
     <form action="/"
           id="validationForm"
@@ -50,6 +44,11 @@
       <v-btn type="submit" id="booking-submit-btn" class="btn btn-primary">
         <slot name="booking-from-button-text">Забронировать</slot>
       </v-btn>
+	    <v-progress-linear
+			    indeterminate
+			    color="cyan"
+			    v-show="loaderShow"
+	    ></v-progress-linear>
     </form>
 
     <success-modal v-show="successModal" @close="closeSuccessModal">

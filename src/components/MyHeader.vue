@@ -62,7 +62,7 @@
           </div>
           <div class="col-lg-6">
             <div class="tn-right">
-              <v-btn variant="flat" color="blue-darken-3">Забронировать сейчас</v-btn>
+              <v-btn variant="flat" color="blue-darken-3" @click="$router.push('/booking')">Забронировать сейчас</v-btn>
               <div class="top-social">
                 <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
                 <a href="#"><i class="fa fa-twitter"></i></a>
