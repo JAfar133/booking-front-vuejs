@@ -2,7 +2,7 @@
   <div class="mobile-header">
 	  <v-layout>
 		  <v-app-bar
-				  color="info"
+				  color="blue-darken-3"
 				  density="compact"
 				  scroll-behavior="collapse"
 				  :elevation="11"
@@ -43,7 +43,7 @@
             </v-list-item>
 				  </v-list>
 			  </v-menu>
-			  <v-app-bar-title>Бронирование</v-app-bar-title>
+			  <v-app-bar-title @click="$router.push('/')">Бронирование</v-app-bar-title>
 			  <template v-slot:append>
 				  <v-btn icon="mdi-calendar-clock" @click="bookingButton"></v-btn>
 			  </template>
