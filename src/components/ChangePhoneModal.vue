@@ -4,6 +4,11 @@
       <div class="modal"
            role="dialog"
       >
+	      <v-progress-linear
+			      indeterminate
+			      color="cyan"
+			      v-show="loaderShow"
+	      ></v-progress-linear>
         <header
             class="modal-header"
             id="modalTitle"
@@ -100,6 +105,7 @@ export default {
       isCodeInputShow: false,
       code: null,
       smsCode: null,
+      loaderShow: false,
     }
   },
   methods:{
@@ -109,14 +115,16 @@ export default {
       setPhoneNumberConfirmed: 'setPhoneNumberConfirmed'
     }),
     sendSmsCode() {
+        this.loaderShow = true;
       axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
           .then((response) => {
             this.smsCode = response.data;
             this.errorMessage = '';
+            this.loaderShow = false;
           })
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
             this.errorMessage = 'Error sending SMS code';
+              this.loaderShow = false;
           });
     },
     close(){
@@ -133,6 +141,7 @@ export default {
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
     verify(){
+      this.loaderShow = true;
       axios.post(`${BASE_URL}/sms/verifyCode?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,{},
       {
         headers: {
@@ -150,6 +159,7 @@ export default {
             this.clientError.code = error.response.data;
             console.log(error.response.data);
             this.errorMessage = error.response.data;
+            this.loaderShow = false;
           });
     },
     codeInput() {

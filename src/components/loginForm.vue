@@ -143,7 +143,7 @@
               <div class="social google" @click="googleAuthorizated" title="Работает только с впн...">
                 <img src="/img/google.svg" alt="google" class="icon google">
               </div>
-              <div class="social" @click="vkAuthorizated">
+              <div class="social vk" @click="vkAuthorizated">
                 <img src="/img/vk.svg" alt="vk" class="icon vk">
               </div>
             </div>
@@ -207,16 +207,18 @@ export default {
       localStorage.setItem('currHref',window.location.pathname)
     },
     googleAuthorizated(){
-      window.location=`${BASE_URL}/oauth2/authorize/google`;
-      localStorage.setItem('currHref',window.location.pathname)
+      // window.location=`${BASE_URL}/oauth2/authorize/google`;
+      // localStorage.setItem('currHref',window.location.pathname)
+        alert('google oauth2 пока не работает')
     },
     githubAuthorizated(){
       window.location=`${BASE_URL}/oauth2/authorize/github`;
       localStorage.setItem('currHref',window.location.pathname)
     },
     vkAuthorizated(){
-      window.location=`${BASE_URL}/oauth2/authorize/vk`;
-      localStorage.setItem('currHref',window.location.pathname)
+      // window.location=`${BASE_URL}/oauth2/authorize/vk`;
+      // localStorage.setItem('currHref',window.location.pathname)
+        alert('vk oauth2 пока не работает')
     },
     login(){
       this.loaderShow = true;

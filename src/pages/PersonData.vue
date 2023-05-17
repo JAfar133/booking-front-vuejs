@@ -119,6 +119,7 @@
 						/>
 						<p v-if="clientError.structure" class="text-danger">{{ clientError.structure }}</p>
 					</div>
+					<div v-if="errorMessage" class="alert alert danger">{{ errorMessage }}</div>
 					<v-btn class="float-end w-100 mt-5"
 								 type="submit"
 								 variant="outlined"
@@ -180,6 +181,11 @@
 						Сохранить
 					</button>
 				</div>
+				<v-progress-linear
+						indeterminate
+						color="cyan"
+						v-show="loaderShow"
+				></v-progress-linear>
 			</div>
 		</div>
 	</div>
@@ -213,6 +219,8 @@ export default {
                 structure:null
             },
             changePhoneNumber: false,
+						loaderShow: false,
+						errorMessage: null
         }
     },
     methods: {
@@ -276,7 +284,8 @@ export default {
             if (this.hasError()) {
                 return;
             }
-            axios.patch(`http://localhost:8080/person`,this.person,
+						this.loaderShow = true;
+            axios.post(`http://localhost:8080/person`,this.person,
                     {
                         headers: {
                             'Authorization': 'Bearer ' + this.access_token
@@ -284,9 +293,12 @@ export default {
                     }
                 )
                 .then(()=>{
+										this.loaderShow = false;
                     alert("Данные сохранены")
                 })
                 .catch((error)=>{
+										this.loaderShow = false;
+										this.errorMessage = error.response.data;
                     console.log(error)
                 })
         },
