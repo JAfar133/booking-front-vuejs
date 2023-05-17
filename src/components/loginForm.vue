@@ -103,16 +103,18 @@
             <v-btn
                 v-if="!isCodeInputShow"
                 type="button"
-                class="btn btn-outline-primary"
                 @click="next"
+                variant="outlined"
+                color="blue-darken-3"
             >
               Получить код
             </v-btn>
             <v-btn
                 v-else
                 type="button"
-                class="btn btn-outline-primary"
                 @click="verify"
+                variant="outlined"
+                color="blue-darken-3"
             >
               Подтвердить
             </v-btn>
@@ -122,8 +124,9 @@
 
 		            density="default"
                 type="button"
-                class="btn btn-outline-primary"
                 @click="login"
+		            variant="outlined"
+		            color="blue-darken-3"
             >
               Войти
             </v-btn>
@@ -376,7 +379,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 400px;
-  max-width: 98%;
+  max-width: 93%;
   height: auto;
   max-height: 90vh;
   top: 50%; /* Позиционируем верхнюю границу на 50% от родителя */

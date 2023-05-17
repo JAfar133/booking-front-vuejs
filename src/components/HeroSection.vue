@@ -8,7 +8,7 @@
             <p>Здесь вы можете забронировать помещения в Севастополе!</p>
           </div>
         </div>
-        <div class="col-lg-4 offset-lg-1 booking">
+        <div class="col-md-5 offset-lg-1 booking">
             <BookingForm :places="places"
                          :place="place"
                          :bookings="bookings"
@@ -64,7 +64,6 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
-
   .hero-section {
     position: relative;
     padding-top: 60px;
@@ -104,7 +103,7 @@ export default {
         width:450px;
       }
     }
-    @media screen and (max-width: 1470px) {
+    @media screen and (max-width: 1200px) {
       .hero-text {
         h1 {
 
@@ -112,7 +111,7 @@ export default {
         }
       }
       .booking-form {
-        width:400px;
+        width:200px;
       }
     }
     @media screen and (max-width: 991px) {
@@ -135,16 +134,17 @@ export default {
         }
         p{
           font-size: 16px;
+          margin-top: 0;
         }
       }
     }
     @media screen and (max-width: 400px) {
       .hero-text {
         h1 {
-          font-size: 40px;
+          font-size: 44px;
         }
         p {
-          font-size: 14px;
+          font-size: 16px;
         }
       }
     }

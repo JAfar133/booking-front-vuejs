@@ -71,8 +71,9 @@
           <div class="password-footer w-100">
             <v-btn
                 type="button"
-                class="btn btn-outline-primary"
                 @click="signup"
+                variant="outlined"
+                color="blue-darken-3"
             >
               Зарегистрироваться
             </v-btn>
@@ -201,7 +202,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 400px;
-  max-width: 98%;
+  max-width: 93%;
   height: auto;
   max-height: 80vh;
   top: 50%; /* Позиционируем верхнюю границу на 50% от родителя */

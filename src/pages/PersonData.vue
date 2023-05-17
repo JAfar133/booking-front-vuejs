@@ -119,9 +119,11 @@
 						/>
 						<p v-if="clientError.structure" class="text-danger">{{ clientError.structure }}</p>
 					</div>
-					<v-btn class="btn btn-outline-primary float-end w-100 mt-5"
-					        style="height: 50px"
-					        type="submit"
+					<v-btn class="float-end w-100 mt-5"
+								 type="submit"
+								 variant="outlined"
+								 color="blue-darken-3"
+								 size="large"
 					>
 						Сохранить
 					</v-btn>

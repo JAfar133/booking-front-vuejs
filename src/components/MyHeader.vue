@@ -44,6 +44,9 @@
 				  </v-list>
 			  </v-menu>
 			  <v-app-bar-title>Бронирование</v-app-bar-title>
+			  <template v-slot:append>
+				  <v-btn icon="mdi-calendar-clock" @click="bookingButton"></v-btn>
+			  </template>
 		  </v-app-bar>
 	  </v-layout>
   </div>
@@ -59,6 +62,7 @@
           </div>
           <div class="col-lg-6">
             <div class="tn-right">
+              <v-btn variant="flat" color="blue-darken-3">Забронировать сейчас</v-btn>
               <div class="top-social">
                 <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
                 <a href="#"><i class="fa fa-twitter"></i></a>
@@ -86,10 +90,10 @@
                   <li><a href="/">Главная</a></li>
                   <li class="rooms-li"><a href="/rooms">Помещения</a></li>
                   <li v-if="!isAuthorized">
-                    <button class="btn btn-link"
-                            @click="showLoginForm">
-                      Войти&nbsp;<i class="fa fa-sign-in"></i>
-                    </button></li>
+                    <v-btn @click="showLoginForm" size="small" prepend-icon="mdi-login">
+                      Войти
+                    </v-btn>
+                  </li>
                   <li v-else><a href="/me" >Профиль
                     <i v-if="!person.phoneNumber_confirmed" title="Номер телефона не подтвержден" class="text-danger fa fa-warning"></i>
                   </a>
@@ -186,6 +190,9 @@ export default {
     logout(){
       this.deletePersonFromCookie();
       location.reload();
+    },
+    bookingButton(){
+      this.$router.push('/booking')
     }
   },
   computed: {
