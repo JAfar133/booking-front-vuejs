@@ -1,9 +1,9 @@
 <template>
-  <my-header/>
-  <div class="">
-    <router-view></router-view>
-  </div>
-  <my-footer/>
+	<my-header/>
+	<div class="">
+		<router-view></router-view>
+	</div>
+	<my-footer/>
 </template>
 
 <script>
@@ -12,20 +12,20 @@ import MyHeader from "@/components/MyHeader.vue";
 import MyFooter from "@/components/MyFooter.vue";
 
 export default {
-  components: {MyFooter, MyHeader},
-  methods: {
-    ...mapActions({
-      showPersonInfo: 'showPersonInfo',
-      saveTokenToCookie: 'saveTokenToCookie',
-    }),
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.showPersonInfo();
-    })
-  },
-  created() {
-  }
+    components: {MyFooter, MyHeader},
+    methods: {
+        ...mapActions({
+            showPersonInfo: 'showPersonInfo',
+            saveTokenToCookie: 'saveTokenToCookie',
+        }),
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.showPersonInfo();
+        })
+    },
+    created() {
+    }
 }
 </script>
 

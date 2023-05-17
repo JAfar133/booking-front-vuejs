@@ -93,31 +93,33 @@
         <footer class="modal-footer">
           {{ smsCode ? 'Код: '+smsCode.code : '' }}
           <div class="phone-footer w-100" v-if="phoneLogin">
-            <button
+            <v-btn
                 v-if="!isCodeInputShow"
                 type="button"
                 class="btn btn-outline-primary"
                 @click="next"
             >
               Получить код
-            </button>
-            <button
+            </v-btn>
+            <v-btn
                 v-else
                 type="button"
                 class="btn btn-outline-primary"
                 @click="verify"
             >
               Подтвердить
-            </button>
+            </v-btn>
           </div>
           <div class="password-footer w-100" v-else>
-            <button
+            <v-btn
+
+		            density="default"
                 type="button"
                 class="btn btn-outline-primary"
                 @click="login"
             >
               Войти
-            </button>
+            </v-btn>
           </div>
           <div class="text-center w-100">
             <div class="my-3 text-center">Или войти с помощью соцсетей</div>

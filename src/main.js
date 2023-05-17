@@ -7,7 +7,10 @@ import 'vue-select/dist/vue-select.css'; // импорт стилей Vue Select
 import 'qalendar/dist/style.css'
 import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
 
+loadFonts()
 window.$ = require('jquery')
 window.JQuery = require('jquery')
 
@@ -21,6 +24,7 @@ app.component(VueCarousel.name,VueCarousel)
 app.use(store)
     .use(VueRouter)
     .use(router)
+    .use(vuetify)
     .use(VueCookies, { expires: '7d' })
     .mount('#app')
 

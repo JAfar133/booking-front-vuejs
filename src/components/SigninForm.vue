@@ -64,13 +64,13 @@
         <footer class="modal-footer">
 
           <div class="password-footer w-100">
-            <button
+            <v-btn
                 type="button"
                 class="btn btn-outline-primary"
                 @click="signup"
             >
               Зарегистрироваться
-            </button>
+            </v-btn>
           </div>
 
         </footer>

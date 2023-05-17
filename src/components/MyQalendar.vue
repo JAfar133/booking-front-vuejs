@@ -14,15 +14,14 @@
         />
       </div>
       <div class="mt-2">
-        <div class="row">
-          <div class="">
-            <input type="radio" id="all" :value="false" v-model="filterPicked">
-            <label for="all">Все</label>
-          </div>
-          <div class="">
-            <input type="radio" id="confirmed" :value="true" v-model="filterPicked">
-            <label for="confirmed">Только подтвержденные</label>
-          </div>
+        <div class="">
+	        <v-switch
+			        v-model="filterPicked"
+			        label="Только подтвержденные"
+			        color="red"
+			        :value="true"
+			        hide-details
+	        ></v-switch>
         </div>
       </div>
     </div>

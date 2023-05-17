@@ -41,9 +41,9 @@
         </div>
 
       </div>
-      <button type="submit" id="booking-submit-btn" class="btn btn-primary">
+      <v-btn type="submit" id="booking-submit-btn" class="btn btn-primary">
         <slot name="booking-from-button-text">Забронировать</slot>
-      </button>
+      </v-btn>
     </form>
 
     <success-modal v-show="successModal" @close="closeSuccessModal">

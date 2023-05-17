@@ -83,6 +83,9 @@ export default {
 </script>
 
 <style>
+.qalendar-title {
+    width: 100%;
+}
 hr{
   color: #216DDF;
 }

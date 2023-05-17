@@ -1,6 +1,6 @@
 <template>
   <div class="bg-light">
-    <div class="booking container py-5">
+    <div class="booking container">
         <person-details
                 :booking-error="''"
                 class="person-details"
@@ -137,6 +137,8 @@ export default {
       max-width: 100%;
   }
   .booking{
+    padding-top: 70px;
+      padding-bottom: 40px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;

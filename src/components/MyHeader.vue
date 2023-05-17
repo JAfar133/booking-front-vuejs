@@ -1,4 +1,52 @@
 <template>
+  <div class="mobile-header">
+	  <v-layout>
+		  <v-app-bar
+				  color="info"
+				  density="compact"
+				  scroll-behavior="collapse"
+				  :elevation="11"
+		  >
+			  <v-menu :close-on-content-click="false" v-model="menu">
+				  <template v-slot:activator="{ props }">
+					  <v-btn icon="mdi-menu" v-bind="props"></v-btn>
+				  </template>
+
+				  <v-list>
+					  <v-list-item prepend-icon="mdi-home-circle">
+						  <v-list-item-title><a href="/">Главная</a></v-list-item-title>
+            </v-list-item>
+					  <v-list-item prepend-icon="mdi-home-circle">
+						  <v-list-item-title><a href="/rooms">Помещения</a></v-list-item-title>
+					  </v-list-item>
+					  <v-list-group value="User" v-if="isAuthorized">
+						  <template v-slot:activator="{ props }">
+							  <v-list-item
+									  v-bind="props"
+									  prepend-icon="mdi-account-circle"
+									  title="Профиль"
+							  ></v-list-item>
+              </template>
+						  <v-list-item prepend-icon="mdi-home-circle">
+							  <v-list-item-title v-if="person.firstName" ><a href="/me">Привет, <b>{{ person.firstName }}</b></a></v-list-item-title>
+							  <v-list-item-title v-else><a href="/me">Редактировать</a></v-list-item-title>
+						  </v-list-item>
+						  <v-list-item prepend-icon="mdi-home-circle">
+							  <v-list-item-title><a href="/rooms">Помещения</a></v-list-item-title>
+						  </v-list-item>
+              <v-list-item prepend-icon="mdi-logout" @click="logout" style="background: #C7C7C7">
+							  <v-list-item-title>Выйти</v-list-item-title>
+						  </v-list-item>
+            </v-list-group>
+            <v-list-item style="background: #C7C7C7" prepend-icon="mdi-login" v-else @click="showLoginForm">
+	            <v-list-item-title>Войти</v-list-item-title>
+            </v-list-item>
+				  </v-list>
+			  </v-menu>
+			  <v-app-bar-title>Logo</v-app-bar-title>
+		  </v-app-bar>
+	  </v-layout>
+  </div>
   <header class="header-section">
     <div class="top-nav bg-light">
       <div class="container">
@@ -64,32 +112,43 @@
         </div>
       </div>
     </div>
-    <SigninForm
-        v-show="signinFormShow"
-        @close="closeSigninForm"
-    />
-    <LoginForm
-        v-show="loginFormShow"
-        @close="closeLoginForm"
-        @signin="signin"
-    />
+
   </header>
+	<SigninForm
+			v-show="signinFormShow"
+			@close="closeSigninForm"
+	/>
+	<LoginForm
+			v-show="loginFormShow"
+			@close="closeLoginForm"
+			@signin="signin"
+	/>
 </template>
 
 <script>
 import LoginForm from "@/components/loginForm.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
 import SigninForm from "@/components/SigninForm.vue";
-
+import { aliases, fa } from 'vuetify/iconsets/fa'
+import { mdi } from 'vuetify/iconsets/mdi'
 export default {
   components:{
     SigninForm,
     LoginForm
   },
+  icons: {
+      defaultSet: 'fa',
+      aliases,
+      sets: {
+          fa,
+          mdi,
+      },
+  },
   name: "MyHeader",
   data() {
     return {
-      signinFormShow: false
+      signinFormShow: false,
+      menu: false,
 
     }
   },
@@ -103,6 +162,9 @@ export default {
     ...mapActions({
       deletePersonFromCookie: 'deletePersonFromCookie',
     }),
+      openMenu(){
+          console.log("menu was open")
+      },
     closeLoginForm(){
       this.setLoginFormShow(false)
       document.body.classList.remove('modal-open');
@@ -112,6 +174,7 @@ export default {
       document.body.classList.remove('modal-open');
     },
     showLoginForm() {
+      this.menu=false;
       this.setLoginFormShow(true)
       document.body.classList.add('modal-open');
     },
@@ -365,11 +428,20 @@ ul, ol {
   Hero
 -----------------------*/
 
-
+.mobile-header{
+    display: none;
+}
 
 @media only screen and (max-width: 991px) {
   .header-section {
     display: none;
+  }
+  .mobile-header{
+      display: block;
+  }
+  a{
+      text-decoration: none;
+      color: #717171;
   }
 }
 </style>

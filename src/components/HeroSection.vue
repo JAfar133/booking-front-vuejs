@@ -94,18 +94,57 @@ export default {
         font-family: 'Alice', serif !important;
       }
     }
-    @media screen and (max-width: 550px) {
+    @media screen and (max-width: 1470px) {
+      .hero-text {
+        h1 {
+          font-size: 60px;
+        }
+      }
+      .booking-form {
+        width:450px;
+      }
+    }
+    @media screen and (max-width: 1470px) {
       .hero-text {
         h1 {
 
           font-size: 60px;
         }
       }
+      .booking-form {
+        width:400px;
+      }
+    }
+    @media screen and (max-width: 991px) {
+      .hero-text {
+        h1 {
+          font-size: 50px;
+        }
+      }
+      .booking-form {
+        width:100%;
+      }
+      .booking {
+        width:100%;
+      }
+    }
+    @media screen and (max-width: 550px) {
+      .hero-text {
+        h1 {
+          font-size: 45px;
+        }
+        p{
+          font-size: 16px;
+        }
+      }
     }
     @media screen and (max-width: 400px) {
       .hero-text {
         h1 {
-          font-size: 50px;
+          font-size: 40px;
+        }
+        p {
+          font-size: 14px;
         }
       }
     }

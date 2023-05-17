@@ -1,5 +1,6 @@
 <template>
-  <section class="rooms-section spad">
+
+  <section class="rooms-section spad py-5">
   <!-- Rooms Section Begin -->
   <div class="container">
     <div class="row">
@@ -94,7 +95,8 @@ export default {
 
 <style scoped>
 .rooms-section {
-  padding-top: 0;
+  padding-top: 100px;
+    margin-top: 40px;
   padding-bottom: 80px;
 }
 .room-item {
