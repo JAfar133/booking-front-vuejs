@@ -5,6 +5,11 @@
            :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
       >
+	      <v-progress-linear
+			      indeterminate
+			      color="cyan"
+			      v-show="loaderShow"
+	      ></v-progress-linear>
         <header
             class="modal-header"
             id="modalTitle"
@@ -53,6 +58,7 @@
                       'is-invalid border-danger' : clientError.code,
                     }"
                     @input="codeInput"
+                    @keydown.enter="verify"
                 >
               </div>
             </div>
@@ -85,6 +91,7 @@
                       'is-valid' : !clientError.password && authPerson.password
                     }"
                   @input="validatePassword"
+                  @keydown.enter="login"
               >
                 <p v-if="clientError.password" class="text-danger">{{ clientError.password }}</p>
             </div>
@@ -176,6 +183,7 @@ export default {
       },
       smsCode: null,
       phoneLogin: false,
+      loaderShow: false,
     }
   },
   methods: {
@@ -208,6 +216,7 @@ export default {
       localStorage.setItem('currHref',window.location.pathname)
     },
     login(){
+      this.loaderShow = true;
       this.validateEmail()
       this.validatePassword()
       if(this.clientError.email || this.clientError.password) return
@@ -223,6 +232,7 @@ export default {
           .catch(error=>{
             this.errorMessage = "Неверный email или пароль";
             console.log(error)
+            this.loaderShow = false;
           })
     },
     signin(){
@@ -262,17 +272,21 @@ export default {
         this.clientError.code = null;
     },
     sendSmsCode() {
+        this.loaderShow = true;
       axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
           .then((response) => {
             this.smsCode = response.data;
             this.errorMessage = '';
+            this.loaderShow = false;
           })
           .catch((error) => {
             console.log(error);
             this.errorMessage = 'Error sending SMS code';
+              this.loaderShow = false;
           });
     },
     verify(){
+      this.loaderShow = true;
       axios.post(`${BASE_URL}/sms/verifyCode-and-auth?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}` )
           .then((response) => {
             this.setAccessToken(response.data.access_token)
@@ -284,6 +298,7 @@ export default {
             this.clientError.code = "Неверный код";
             console.log(error.response.data);
             this.errorMessage = error.response.data;
+            this.loaderShow = false;
           });
     },
     next(){

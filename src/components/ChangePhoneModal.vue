@@ -43,6 +43,7 @@
                       'is-invalid border-danger' : clientError.code,
                     }"
                     @input="codeInput"
+                    @keydown.enter="verify"
                 >
               </div>
                 <p v-if="clientError.code" class="text-danger mt-1">{{ errorMessage }}</p>

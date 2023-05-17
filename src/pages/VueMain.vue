@@ -34,7 +34,7 @@ export default {
       places: [],
       sessionPerson: null,
       bookings: [],
-      place: null
+      place: null,
     }
   },
   methods: {
@@ -71,7 +71,6 @@ export default {
     this.$nextTick(function (){
       this.getRoomHalls();
       this.getBookings();
-
     });
   },
   computed:{
@@ -92,6 +91,7 @@ hr{
 .qalendar {
   margin-bottom: 100px;
 }
+
 
 .main-section {
   padding-top: 100px;

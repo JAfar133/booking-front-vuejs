@@ -1,5 +1,11 @@
 <template>
+	<v-progress-linear
+			indeterminate
+			color="cyan"
+			v-show="loaderShow"
+	></v-progress-linear>
   <div class="booking-form" id="booking-form" tabindex="0">
+
     <slot name="booking-form-header"></slot>
     <form action="/"
           id="validationForm"
@@ -54,7 +60,9 @@
         v-show="verifyPhoneNumber"
         @close="verifyPhoneNumber=false"
     />
+
   </div>
+
 </template>
 
 <script>
@@ -100,7 +108,8 @@ export default {
       bookingError: '',
       successModal: ref(false),
       markers: [],
-      verifyPhoneNumber: false
+      verifyPhoneNumber: false,
+      loaderShow: false,
     }
   },
 
@@ -125,14 +134,17 @@ export default {
       return new Date(date[0], date[1] - 1, date[2] + 1).toISOString().slice(0, 10)
     },
     async valid(){
+      this.loaderShow = true;
       this.bookingError = []
       axios.post(`${BASE_URL}/booking/valid-booking`, this.booking)
           .then(() =>{
               this.$emit('bookingIsValid')
+              this.loaderShow = false;
           })
           .catch(error => {
             console.log(error)
             this.bookingError.push(error.response.data)
+            this.loaderShow = false;
           })
     },
     async submitBooking(customer, comment){

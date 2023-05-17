@@ -17,10 +17,29 @@
             v-show="changePhoneNumber"
             @close="changePhoneNumber=false"
     />
-    <success-modal v-show="successModal"
-                   @close="close()">
-        Мы свяжемся с вами для подтверждения бронирования
-    </success-modal>
+	<v-dialog
+			transition="dialog-top-transition"
+			width="auto"
+			v-model="successModal"
+	>
+		<template v-slot:default="{ isActive }">
+			<v-card>
+				<v-toolbar
+						color="primary"
+						title="Успешно"
+				></v-toolbar>
+				<v-card-text>
+					<div class="">Мы свяжемся с вами для подтверждения бронирования!</div>
+				</v-card-text>
+				<v-card-actions class="justify-end">
+					<v-btn
+							variant="text"
+							@click="close"
+					>Ок!</v-btn>
+				</v-card-actions>
+			</v-card>
+		</template>
+	</v-dialog>
 </template>
 
 <script>

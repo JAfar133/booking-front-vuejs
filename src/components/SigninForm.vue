@@ -5,6 +5,11 @@
            :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
       >
+	      <v-progress-linear
+			      indeterminate
+			      color="cyan"
+			      v-show="loaderShow"
+	      ></v-progress-linear>
         <header
             class="modal-header"
             id="modalTitle"
@@ -104,7 +109,8 @@ export default {
         phoneNumber: null,
         password: null,
       },
-      errorMessage: null
+      errorMessage: null,
+      loaderShow: false,
     }
   },
   methods:{
@@ -120,6 +126,7 @@ export default {
       saveTokenToCookie: 'saveTokenToCookie',
     }),
     signup(){
+      this.loaderShow = true;
       this.validatePhoneNumber();
       this.validateEmail();
       this.validatePassword();
@@ -129,12 +136,14 @@ export default {
             this.setAccessToken(response.data.access_token)
             this.setRefreshToken(response.data.refresh_token)
             this.saveTokenToCookie()
+            this.loaderShow = false;
             this.close()
 
           })
           .catch(error=>{
             console.log(error)
             this.errorMessage = error.response.data;
+            this.loaderShow = false;
           })
     },
     hasError() {

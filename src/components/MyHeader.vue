@@ -16,7 +16,7 @@
 					  <v-list-item prepend-icon="mdi-home-circle">
 						  <v-list-item-title><a href="/">Главная</a></v-list-item-title>
             </v-list-item>
-					  <v-list-item prepend-icon="mdi-home-circle">
+					  <v-list-item prepend-icon="mdi-google-classroom">
 						  <v-list-item-title><a href="/rooms">Помещения</a></v-list-item-title>
 					  </v-list-item>
 					  <v-list-group value="User" v-if="isAuthorized">
@@ -27,12 +27,12 @@
 									  title="Профиль"
 							  ></v-list-item>
               </template>
-						  <v-list-item prepend-icon="mdi-home-circle">
+						  <v-list-item prepend-icon="mdi-account-edit">
 							  <v-list-item-title v-if="person.firstName" ><a href="/me">Привет, <b>{{ person.firstName }}</b></a></v-list-item-title>
 							  <v-list-item-title v-else><a href="/me">Редактировать</a></v-list-item-title>
 						  </v-list-item>
-						  <v-list-item prepend-icon="mdi-home-circle">
-							  <v-list-item-title><a href="/rooms">Помещения</a></v-list-item-title>
+						  <v-list-item prepend-icon="mdi-format-list-text">
+							  <v-list-item-title><a href="/bookings">Мои бронирования</a></v-list-item-title>
 						  </v-list-item>
               <v-list-item prepend-icon="mdi-logout" @click="logout" style="background: #C7C7C7">
 							  <v-list-item-title>Выйти</v-list-item-title>
@@ -43,7 +43,7 @@
             </v-list-item>
 				  </v-list>
 			  </v-menu>
-			  <v-app-bar-title>Logo</v-app-bar-title>
+			  <v-app-bar-title>Бронирование</v-app-bar-title>
 		  </v-app-bar>
 	  </v-layout>
   </div>
