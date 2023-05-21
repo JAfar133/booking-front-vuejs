@@ -1,8 +1,7 @@
 <template>
-  <transition name="success-modal">
+  <transition name="scale-transition">
     <div class="modal-backdrop">
       <div class="modal"
-           :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
       >
 	      <v-progress-linear

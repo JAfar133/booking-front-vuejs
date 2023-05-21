@@ -7,17 +7,17 @@
 				  scroll-behavior="collapse"
 				  :elevation="11"
 		  >
-			  <v-menu :close-on-content-click="false" v-model="menu">
+			  <v-menu :close-on-content-click="false" v-model="menu" transition="scale-transition">
 				  <template v-slot:activator="{ props }">
 					  <v-btn icon="mdi-menu" v-bind="props"></v-btn>
 				  </template>
 
 				  <v-list>
-					  <v-list-item prepend-icon="mdi-home-circle">
-						  <v-list-item-title><a href="/">Главная</a></v-list-item-title>
+					  <v-list-item prepend-icon="mdi-home-circle" @click="$router.push('/')">
+						  <v-list-item-title>Главная</v-list-item-title>
             </v-list-item>
-					  <v-list-item prepend-icon="mdi-google-classroom">
-						  <v-list-item-title><a href="/rooms">Помещения</a></v-list-item-title>
+					  <v-list-item prepend-icon="mdi-google-classroom" @click="$router.push('/rooms')">
+						  <v-list-item-title>Помещения</v-list-item-title>
 					  </v-list-item>
 					  <v-list-group value="User" v-if="isAuthorized">
 						  <template v-slot:activator="{ props }">
@@ -27,12 +27,12 @@
 									  title="Профиль"
 							  ></v-list-item>
               </template>
-						  <v-list-item prepend-icon="mdi-account-edit">
-							  <v-list-item-title v-if="person.firstName" ><a href="/me">Привет, <b>{{ person.firstName }}</b></a></v-list-item-title>
-							  <v-list-item-title v-else><a href="/me">Редактировать</a></v-list-item-title>
+						  <v-list-item prepend-icon="mdi-account-edit" @click="$router.push('/me')">
+							  <v-list-item-title v-if="person.firstName" >Привет, <b>{{ person.firstName }}</b></v-list-item-title>
+							  <v-list-item-title v-else>Редактировать</v-list-item-title>
 						  </v-list-item>
-						  <v-list-item prepend-icon="mdi-format-list-text">
-							  <v-list-item-title><a href="/bookings">Мои бронирования</a></v-list-item-title>
+						  <v-list-item prepend-icon="mdi-format-list-text" @click="$router.push('/bookings')">
+							  <v-list-item-title>Мои бронирования</v-list-item-title>
 						  </v-list-item>
               <v-list-item prepend-icon="mdi-logout" @click="logout" style="background: #C7C7C7">
 							  <v-list-item-title>Выйти</v-list-item-title>
@@ -206,7 +206,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 ul, ol {
   padding: 0;
@@ -374,6 +374,15 @@ ul, ol {
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
+}
+.tn-right {
+    height:100%;
+    button {
+      height: 100%;
+      border-radius: 0;
+      margin-bottom: 5px;
+      margin-right: 20px;
+    }
 }
 .menu-item .nav-menu .mainmenu li .dropdown {
   position: absolute;

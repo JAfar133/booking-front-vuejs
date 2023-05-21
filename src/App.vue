@@ -29,6 +29,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+@import "public/css/variables";
+h1{
+	font-family: $title_font;
+}
 </style>

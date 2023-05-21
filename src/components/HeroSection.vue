@@ -56,6 +56,11 @@ export default {
       required: true
     }
   },
+  data(){
+    return {
+
+    }
+  },
   methods: {
 
   }
@@ -63,7 +68,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
   .hero-section {
     position: relative;
     padding-top: 60px;
@@ -77,7 +82,6 @@ export default {
     }
     .hero-text {
       padding-top: 170px;
-      font-family: 'Alice', serif !important;
       h1 {
         font-size: 85px;
         line-height: 90px;
@@ -90,7 +94,6 @@ export default {
         line-height: 28px;
         margin-bottom: 35px;
         margin-top: 30px;
-        font-family: 'Alice', serif !important;
       }
     }
     @media only screen and (max-width: 1470px) {
