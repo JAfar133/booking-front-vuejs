@@ -1,5 +1,5 @@
 <template>
-  <transition name="success-modal">
+  <transition name="fade-transition">
     <div class="modal-backdrop">
       <div class="modal"
            role="dialog"

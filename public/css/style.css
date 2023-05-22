@@ -1,0 +1,89 @@
+ul, ol {
+  padding: 0;
+  margin: 0;
+}
+a:hover, a:focus {
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+}
+input:focus, select:focus, button:focus, textarea:focus {
+  outline: none;
+}
+.date-input input{
+  height:50px !important;
+}
+
+.hero-slider, .vue-carousel, .vue-carousel__list, .vue-carousel__item, .slide, .slide img {
+  height: 100%;
+
+}
+.hero-slider img {
+  width: 100vw;
+  object-fit: cover;
+  object-position: center;
+  max-height: 100%;
+}
+.hero-slider ol {
+
+}
+.calendar-month__weekday:not(.disabled):hover, .calendar-week__day:not(.disabled):hover {
+  background-color: #ECECFF;
+  cursor: pointer;
+}
+.calendar-month__weekday:target, .calendar-week__day:target {
+  background-color: green;
+}
+.active, .active:hover {
+  background-color: #ECECFF;
+  cursor: auto;
+}
+.disabled {
+  background-color: #FCFCFC;
+}
+body.modal-open {
+  overflow-y: hidden;
+}
+/* Анимация */
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.5s;
+}
+.modal-enter, .modal-leave-to {
+  opacity: 0;
+}
+.success-modal-leave-active {
+  transition: opacity 0.5s;
+}
+.success-modal-enter-active {
+  transition: opacity 0.5s;
+}
+.success-modal-leave-to {
+  opacity: 0;
+}
+/*.modal-enter, .modal-leave-to {*/
+/*    transform: translateX(10px);*/
+/*    opacity: 0;*/
+/*}*/
+::selection {
+  background-color: rgba(119,221,231,0.5);
+}
+::-webkit-scrollbar {
+  width: 10px; /* задаем ширину скроллбара */
+}
+::-webkit-scrollbar-track {
+  display: none; /* скрываем саму полосу скроллбара */
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(119,221,231,0.5); /* задаем цвет ползунка скроллбара с прозрачностью 0.5 */
+  border-radius: 10px; /* задаем скругление углов ползунка */
+}
+
+/*.fa-yandex {*/
+/*    background-image: url('/img/tg.png');*/
+/*}*/
+.hero-img {
+  filter: brightness(80%);
+}
+.v-overlay__content {
+  width:300px;
+}

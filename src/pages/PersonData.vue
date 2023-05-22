@@ -125,6 +125,7 @@
 								 variant="outlined"
 								 color="blue-darken-3"
 								 size="large"
+								 :loading="loaderShow"
 					>
 						Сохранить
 					</v-btn>

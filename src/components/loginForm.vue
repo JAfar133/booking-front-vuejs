@@ -1,5 +1,5 @@
 <template>
-  <transition name="scale-transition">
+  <transition name="fade-transition">
     <div class="modal-backdrop" >
       <div class="modal"
            :class="{ 'alert alert-success':isAuthorized }"
@@ -106,6 +106,7 @@
                 @click="next"
                 variant="outlined"
                 color="blue-darken-3"
+                :loading="loaderShow"
             >
               Получить код
             </v-btn>
@@ -115,6 +116,7 @@
                 @click="verify"
                 variant="outlined"
                 color="blue-darken-3"
+                :loading="loaderShow"
             >
               Подтвердить
             </v-btn>
@@ -127,6 +129,7 @@
                 @click="login"
 		            variant="outlined"
 		            color="blue-darken-3"
+		            :loading="loaderShow"
             >
               Войти
             </v-btn>

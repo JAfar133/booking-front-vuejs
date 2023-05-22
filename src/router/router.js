@@ -7,6 +7,7 @@ import MyRooms from "@/pages/MyRooms.vue";
 import BookingPage from "@/pages/BookingPage.vue";
 import store from "@/store";
 import VueCookies from "vue-cookies";
+import AdminPage from "@/pages/AdminPage.vue";
 
 const routes = [
     {
@@ -30,6 +31,10 @@ const routes = [
     {
         path: '/booking',
         component: BookingPage
+    },
+    {
+        path: '/admin',
+        component: AdminPage
     },
     {
         path: '/oauth',

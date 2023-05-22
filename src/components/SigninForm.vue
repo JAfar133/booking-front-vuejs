@@ -1,5 +1,5 @@
 <template>
-  <transition name="scale-transition">
+  <transition name="fade-transition">
     <div class="modal-backdrop">
       <div class="modal"
            role="dialog"
@@ -73,6 +73,7 @@
                 @click="signup"
                 variant="outlined"
                 color="blue-darken-3"
+                :loading="loaderShow"
             >
               Зарегистрироваться
             </v-btn>

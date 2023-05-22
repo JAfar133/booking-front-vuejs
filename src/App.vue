@@ -34,4 +34,5 @@ export default {
 h1{
 	font-family: $title_font;
 }
+
 </style>

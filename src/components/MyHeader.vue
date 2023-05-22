@@ -95,7 +95,8 @@
                     </v-btn>
                   </li>
                   <li v-else><a href="/me" >Профиль
-                    <i v-if="!person.phoneNumber_confirmed" title="Номер телефона не подтвержден" class="text-danger fa fa-warning"></i>
+	                  <v-icon v-if="person.phoneNumber_confirmed" end icon="mdi-account-outline"></v-icon>
+	                  <v-icon style="color:lightcoral" v-else end icon="mdi-account-alert-outline"></v-icon>
                   </a>
                     <ul class="dropdown">
                       <li>

@@ -36,12 +36,15 @@
             id="room"
             class="nice-select"
         />
-        <div v-if="bookingError.length && !showModal" class="alert alert-danger mt-2">
-          <span :key="error.length" v-for="error in bookingError"> {{ error }}</span>
-        </div>
+        <v-alert v-if="bookingError.length && !showModal"
+                 type="warning"
+                 variant="tonal"
+                 class="mt-4">
+	        <span :key="error.length" v-for="error in bookingError"> {{ error }}</span>
+        </v-alert>
 
       </div>
-      <v-btn type="submit" id="booking-submit-btn" class="btn btn-primary">
+      <v-btn type="submit" id="booking-submit-btn" class="btn btn-primary" :loading="loaderShow">
         <slot name="booking-from-button-text">Забронировать</slot>
       </v-btn>
 	    <v-progress-linear
