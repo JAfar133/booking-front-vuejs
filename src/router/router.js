@@ -1,14 +1,28 @@
 
 import {createRouter, createWebHistory} from "vue-router";
-import VueMain from "@/pages/VueMain.vue";
-import BookingList from "@/pages/BookingList.vue";
-import PersonData from "@/pages/PersonData.vue";
-import MyRooms from "@/pages/MyRooms.vue";
-import BookingPage from "@/pages/BookingPage.vue";
+import VueMain from "@/pages/main_page/VueMain.vue";
+import BookingList from "@/pages/booking_list_page/BookingList.vue";
+import PersonData from "@/pages/person_profile_page/PersonData.vue";
+import MyRooms from "@/pages/rooms_page/MyRooms.vue";
+import BookingPage from "@/pages/booking_page/BookingPage.vue";
 import store from "@/store";
 import VueCookies from "vue-cookies";
-import AdminPage from "@/pages/AdminPage.vue";
-
+import AdminPage from "@/pages/admin_page/AdminPage.vue";
+async function authorizedEndPoints(to, from, next) {
+    const isAuthorized = localStorage.getItem("isAuthorized")
+    if (isAuthorized)
+        next()
+    else {
+        next('/')
+        store.commit('setLoginFormShow',true)
+    }
+}
+async function adminEndPoints(to, from, next){
+    const isAdmin = localStorage.getItem("role")==="ADMIN";
+    if(isAdmin)
+        next()
+    else next('/')
+}
 const routes = [
     {
         path: '/',
@@ -17,16 +31,16 @@ const routes = [
     {
         path: '/bookings',
         component: BookingList,
-        meta: { requiresAuth: true }
+        beforeEnter: authorizedEndPoints
     },
     {
         path: '/me',
-        component: PersonData,
-        meta: { requiresAuth: true }
+        component: ()=>PersonData,
+        beforeEnter: authorizedEndPoints
     },
     {
         path: '/rooms',
-        component: MyRooms
+        component: MyRooms,
     },
     {
         path: '/booking',
@@ -34,7 +48,8 @@ const routes = [
     },
     {
         path: '/admin',
-        component: AdminPage
+        component: AdminPage,
+        beforeEnter: adminEndPoints
     },
     {
         path: '/oauth',
@@ -48,7 +63,7 @@ const routes = [
                 VueCookies.set('refresh_token', refreshToken);
                 store.dispatch('showPersonInfo')
                 // Перенаправляем пользователя на нужную страницу
-                next(referer);
+                setTimeout(next(referer),100);
             } else {
                 // Если токены отсутствуют, перенаправляем пользователя на страницу авторизации
                 next('/');
@@ -62,19 +77,5 @@ const router = createRouter({
     routes,
     history: createWebHistory()
 })
-router.beforeEach(async (to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        const token = VueCookies.get('access_token');
-        if (!token && token !== undefined) {
-            next({
-                path: '/',
-                query: { redirect: to.fullPath }
-            })
-        } else {
-            next()
-        }
-    } else {
-        next()
-    }
-})
+
 export default router;

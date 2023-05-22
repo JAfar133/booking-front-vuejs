@@ -25,7 +25,13 @@
             class="modal-body"
             id="modalDescription"
         >
-          <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+          <v-alert v-if="errorMessage"
+                   type="warning"
+                   variant="tonal"
+                   class="mt-4">
+            <span> {{ errorMessage }}</span>
+          </v-alert>
             <div>
               <label for="phone_number" >Номер телефона:</label>
               <PhoneNumberInput
@@ -90,6 +96,7 @@ import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import axios from "axios";
 import {mapActions, mapMutations} from "vuex";
 import BASE_URL from '@/config.js';
+import {signUp} from "@/api/authApi";
 export default {
   name: "SigninForm",
   components: {
@@ -132,18 +139,13 @@ export default {
       this.validateEmail();
       this.validatePassword();
       if(this.hasError()) return
-      axios.post(`${BASE_URL}/auth/signin`,this.person)
-          .then(response=>{
-            this.setAccessToken(response.data.access_token)
-            this.setRefreshToken(response.data.refresh_token)
-            this.saveTokenToCookie()
-            this.loaderShow = false;
+      signUp(this.person)
+          .then(()=>{
             this.close()
-
           })
           .catch(error=>{
             console.log(error)
-            this.errorMessage = error.response.data;
+            this.errorMessage = error;
             this.loaderShow = false;
           })
     },

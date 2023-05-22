@@ -164,7 +164,7 @@
 import VueSelect from 'vue-select';
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
-import validate from '@/validation'
+import validate from '@/utils/validation'
 export default {
   components: {
     PhoneNumberInput,

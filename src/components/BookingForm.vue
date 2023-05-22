@@ -71,9 +71,9 @@
 import VueSelect from 'vue-select';
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
-import SuccessModal from "@/components/SuccessModal.vue";
+import SuccessModal from "@/pages/booking_page/components/SuccessModal.vue";
 import '@vuepic/vue-datepicker/dist/main.css'
-import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
+import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
 import axios from 'axios'
 import {ref} from 'vue'
 import {mapMutations, mapState} from "vuex";

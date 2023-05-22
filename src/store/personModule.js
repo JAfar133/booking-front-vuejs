@@ -19,13 +19,16 @@ export const personModule = {
             course: 0,
             structure:null
         },
-        isAuthorized: false,
+        isAuthorized: localStorage.getItem('isAuthorized') || false,
         loginFormShow: false,
         access_token: VueCookies.get('access_token'),
         refresh_token: VueCookies.get('refresh_token'),
         expireTime: null,
     }),
     getters: {
+        person(state){
+            return state.person
+        },
         phoneNumber(state) {
             return state.person.phoneNumber
         },
@@ -72,45 +75,53 @@ export const personModule = {
     },
     actions: {
         showPersonInfo({commit,state, dispatch}){
-            const cookieAccessToken = VueCookies.get('access_token')
-            const cookieRefreshToken = VueCookies.get('refresh_token')
-            if (cookieAccessToken) {
-                commit('setAccessToken',cookieAccessToken)
-                commit('setRefreshToken', cookieRefreshToken)
-                axios.get(`${BASE_URL}/person/showInfo`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + cookieAccessToken
-                    }
-                })
-                    .then((response) =>{
-                        const person = {
-                            id: response.data.id,
-                            lastName: response.data.lastName ?? state.person.lastName,
-                            firstName: response.data.firstName ?? state.person.firstName,
-                            middleName: response.data.middleName ?? state.person.middleName,
-                            phoneNumber: response.data.phoneNumber,
-                            email: response.data.email,
-                            role: response.data.role,
-                            provider: response.data.provider,
-                            phoneNumber_confirmed: response.data.phoneNumber_confirmed,
-                            post: response.data.post ?? state.person.post,
-                            institute: response.data.institute ?? state.person.institute,
-                            course: response.data.course === 0 ? null : response.data.course,
-                            structure: response.data.structure ?? state.person.structure,
-                        }
-                        commit('setPerson', person);
-                        commit('setPersonId', response.data.id)
-                        commit('setIsAuthorized',true);
-                        return true;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        if(cookieRefreshToken){
-                            dispatch('refreshToken')
-                        }
-                        return false;
-                    })
-            }
+            return new Promise((resolve, reject) => {
+                
+                const cookieAccessToken = VueCookies.get('access_token')
+                const cookieRefreshToken = VueCookies.get('refresh_token')
+                if (cookieAccessToken) {
+                    commit('setAccessToken', cookieAccessToken)
+                    commit('setRefreshToken', cookieRefreshToken)
+                    axios.get(`${BASE_URL}/person/showInfo`, {
+                            headers: {
+                                'Authorization': 'Bearer ' + cookieAccessToken
+                            }
+                        })
+                        .then((response) =>{
+                            const person = {
+                                id: response.data.id,
+                                lastName: response.data.lastName ?? state.person.lastName,
+                                firstName: response.data.firstName ?? state.person.firstName,
+                                middleName: response.data.middleName ?? state.person.middleName,
+                                phoneNumber: response.data.phoneNumber,
+                                email: response.data.email,
+                                role: response.data.role,
+                                provider: response.data.provider,
+                                phoneNumber_confirmed: response.data.phoneNumber_confirmed,
+                                post: response.data.post ?? state.person.post,
+                                institute: response.data.institute ?? state.person.institute,
+                                course: response.data.course === 0 ? null : response.data.course,
+                                structure: response.data.structure ?? state.person.structure,
+                            }
+                            commit('setPerson', person);
+                            commit('setPersonId', response.data.id)
+                            commit('setIsAuthorized',true);
+                            localStorage.setItem("isAuthorized", true);
+                            localStorage.setItem("role", person.role)
+                            resolve(true)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            if(cookieRefreshToken){
+                                dispatch('refreshToken')
+                            }
+                            reject(false)
+                        })
+                } else {
+                    reject(false)
+                }
+            })
+            
         },
         saveTokenToCookie({state,dispatch}){
             VueCookies.set('access_token',state.access_token);
@@ -141,6 +152,8 @@ export const personModule = {
         deletePersonFromCookie({commit, dispatch}){
             VueCookies.remove('access_token')
             VueCookies.remove('refresh_token')
+            localStorage.removeItem("role")
+            localStorage.removeItem("isAuthorized")
             commit('setPersonId', null)
             commit('setPerson', {
                 id: null,
@@ -161,13 +174,14 @@ export const personModule = {
             dispatch('logout')
 
         },
-        logout({state}){
+        logout({state, dispatch}){
             axios.post(`${BASE_URL}/auth/logout`, {},{
                 headers: {
                     'Authorization': 'Bearer ' + state.access_token
                 }
             })
                 .then(response=>{
+                    dispatch('deletePersonFromCookie')
                     console.log(response)
                 })
                 .catch(error=>{

@@ -43,6 +43,7 @@ import {mapState} from "vuex";
 import axios from "axios";
 import moment from "moment";
 import BASE_URL from '@/config.js';
+import {deleteAllBookings} from "@/api/personApi";
 export default {
   name: "BookingList",
   data(){
@@ -54,18 +55,11 @@ export default {
   },
   methods: {
     deleteBooking(){
-      axios.post(`${BASE_URL}/booking/delete-all`,this.selectBookings,
-          {
-            headers: {
-              'Authorization': 'Bearer ' + this.access_token
-            }
-          }
-      )
-          .then(response => {
+      deleteAllBookings(this.selectBookings)
+          .then(()=>{
             this.bookings = []
-            console.log(response.data)
           })
-          .catch(error => {
+          .catch(error=>{
             console.log(error)
           })
     },

@@ -21,7 +21,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            this.showPersonInfo();
+          this.showPersonInfo();
         })
     },
     created() {

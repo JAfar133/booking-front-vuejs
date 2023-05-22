@@ -45,13 +45,14 @@
 <script>
 
 import BookingForm from "@/components/BookingForm.vue";
-import PersonDetails from "@/components/PersonDetails.vue";
-import { getRoomHalls, getBookings } from '@/mainApi';
+import PersonDetails from "@/pages/booking_page/components/PersonDetails.vue";
+import { getRoomHalls, getBookings } from '@/api/mainApi';
 import {mapMutations, mapState} from "vuex";
 import axios from "axios";
-import ChangePhoneModal from "@/components/ChangePhoneModal.vue";
-import SuccessModal from "@/components/SuccessModal.vue";
+import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
+import SuccessModal from "@/pages/booking_page/components/SuccessModal.vue";
 import BASE_URL from '@/config.js';
+import {submitBooking} from "@/api/personApi";
 export default {
   name: "BookingPage",
   components: {
@@ -94,29 +95,17 @@ export default {
       const isValid = this.$refs.PersonDetails.personDetailsIsValid()
         console.log(isValid)
         console.log(this.isAuthorized)
-      if(isValid){
-        if(!this.isAuthorized) this.setLoginFormShow(true)
-        else if(!this.person.phoneNumber_confirmed) this.changePhoneNumber = true
-        else {
-          this.setCustomer(this.person)
-          axios.post(`${BASE_URL}/booking/save`, this.booking,
-              {
-                headers: {
-                  'Authorization': 'Bearer ' + this.access_token
-                }
-              }
-          )
-              .then((response) =>{
-                console.log(response);
-                localStorage.removeItem("booking");
-                this.successModal = true;
-                // window.location.href="/";
-              })
-              .catch(error => {
-                console.log(error)
-              })
-        }
-      }
+				if(isValid){
+					if(!this.isAuthorized) this.setLoginFormShow(true)
+					else if(!this.person.phoneNumber_confirmed) this.changePhoneNumber = true
+					else {
+						this.setCustomer(this.person)
+						submitBooking(this.booking).then((data)=>{
+							localStorage.removeItem("booking")
+							this.successModal = true;
+						})
+					}
+				}
     },
     ...mapMutations({
       setBooking: 'setBooking',

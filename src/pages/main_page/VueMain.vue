@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import HeroSection from "@/components/HeroSection.vue";
-import MyQalendar from "@/components/MyQalendar.vue";
+import HeroSection from "@/pages/main_page/components/HeroSection.vue";
+import MyQalendar from "@/pages/main_page/components/MyQalendar.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
-import { getRoomHalls, getBookings} from '@/mainApi';
+import { getRoomHalls, getBookings} from '@/api/mainApi';
 // import AboutUsSection from "@/components/AboutUsSection.vue";
 export default {
   name: 'VueMain',

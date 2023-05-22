@@ -87,23 +87,23 @@
             <div class="nav-menu">
               <nav class="mainmenu">
                 <ul>
-                  <li><a href="/">Главная</a></li>
-                  <li class="rooms-li"><a href="/rooms">Помещения</a></li>
+                  <li><router-link to="/">Главная</router-link></li>
+                  <li class="rooms-li"><router-link to="/rooms">Помещения</router-link></li>
                   <li v-if="!isAuthorized">
                     <v-btn @click="showLoginForm" size="small" prepend-icon="mdi-login">
                       Войти
                     </v-btn>
                   </li>
-                  <li v-else><a href="/me" >Профиль
+                  <li v-else><router-link to="/me" >Профиль
 	                  <v-icon v-if="person.phoneNumber_confirmed" end icon="mdi-account-outline"></v-icon>
 	                  <v-icon style="color:lightcoral" v-else end icon="mdi-account-alert-outline"></v-icon>
-                  </a>
+                  </router-link>
                     <ul class="dropdown">
                       <li>
-                        <a v-if="person.firstName" href="/me">Привет, <b>{{ person.firstName }}</b></a>
-                        <a v-else href="/me">Редактировать</a>
+                        <router-link v-if="person.firstName" to="/me">Привет, <b>{{ person.firstName }}</b></router-link>
+                        <router-link v-else to="/me">Редактировать</router-link>
                       </li>
-                      <li><a href="/bookings">Мои бронирования</a></li>
+                      <li><router-link to="/bookings">Мои бронирования</router-link></li>
                       <li style="background: #cfcfcf;">
                         <button class="menu-btn btn btn-link" @click="logout">
                           Выйти&nbsp;<i class="fa fa-sign-out"></i>
@@ -131,9 +131,9 @@
 </template>
 
 <script>
-import LoginForm from "@/components/loginForm.vue";
+import LoginForm from "@/components/auth/loginForm.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
-import SigninForm from "@/components/SigninForm.vue";
+import SigninForm from "@/components/auth/SigninForm.vue";
 import { aliases, fa } from 'vuetify/iconsets/fa'
 import { mdi } from 'vuetify/iconsets/mdi'
 export default {

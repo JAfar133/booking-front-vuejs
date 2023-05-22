@@ -32,8 +32,12 @@
           </div>
           <hr style="opacity: 10%">
 
-          <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
+          <v-alert v-if="errorMessage"
+                   type="warning"
+                   variant="tonal"
+                   class="mt-4">
+            <span> {{ errorMessage }} </span>
+          </v-alert>
           <div class="phone-login-form" v-if="phoneLogin">
             <div class="mb-3 text-center" v-if="!isCodeInputShow" >Мы отправим на номер SMS-сообщение с кодом подтверждения</div>
             <div>
@@ -162,9 +166,9 @@
 <script>
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
-import axios from "axios";
 import VueCookies from "vue-cookies";
 import BASE_URL from '@/config.js';
+import {loginByEmail, sendSms, verifyAndAuth} from "@/api/authApi";
 export default {
   name: "loginForm",
   components: {PhoneNumberInput},
@@ -225,21 +229,16 @@ export default {
     },
     login(){
       this.loaderShow = true;
-      this.validateEmail()
-      this.validatePassword()
-      if(this.clientError.email || this.clientError.password) return
-      this.errorMessage = ""
-      axios.post(`${BASE_URL}/auth/login/email`,this.authPerson)
-          .then(response => {
-            console.log("HERE")
-            this.setAccessToken(response.data.access_token)
-            this.setRefreshToken(response.data.refresh_token)
-            this.saveTokenToCookie()
+      this.validateEmail();
+      this.validatePassword();
+      if(this.clientError.email || this.clientError.password) return;
+      this.errorMessage = "";
+      loginByEmail(this.authPerson)
+          .then(()=> {
             this.close()
           })
-          .catch(error=>{
-            this.errorMessage = "Неверный email или пароль";
-            console.log(error)
+          .catch((error)=>{
+            this.errorMessage = error;
             this.loaderShow = false;
           })
     },
@@ -281,33 +280,30 @@ export default {
     },
     sendSmsCode() {
         this.loaderShow = true;
-      axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
-          .then((response) => {
-            this.smsCode = response.data;
-            this.errorMessage = '';
-            this.loaderShow = false;
-          })
-          .catch((error) => {
-            console.log(error);
-            this.errorMessage = 'Error sending SMS code';
+        sendSms(this.person.phoneNumber)
+            .then((smsCode)=>{
+              this.smsCode = smsCode;
+              this.errorMessage = '';
               this.loaderShow = false;
-          });
+            })
+            .catch((error)=>{
+              this.errorMessage = error;
+              this.loaderShow = false
+            })
     },
     verify(){
       this.loaderShow = true;
-      axios.post(`${BASE_URL}/sms/verifyCode-and-auth?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}` )
-          .then((response) => {
-            this.setAccessToken(response.data.access_token)
-            this.setRefreshToken(response.data.refresh_token)
-            this.saveTokenToCookie()
+      verifyAndAuth(this.code, this.person.phoneNumber)
+          .then((response)=> {
+            console.log(response)
             this.close()
           })
-          .catch((error) => {
-            this.clientError.code = "Неверный код";
-            console.log(error.response.data);
-            this.errorMessage = error.response.data;
+          .catch(error=>{
+            console.log(error)
+            this.clientError.code = "Неверный код"
+            this.errorMessage = error;
             this.loaderShow = false;
-          });
+          })
     },
     next(){
       if(this.person.phoneNumber!==null && this.clientError.phoneNumber==null){
