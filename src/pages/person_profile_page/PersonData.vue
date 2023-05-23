@@ -170,17 +170,11 @@
 					       name="email"
 					       id="email"
 					       class="form-control"
-					       :disabled="person.provider"
+					       :disabled="true"
 					       v-model="person.email"
 					       :class="{ 'is-invalid border-danger text-danger' : clientError.email || !person.email ,
                              'is-valid border-success' : !clientError.email && person.email }"
 					>
-					<button v-if="!person.provider"
-					        class="btn btn-link mx-2"
-					        @click="changeEmail"
-					>
-						Сохранить
-					</button>
 				</div>
 				<v-progress-linear
 						indeterminate
@@ -289,6 +283,7 @@ export default {
 						this.loaderShow = true;
             changePersonData(this.person)
                 .then((person)=>{
+                  console.log(person)
                   this.setPerson(person)
                   this.loaderShow = false
                   alert('Данные сохранены')
