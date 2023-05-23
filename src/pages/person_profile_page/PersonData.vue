@@ -113,7 +113,13 @@
 						/>
 						<p v-if="clientError.structure" class="text-danger">{{ clientError.structure }}</p>
 					</div>
-					<div v-if="errorMessage" class="alert alert danger">{{ errorMessage }}</div>
+					<v-alert type="warning"
+                   variant="tonal"
+                   class="mt-4"
+                   v-if="errorMessage"
+          >
+            {{ errorMessage }}
+          </v-alert>
 					<v-btn class="float-end w-100 mt-5"
 								 type="submit"
 								 variant="outlined"
