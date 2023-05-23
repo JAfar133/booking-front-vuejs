@@ -1,10 +1,13 @@
 <template>
   <div class="container booking-list" >
     <div class="" v-if="bookings.length">
-      <input type="checkbox"
+      <v-checkbox
              v-model="allSelected"
-             @change="allSelectedInput">
-      <label>Выбрать все</label>
+             @change="allSelectedInput"
+             color="info"
+             label="Выбрать все"
+      >
+      </v-checkbox>
       <button
           v-if="selectBookings.length>0"
           class="btn btn-outline-danger mx-3"
@@ -15,20 +18,59 @@
           v-for="(booking,idx) in bookings"
           :key="booking.id"
       >
-        <input type="checkbox" :value="booking" v-model="selectBookings">
-        <div class="card" v-ripple @click="cartClick(booking)">
-          <div class="card-header">
-            <h5>№ {{ idx+1 }}</h5>
-            <h5>Дата заказа {{ new Date(booking.bookedAt).toLocaleString() }}</h5>
-          </div>
-          <div class="card-body">
-            <h4>{{ booking.place.name }}, {{ booking.place.address }}</h4>
-            <h5> Бронирование на {{ normalizeDate(booking.date) }}, с {{ booking.timeStart.substring(0,5) }} по {{ booking.timeEnd.substring(0,5) }} </h5>
-            <h5 :class="{ 'confirmed': booking.confirmed }" style="color: red">
-              {{ booking.confirmed ? 'Бронирование подтверждено ': 'Мы скоро с вами свяжемся для подтверждения бронирования' }}
-            </h5>
-          </div>
-        </div>
+        <v-checkbox :value="booking" v-model="selectBookings" color="info"></v-checkbox>
+        <v-card
+            style="width:100%"
+            v-ripple @click="cartClick(booking)"
+            :class="{'card-selected':isSelected(booking)}"
+        >
+          <v-card-title>
+            <div class="flex-row">
+
+              <div>
+                <v-icon v-if="booking.confirmed" icon="mdi-timeline-check-outline" color="green"></v-icon>
+                <v-icon v-else icon="mdi-timeline-alert-outline" color="red"></v-icon>
+                {{ booking.place.name }}, {{ booking.place.address }}
+              </div>
+              <div>
+                № {{ idx }}
+              </div>
+            </div>
+          </v-card-title>
+          <v-card-subtitle>
+            {{ new Date(booking.bookedAt).toLocaleString() }}
+          </v-card-subtitle>
+          <v-card-text>
+             <div class="font-weight-normal">
+               <strong>{{ normalizeDate(booking.date) }}</strong>
+             </div>
+             <v-timeline density="compact" style="max-width: 200px">
+
+               <v-timeline-item
+                   size="small"
+                   dot-color="blue-darken-3"
+                   icon="mdi-clock-time-seven-outline"
+               >
+                 <div><strong>Начало</strong></div>
+                 <div class="">
+                   <div>{{ booking.timeStart.substring(0,5) }}</div>
+                 </div>
+               </v-timeline-item>
+               <v-timeline-item
+                   size="small"
+                   dot-color="blue-darken-3"
+                   icon="mdi-clock-time-ten-outline"
+               >
+                 <div><strong>Конец</strong></div>
+                 <div class="">
+                   <div>{{ booking.timeEnd.substring(0,5) }}</div>
+                 </div>
+               </v-timeline-item>
+             </v-timeline>
+            <div v-if="!booking.confirmed" class="text-danger">Бронь не подтверждена</div>
+            <div v-else class="text-success">Бронь подтверждена</div>
+          </v-card-text>
+        </v-card>
       </div>
     </div>
     <div class="container" style="min-height: 95vh" v-else>
@@ -74,7 +116,7 @@ export default {
     getBookings() {
       axios.get(`${BASE_URL}/person/get-bookings/${this.personId}`)
           .then(response => {
-            this.bookings = response.data
+            this.bookings = response.data.sort(this.bookingSort)
           })
           .catch(error => {
             this.bookings = []
@@ -87,7 +129,16 @@ export default {
       else this.selectBookings.push(booking);
     },
     normalizeDate(date){
-      return moment(new Date(date[0],date[1],date[2])).locale('ru').format("Do MMM YYYY")
+      return moment(new Date(date[0],date[1]-1,date[2])).locale('ru').format("Do MMM YYYY")
+    },
+    isSelected(booking){
+      return this.selectBookings.includes(booking)
+    },
+    bookingSort(a, b) {
+      if (a.confirmed !== b.confirmed) {
+        return -1;
+      }
+      return 1;
     }
   },
   computed: {
@@ -95,7 +146,8 @@ export default {
       personId: state => state.person.personId,
       person: state => state.person.person,
       access_token: state => state.person.access_token
-    })
+    }),
+
   },
   mounted() {
     this.$nextTick(function (){
@@ -113,6 +165,9 @@ export default {
 <style scoped lang="scss">
   .card {
     width: 100%;
+  }
+  .card-selected{
+    background: lightgray;
   }
   .card-header{
     display: flex;
@@ -135,5 +190,9 @@ export default {
   input[type=checkbox]{
     margin-right: 20px;
   }
-
+  .flex-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 </style>

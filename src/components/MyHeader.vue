@@ -324,6 +324,7 @@ ul, ol {
 .menu-item {
   position: relative;
   z-index: 6;
+  width: 100vw;
   border-bottom: 1px solid rgba(36, 11, 12, 0.05);
   background: linear-gradient(90deg, rgba(10,127,205,1) 0%, rgba(10,145,223,1) 6%, rgba(255,255,255,1) 37%, rgba(255,255,255,1) 100%);
 }
