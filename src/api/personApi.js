@@ -18,3 +18,10 @@ export function deleteAllBookings(bookings) {
             throw new Error(error.response.data)
         });
 }
+export function changePersonData(person) {
+    return axios.post(`http://localhost:8080/person`,person,getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error => {
+            throw new Error(error.response.data)
+        });
+}

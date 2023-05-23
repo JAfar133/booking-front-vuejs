@@ -203,6 +203,7 @@ import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import axios from "axios";
 import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
 import validate from "@/utils/validation";
+import {changePersonData} from "@/api/personApi";
 export default {
     name: "PersonData",
     components: {ChangePhoneModal, VueSelect, PhoneNumberInput},
@@ -226,7 +227,7 @@ export default {
     },
     methods: {
         ...mapMutations({
-            setCustomer: 'setPerson',
+            setPerson: 'setPerson',
             setPersonId: 'setPersonId',
             setPhoneNumber: 'setPhoneNumber'
         }),
@@ -286,21 +287,16 @@ export default {
                 return;
             }
 						this.loaderShow = true;
-            axios.post(`http://localhost:8080/person`,this.person,
-                    {
-                        headers: {
-                            'Authorization': 'Bearer ' + this.access_token
-                        }
-                    }
-                )
-                .then(()=>{
-										this.loaderShow = false;
-                    alert("Данные сохранены")
+            changePersonData(this.person)
+                .then((person)=>{
+                  this.setPerson(person)
+                  this.loaderShow = false
+                  alert('Данные сохранены')
                 })
                 .catch((error)=>{
-										this.loaderShow = false;
-										this.errorMessage = error.response.data;
-                    console.log(error)
+                  this.loaderShow = false;
+                  this.errorMessage = error;
+                  console.log(error)
                 })
         },
     },
