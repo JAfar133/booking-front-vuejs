@@ -43,7 +43,7 @@
             </v-list-item>
 				  </v-list>
 			  </v-menu>
-			  <v-app-bar-title @click="$router.push('/')">Бронирование</v-app-bar-title>
+			  <v-app-bar-title @click="$router.push('/')"><img height="35" src="/img/logo-sevgu-footer.svg" alt=""></v-app-bar-title>
 			  <template v-slot:append>
 				  <v-btn icon="mdi-calendar-clock" @click="bookingButton"></v-btn>
 			  </template>
@@ -62,7 +62,7 @@
           </div>
           <div class="col-lg-6">
             <div class="tn-right">
-              <v-btn variant="flat" color="blue-darken-3" @click="$router.push('/booking')">Забронировать сейчас</v-btn>
+              <v-btn variant="flat" color="blue-darken-1" @click="$router.push('/booking')">Забронировать сейчас</v-btn>
               <div class="top-social">
                 <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
                 <a href="#"><i class="fa fa-twitter"></i></a>
@@ -79,7 +79,7 @@
           <div class="col-lg-2">
             <div class="logo">
               <a href="/">
-                <img src="/img/logo.png" alt="">
+                <img height="45" src="/img/logo-sevgu-footer.svg" alt="">
               </a>
             </div>
           </div>
@@ -140,6 +140,7 @@ import {mapActions, mapMutations, mapState} from "vuex";
 import SigninForm from "@/components/auth/SigninForm.vue";
 import { aliases, fa } from 'vuetify/iconsets/fa'
 import { mdi } from 'vuetify/iconsets/mdi'
+
 export default {
   components:{
     SigninForm,
@@ -158,7 +159,6 @@ export default {
     return {
       signinFormShow: false,
       menu: false,
-
     }
   },
   methods: {
@@ -183,6 +183,7 @@ export default {
       this.setLoginFormShow(true)
       document.body.classList.add('modal-open');
     },
+
     signin(){
       this.setLoginFormShow(false)
       this.signinFormShow = true;
@@ -270,7 +271,11 @@ ul, ol {
   margin-left: 15px;
 }
 
-
+.menu-item.fixed {
+  position: fixed;
+  top: 0;
+  width:100vw;
+}
 .top-nav .tn-right .language-option img {
   height: 26px;
   width: 26px;
@@ -320,13 +325,12 @@ ul, ol {
   position: relative;
   z-index: 6;
   border-bottom: 1px solid rgba(36, 11, 12, 0.05);
+  background: linear-gradient(90deg, rgba(10,127,205,1) 0%, rgba(10,145,223,1) 6%, rgba(255,255,255,1) 37%, rgba(255,255,255,1) 100%);
 }
 .menu-item .logo {
-  padding: 25px 0;
+  margin-top: 18px;
 }
-.menu-item .logo a {
-  display: inline-block;
-}
+
 .menu-item .nav-menu {
   text-align: right;
 }

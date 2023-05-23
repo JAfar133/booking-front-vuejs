@@ -1,6 +1,6 @@
 <template>
 	<my-header/>
-	<div class="">
+	<div class="body">
 		<router-view></router-view>
 	</div>
 	<my-footer/>
@@ -10,7 +10,7 @@
 import {mapActions} from "vuex";
 import MyHeader from "@/components/MyHeader.vue";
 import MyFooter from "@/components/MyFooter.vue";
-
+import '../src/utils/header'
 export default {
     components: {MyFooter, MyHeader},
     methods: {
@@ -34,5 +34,7 @@ export default {
 h1{
 	font-family: $title_font;
 }
-
+.body.paddingTop{
+  padding-top:75px;
+}
 </style>

@@ -7,7 +7,7 @@
             <div class="ft-about">
               <div class="logo">
                 <a href="#">
-                  <img src="/img/footer-logo.png" alt="">
+                  <img src="/img/logo-sevgu-footer.svg" alt="">
                 </a>
               </div>
               <p>Предоставляем лучшую систему бронирования помещений в севастополе</p>
@@ -56,7 +56,6 @@ export default {
 
 .footer-section {
   background: #222736;
-  float: bottom;
 }
 .footer-section .footer-text {
   padding: 80px 0 30px;
