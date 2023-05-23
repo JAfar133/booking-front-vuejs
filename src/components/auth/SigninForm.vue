@@ -94,10 +94,9 @@
 
 <script>
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
-import axios from "axios";
 import {mapActions, mapMutations} from "vuex";
-import BASE_URL from '@/config.js';
 import {signUp} from "@/api/authApi";
+
 export default {
   name: "SigninForm",
   components: {
@@ -195,7 +194,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;

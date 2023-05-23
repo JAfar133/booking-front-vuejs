@@ -88,6 +88,7 @@ import phoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapMutations, mapState} from "vuex";
 import axios from "axios";
 import BASE_URL from '@/config.js';
+
 export default {
   name: "changePhone",
   components:{
@@ -179,11 +180,14 @@ export default {
   computed: {
     ...mapState({
       person: state => state.person.person,
-      access_token: state => state.person.access_token
+      access_token: state => state.person.access_token,
+      modalOpen: state => state.person.loginFormShow
     }),
   },
   mounted() {
-
+    if(this.modalOpen){
+      document.body.classList.add('modal-open');
+    }
   }
 }
 </script>
@@ -195,7 +199,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
