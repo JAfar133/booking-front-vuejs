@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import BookingForm from "@/components/BookingForm.vue";
+import BookingForm from "@/pages/booking_page/components/BookingForm.vue";
 import HeroSlider from "@/pages/main_page/components/HeroSlider.vue";
 export default {
   name: "HeroSection",

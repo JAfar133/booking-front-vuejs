@@ -1,3 +1,4 @@
+
 ul, ol {
   padding: 0;
   margin: 0;
@@ -24,9 +25,6 @@ input:focus, select:focus, button:focus, textarea:focus {
   object-position: center;
   max-height: 100%;
 }
-.hero-slider ol {
-
-}
 .calendar-month__weekday:not(.disabled):hover, .calendar-week__day:not(.disabled):hover {
   background-color: #ECECFF;
   cursor: pointer;
@@ -41,29 +39,6 @@ input:focus, select:focus, button:focus, textarea:focus {
 .disabled {
   background-color: #FCFCFC;
 }
-body.modal-open {
-  overflow-y: hidden;
-}
-/* Анимация */
-.modal-enter-active, .modal-leave-active {
-  transition: opacity 0.5s;
-}
-.modal-enter, .modal-leave-to {
-  opacity: 0;
-}
-.success-modal-leave-active {
-  transition: opacity 0.5s;
-}
-.success-modal-enter-active {
-  transition: opacity 0.5s;
-}
-.success-modal-leave-to {
-  opacity: 0;
-}
-/*.modal-enter, .modal-leave-to {*/
-/*    transform: translateX(10px);*/
-/*    opacity: 0;*/
-/*}*/
 ::selection {
   background-color: rgba(119,221,231,0.5);
 }
@@ -77,6 +52,14 @@ body.modal-open {
   background-color: rgba(119,221,231,0.5); /* задаем цвет ползунка скроллбара с прозрачностью 0.5 */
   border-radius: 10px; /* задаем скругление углов ползунка */
 }
+.modal-open {
+  height: 100vh;
+  overflow-y: hidden !important;
+}
+/*.modal-enter, .modal-leave-to {*/
+/*    transform: translateX(10px);*/
+/*    opacity: 0;*/
+/*}*/
 
 /*.fa-yandex {*/
 /*    background-image: url('/img/tg.png');*/

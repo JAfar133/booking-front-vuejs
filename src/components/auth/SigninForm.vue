@@ -1,8 +1,9 @@
 <template>
   <transition name="fade-transition">
-    <div class="modal-backdrop">
+    <div class="modal-backdrop" @click.prevent="close">
       <div class="modal"
            role="dialog"
+           @click.stop
       >
 	      <v-progress-linear
 			      indeterminate
@@ -134,11 +135,11 @@ export default {
       saveTokenToCookie: 'saveTokenToCookie',
     }),
     signup(){
-      this.loaderShow = true;
       this.validatePhoneNumber();
       this.validateEmail();
       this.validatePassword();
       if(this.hasError()) return
+      this.loaderShow = true;
       signUp(this.person)
           .then(()=>{
             this.close()
@@ -178,7 +179,11 @@ export default {
     },
     close(){
       this.$emit('close')
+      document.body.classList.remove('modal-open');
     }
+  },
+  mounted() {
+
   }
 }
 </script>
@@ -194,7 +199,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 .modal {
   background: #FFFFFF;
@@ -259,5 +263,15 @@ label {
   display: block;
   margin-bottom: 5px;
   margin-top: 15px;
+}
+@media only screen and (max-width: 600px) {
+  .modal {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    z-index: 1054;
+  }
 }
 </style>

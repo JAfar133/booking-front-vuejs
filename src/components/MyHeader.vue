@@ -100,8 +100,12 @@
                   </router-link>
                     <ul class="dropdown">
                       <li>
-                        <router-link v-if="person.firstName" to="/me">Привет, <b>{{ person.firstName }}</b></router-link>
-                        <router-link v-else to="/me">Редактировать</router-link>
+                        <div v-if="person.firstName">
+                          <router-link to="/me">Привет, <b>{{ person.firstName }}</b></router-link>
+                        </div>
+                        <div v-else >
+                          <router-link to="/me">Редактировать</router-link>
+                        </div>
                       </li>
                       <li><router-link to="/bookings">Мои бронирования</router-link></li>
                       <li style="background: #cfcfcf;">
@@ -172,11 +176,9 @@ export default {
       },
     closeLoginForm(){
       this.setLoginFormShow(false)
-      document.body.classList.remove('modal-open');
     },
     closeSigninForm(){
       this.signinFormShow = false;
-      document.body.classList.remove('modal-open');
     },
     showLoginForm() {
       this.menu=false;
@@ -186,7 +188,7 @@ export default {
     signin(){
       this.setLoginFormShow(false)
       this.signinFormShow = true;
-
+      document.body.classList.add('modal-open');
     },
     logout(){
       this.deletePersonFromCookie();

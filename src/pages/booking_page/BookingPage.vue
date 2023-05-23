@@ -44,14 +44,12 @@
 
 <script>
 
-import BookingForm from "@/components/BookingForm.vue";
+import BookingForm from "@/pages/booking_page/components/BookingForm.vue";
 import PersonDetails from "@/pages/booking_page/components/PersonDetails.vue";
 import { getRoomHalls, getBookings } from '@/api/mainApi';
 import {mapMutations, mapState} from "vuex";
-import axios from "axios";
 import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
 import SuccessModal from "@/pages/booking_page/components/SuccessModal.vue";
-import BASE_URL from '@/config.js';
 import {submitBooking} from "@/api/personApi";
 export default {
   name: "BookingPage",
@@ -96,7 +94,10 @@ export default {
         console.log(isValid)
         console.log(this.isAuthorized)
 				if(isValid){
-					if(!this.isAuthorized) this.setLoginFormShow(true)
+					if(!this.isAuthorized) {
+            this.setLoginFormShow(true)
+            document.body.classList.add('modal-open');
+          }
 					else if(!this.person.phoneNumber_confirmed) this.changePhoneNumber = true
 					else {
 						this.setCustomer(this.person)

@@ -1,9 +1,10 @@
 <template>
   <transition name="fade-transition">
-    <div class="modal-backdrop" >
+    <div class="modal-backdrop overflow-hidden" @click.prevent="close">
       <div class="modal"
            :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
+           @click.stop
       >
 	      <v-progress-linear
 			      indeterminate
@@ -228,11 +229,11 @@ export default {
         alert('vk oauth2 пока не работает')
     },
     login(){
-      this.loaderShow = true;
       this.validateEmail();
       this.validatePassword();
       if(this.clientError.email || this.clientError.password) return;
       this.errorMessage = "";
+      this.loaderShow = true;
       loginByEmail(this.authPerson)
           .then(()=> {
             this.close()
@@ -250,6 +251,7 @@ export default {
       this.smsCode = null;
       this.code = null;
       this.$emit('close');
+      document.body.classList.remove('modal-open');
     },
     loginPhone() {
       this.phoneLogin = true
@@ -328,6 +330,7 @@ export default {
   },
   mounted() {
     this.isCodeInputShow = false;
+
   }
 }
 </script>
@@ -370,7 +373,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 .modal {
   background: #FFFFFF;
@@ -451,5 +453,15 @@ label {
   border-radius: 5px;
   padding: 5px;
 
+}
+@media only screen and (max-width: 600px) {
+  .modal {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    z-index: 1000;
+  }
 }
 </style>

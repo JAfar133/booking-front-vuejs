@@ -1,7 +1,7 @@
 <template>
   <div class="booking-form" id="booking-form" tabindex="0">
     <slot name="booking-form-header"></slot>
-    <form action="/"
+    <form action="/public"
           id="validationForm"
           method="post"
           @submit.prevent="valid"
@@ -230,7 +230,6 @@ export default {
 </script>
 
 <style scoped>
-  @import "vue-select/dist/vue-select.css";
 
   .booking-form {
     background: #ffffff;
@@ -283,14 +282,4 @@ export default {
     margin-top: 30px;
   }
 
-  @media only screen and (max-width: 1510px) {
-    .booking-form {
-      width:500px;
-    }
-  }
-  @media only screen and (max-width: 991px) {
-    .booking-form {
-      width:auto;
-    }
-  }
 </style>

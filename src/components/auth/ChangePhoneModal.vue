@@ -1,8 +1,9 @@
 <template>
   <transition name="fade-transition">
-    <div class="modal-backdrop">
+    <div class="modal-backdrop" @click.prevent="close">
       <div class="modal"
            role="dialog"
+           @click.stop
       >
 	      <v-progress-linear
 			      indeterminate
@@ -132,6 +133,7 @@ export default {
       this.smsCode = null;
       this.code = null;
       this.$emit('close');
+      document.body.classList.remove('modal-open');
     },
     next(){
       if(this.person.phoneNumber!==null && this.clientError.phoneNumber==null){
@@ -180,6 +182,9 @@ export default {
       access_token: state => state.person.access_token
     }),
   },
+  mounted() {
+
+  }
 }
 </script>
 

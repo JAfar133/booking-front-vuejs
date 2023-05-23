@@ -4,10 +4,10 @@ echo "Starting deployment..."
 remote_host="195.133.49.102"
 remote_user="root"
 ssh_port="22"
-
+ssh_path="C:/Users/golov/.ssh/ssh_key"
 echo "connect to server..."
 
-ssh -i ssh_key "$remote_user"@"$remote_host" << EOF
+ssh -i $ssh_path "$remote_user"@"$remote_host" << EOF
 cd booking-backend-java
 git pull
 pgrep java | xargs kill -9
