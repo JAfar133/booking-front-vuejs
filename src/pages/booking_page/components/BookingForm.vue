@@ -36,7 +36,7 @@
             id="room"
             class="nice-select"
         />
-        <v-alert v-if="bookingError.length && !showModal"
+        <v-alert v-if="bookingError.length"
                  type="warning"
                  variant="tonal"
                  class="mt-4">
@@ -106,7 +106,6 @@ export default {
   },
   data() {
     return {
-      showModal: ref(false),
       bookingError: '',
       successModal: ref(false),
       markers: [],
@@ -126,9 +125,7 @@ export default {
     optionLabel(option){
       return option.name+ " на " + option.address.split(", Севастополь")[0]
     },
-    closePersonDetailsModal() {
-      this.showModal = false;
-    },
+
     closeSuccessModal(){
       this.successModal = false;
     },
@@ -162,7 +159,6 @@ export default {
       )
           .then((response) =>{
             this.booking.date = this.getNormalizedDate(response.data.date)
-            this.showModal = false;
             this.successModal = true;
           })
           .catch(error => {

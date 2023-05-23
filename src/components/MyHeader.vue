@@ -171,9 +171,7 @@ export default {
     ...mapActions({
       deletePersonFromCookie: 'deletePersonFromCookie',
     }),
-      openMenu(){
-          console.log("menu was open")
-      },
+
     closeLoginForm(){
       this.setLoginFormShow(false)
     },

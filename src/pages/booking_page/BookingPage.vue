@@ -15,7 +15,7 @@
   </div>
     <change-phone-modal
             v-show="changePhoneNumber"
-            @close="changePhoneNumber=false"
+            @close="closeConfirmModal"
     />
 	<v-dialog
 			transition="dialog-top-transition"
@@ -91,8 +91,7 @@ export default {
     },
     async submitBooking(){
       const isValid = this.$refs.PersonDetails.personDetailsIsValid()
-        console.log(isValid)
-        console.log(this.isAuthorized)
+
 				if(isValid){
 					if(!this.isAuthorized) {
             this.setLoginFormShow(true)
@@ -104,9 +103,17 @@ export default {
 						submitBooking(this.booking).then((data)=>{
 							localStorage.removeItem("booking")
 							this.successModal = true;
-						})
+						}).catch(error=>{
+              console.log(error)
+            })
 					}
 				}
+    },
+    closeConfirmModal(){
+      this.changePhoneNumber = false;
+      if(this.person.phoneNumber_confirmed){
+        this.submitBooking();
+      }
     },
     ...mapMutations({
       setBooking: 'setBooking',

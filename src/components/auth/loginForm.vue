@@ -215,14 +215,14 @@ export default {
       window.location=`${BASE_URL}/oauth2/authorize/yandex`;
       localStorage.setItem('currHref',window.location.pathname)
     },
+    githubAuthorizated(){
+      window.location=`${BASE_URL}/oauth2/authorize/github`;
+      localStorage.setItem('currHref',window.location.pathname)
+    },
     googleAuthorizated(){
       // window.location=`${BASE_URL}/oauth2/authorize/google`;
       // localStorage.setItem('currHref',window.location.pathname)
         alert('google oauth2 пока не работает')
-    },
-    githubAuthorizated(){
-      window.location=`${BASE_URL}/oauth2/authorize/github`;
-      localStorage.setItem('currHref',window.location.pathname)
     },
     vkAuthorizated(){
       // window.location=`${BASE_URL}/oauth2/authorize/vk`;

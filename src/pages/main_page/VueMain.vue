@@ -1,7 +1,6 @@
 <template>
   <HeroSection :places="places" :bookings="bookings" :place="place" @bookingIsValid="bookingIsValid"/>
   <div class="main-section ">
-<!--    <about-us-section/>-->
 
     <div class="qalendar-title">
       <h3 id="title" class="text-center">Календарь бронирований</h3>
@@ -20,11 +19,9 @@ import HeroSection from "@/pages/main_page/components/HeroSection.vue";
 import MyQalendar from "@/pages/main_page/components/MyQalendar.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
 import { getRoomHalls, getBookings} from '@/api/mainApi';
-// import AboutUsSection from "@/components/AboutUsSection.vue";
 export default {
   name: 'VueMain',
   components: {
-    // AboutUsSection,
     MyQalendar,
     HeroSection
   },
@@ -51,7 +48,7 @@ export default {
     }),
     bookingIsValid(){
       localStorage.setItem('booking', JSON.stringify(this.booking));
-      window.location.href="/booking";
+      this.$router.push('/booking');
     },
     getRoomHalls() {
       getRoomHalls()

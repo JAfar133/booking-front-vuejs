@@ -16,7 +16,7 @@
           :key="booking.id"
       >
         <input type="checkbox" :value="booking" v-model="selectBookings">
-        <div class="card">
+        <div class="card" v-ripple @click="cartClick(booking)">
           <div class="card-header">
             <h5>№ {{ idx+1 }}</h5>
             <h5>Дата заказа {{ new Date(booking.bookedAt).toLocaleString() }}</h5>
@@ -46,18 +46,22 @@ import BASE_URL from '@/config.js';
 import {deleteAllBookings} from "@/api/personApi";
 export default {
   name: "BookingList",
+  components:{
+
+  },
   data(){
     return {
       bookings: [],
       selectBookings: [],
-      allSelected: false
+      allSelected: false,
+      skeletonLoader: true
     }
   },
   methods: {
     deleteBooking(){
       deleteAllBookings(this.selectBookings)
           .then(()=>{
-            this.bookings = []
+            this.getBookings()
           })
           .catch(error=>{
             console.log(error)
@@ -76,6 +80,11 @@ export default {
             this.bookings = []
             console.log(error)
           })
+    },
+    cartClick(booking){
+      const idx = this.selectBookings.indexOf(booking)
+      if(idx!==-1) this.selectBookings.splice(idx,1);
+      else this.selectBookings.push(booking);
     },
     normalizeDate(date){
       return moment(new Date(date[0],date[1],date[2])).locale('ru').format("Do MMM YYYY")

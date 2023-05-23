@@ -254,7 +254,6 @@ export default {
     },
     personDetailsIsValid(){
       this.validateAll();
-        console.log(this.hasError())
       return !this.hasError();
 
     },

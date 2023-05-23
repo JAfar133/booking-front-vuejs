@@ -1,11 +1,5 @@
 <template>
 	<div class="row booking-section">
-		<!--    <div class="menu col mt-5">-->
-		<!--      <ul class="mt-5">-->
-		<!--        <li>Личная информация</li>-->
-		<!--        <li>Мои бронирования</li>-->
-		<!--      </ul>-->
-		<!--    </div>-->
 		<div class="persondata container col">
 			<div class="title text-center">
 				<h3 class="">Личная информация</h3>

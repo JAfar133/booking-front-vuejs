@@ -8,7 +8,6 @@ store.dispatch('showPersonInfo').then(result => {
 export async function isAuthenticated() {
     store.dispatch('showPersonInfo');
     isAuth = store.getters.isAuthorized;
-    console.log(isAuth)
     return isAuth;
 }
 
