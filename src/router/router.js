@@ -35,7 +35,7 @@ const routes = [
     },
     {
         path: '/me',
-        component: ()=>PersonData,
+        component: PersonData,
         beforeEnter: authorizedEndPoints
     },
     {
