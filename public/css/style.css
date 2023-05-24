@@ -26,18 +26,18 @@ input:focus, select:focus, button:focus, textarea:focus {
   max-height: 100%;
 }
 .calendar-month__weekday:not(.disabled):hover, .calendar-week__day:not(.disabled):hover {
-  background-color: #ECECFF;
+  background-color: #ABD9F4;
   cursor: pointer;
 }
 .calendar-month__weekday:target, .calendar-week__day:target {
   background-color: green;
 }
 .active, .active:hover {
-  background-color: #ECECFF;
+  background-color: #ABD9F4;
   cursor: auto;
 }
 .disabled {
-  background-color: #FCFCFC;
+  background-color: #F9F9F9;
 }
 ::selection {
   background-color: rgba(119,221,231,0.5);

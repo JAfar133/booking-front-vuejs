@@ -141,8 +141,9 @@ export default {
                 const dayDate = new Date(day);
                 currentDate.setHours(0)
 
-                if(dayDate.getTime() < currentDate.getTime() && window.innerWidth<992 && dayDate.getMonth()===currentDate.getMonth()){
-                  weekday.classList.add('none')
+                if(dayDate.getTime() < currentDate.getTime() && window.innerWidth<992){
+                  if(dayDate.getMonth()===currentDate.getMonth())
+                    weekday.classList.add('none')
                   weekday.classList.add('disabled')
                 }
                 else if ((dayDate.getTime() < currentDate.getTime() || dayDate.getDay() === 0) && window.innerWidth>991) {
