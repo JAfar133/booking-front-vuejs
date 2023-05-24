@@ -26,6 +26,9 @@ export const bookingModule = {
         },
         setCustomer(state, customer){
             state.booking.customer = customer
+        },
+        setPlace(state, place){
+            state.booking.place = place
         }
 
     },

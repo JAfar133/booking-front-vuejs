@@ -41,18 +41,32 @@
               ></phone-number-input>
               <div v-if="isCodeInputShow" class="mt-3">
                 <label for="">Введите смс код, который мы отправили вам на номер телефона</label>
-                <input
-                    type="text"
-                    v-model="code"
-                    class="form-control"
-                    :class="{
-                      'is-invalid border-danger' : clientError.code,
-                    }"
-                    @input="codeInput"
-                    @keydown.enter="verify"
-                >
+<!--                <input-->
+<!--                    type="text"-->
+<!--                    v-model="code"-->
+<!--                    class="form-control"-->
+<!--                    :class="{-->
+<!--                      'is-invalid border-danger' : clientError.code,-->
+<!--                    }"-->
+<!--                    @input="codeInput"-->
+<!--                    @keydown.enter="verify"-->
+<!--                >-->
+                <div class="code-inputs">
+                  <template :key="input.id" v-for="input in inputs">
+                    <input
+                        type="tel"
+                        :ref="input.id"
+                        v-model="input.value"
+                        :id="input.id"
+                        @keydown="inputKeyDown"
+                        @input="codeInput"
+                        :class="{'danger': clientError.code}"
+                    >
+                  </template>
+                </div>
+                <div class="mt-4 text-danger text-center" v-if="clientError.code"
+                >{{ errorMessage }}</div>
               </div>
-                <p v-if="clientError.code" class="text-danger mt-1">{{ errorMessage }}</p>
             </div>
           </div>
 
@@ -105,9 +119,17 @@ export default {
       },
       errorMessage:null,
       isCodeInputShow: false,
-      code: null,
+      code: '',
       smsCode: null,
       loaderShow: false,
+      inputs:[
+        {id:"1",value:""},
+        {id:"2",value:""},
+        {id:"3",value:""},
+        {id:"4",value:""},
+        {id:"5",value:""},
+        {id:"6",value:""},
+      ],
     }
   },
   methods:{
@@ -116,13 +138,60 @@ export default {
       setPhoneNumber: 'setPhoneNumber',
       setPhoneNumberConfirmed: 'setPhoneNumberConfirmed'
     }),
+    inputKeyDown(event){
+      const inputId = Number(event.target.id)
+      if (event.keyCode === 8) {
+        if(inputId>1){
+            if(this.inputs[inputId-1].value!==""){
+              this.inputs[inputId-1].value=""
+            }
+            else document.getElementById(String(inputId-1)).focus();
+        }
+      }
+      if(event.keyCode === 37){
+        if(inputId>0){
+          document.getElementById(String(inputId-1)).focus();
+        }
+      }
+      if(event.keyCode === 39){
+        if(inputId<6){
+          document.getElementById(String(inputId+1)).focus();
+        }
+      }
+    },
+    codeInput(input){
+      const value = input.target.value;
+      const id = Number(input.target.id);
+
+      this.inputs[id-1].value = this.inputs[id-1].value.slice(0,1)
+      if(isNaN(value)){
+        this.inputs[id-1].value = value.replace(/\D/g, '');
+      }
+      if(this.inputs[id-1].value!=="" && id!==this.inputs.length){
+        document.getElementById(String(id+1)).focus();
+      }
+
+      for(input of this.inputs){
+        if(input.value!=="") {
+          this.code+=input.value;
+        }
+      }
+      if(this.code.length===this.inputs.length){
+        this.verify();
+      }
+      else {
+        this.code = '';
+      }
+    },
     sendSmsCode() {
         this.loaderShow = true;
       axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
           .then((response) => {
             this.smsCode = response.data;
+            alert(`Ваш код из СМС: ${response.data.code}`)
             this.errorMessage = '';
             this.loaderShow = false;
+            document.getElementById("1").focus();
           })
           .catch(() => {
             this.errorMessage = 'Error sending SMS code';
@@ -165,9 +234,9 @@ export default {
             this.loaderShow = false;
           });
     },
-    codeInput() {
-      this.clientError.code = null;
-    },
+    // codeInput() {
+    //   this.clientError.code = null;
+    // },
     validatePhoneNumber(){
       const regex = /^(\+7|7|8)?[\s-]?\(?[3489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/;
       if (!regex.test(this.person.phoneNumber)) {
@@ -268,5 +337,23 @@ label {
   display: block;
   margin-bottom: 5px;
   margin-top: 15px;
+}
+.code-inputs{
+  display: flex;
+  column-gap: 10px;
+  justify-content: center;
+  margin-top: 30px;
+  input{
+    font-size: 25px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid #aaaab3;
+    width:40px;
+  }
+  input.danger{
+    border-bottom: 2px solid #DA0916;
+  }
 }
 </style>

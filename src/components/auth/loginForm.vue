@@ -55,16 +55,21 @@
               />
               <div v-if="isCodeInputShow" class="mt-3">
                 <label for="">Введите смс код, который мы отправили вам на номер телефона</label>
-                <input
-                    type="text"
-                    v-model="code"
-                    class="form-control"
-                    :class="{
-                      'is-invalid border-danger' : clientError.code,
-                    }"
-                    @input="codeInput"
-                    @keydown.enter="verify"
-                >
+                <div class="code-inputs">
+                  <template :key="input.id" v-for="input in inputs">
+                    <input
+                        type="tel"
+                        :ref="input.id"
+                        v-model="input.value"
+                        :id="input.id"
+                        @keydown="inputKeyDown"
+                        @input="codeInput"
+                        :class="{'danger': clientError.code}"
+                    >
+                  </template>
+                </div>
+                <div class="mt-4 text-danger text-center" v-if="clientError.code"
+                >{{ clientError.code }}</div>
               </div>
             </div>
           </div>
@@ -196,6 +201,14 @@ export default {
       smsCode: null,
       phoneLogin: false,
       loaderShow: false,
+      inputs:[
+        {id:"1",value:""},
+        {id:"2",value:""},
+        {id:"3",value:""},
+        {id:"4",value:""},
+        {id:"5",value:""},
+        {id:"6",value:""},
+      ],
     }
   },
   methods: {
@@ -278,16 +291,17 @@ export default {
         else if(this.authPerson.password.length < 8) this.clientError.password = "длина должна быть более 7 символов"
         else this.clientError.password = null;
     },
-    codeInput() {
-        this.clientError.code = null;
-    },
     sendSmsCode() {
         this.loaderShow = true;
         sendSms(this.person.phoneNumber)
             .then((smsCode)=>{
-              this.smsCode = smsCode;
+              setTimeout(()=>{
+                alert(`Ваш код из СМС: ${smsCode.code}`)
+                this.smsCode = smsCode;
+              },500)
               this.errorMessage = '';
               this.loaderShow = false;
+              document.getElementById("1").focus();
             })
             .catch((error)=>{
               this.errorMessage = error;
@@ -304,7 +318,6 @@ export default {
           .catch(error=>{
             console.log(error)
             this.clientError.code = "Неверный код"
-            this.errorMessage = error;
             this.loaderShow = false;
           })
     },
@@ -315,10 +328,54 @@ export default {
       }
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
-    savePersonIdToCookies(){
-      const expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime()+ 30 * 24 * 60 * 60 * 1000);
-      VueCookies.set('userId',this.person.id);
+    inputKeyDown(event){
+      const inputId = Number(event.target.id)
+      if (event.keyCode === 8) {
+        if(inputId>1){
+          if(this.inputs[inputId-1].value!==""){
+            this.inputs[inputId-1].value=""
+          }
+          else document.getElementById(String(inputId-1)).focus();
+        }
+      }
+      if(event.keyCode === 37){
+        if(inputId>0){
+          document.getElementById(String(inputId-1)).focus();
+        }
+      }
+      if(event.keyCode === 39){
+        if(inputId<6){
+          document.getElementById(String(inputId+1)).focus();
+        }
+      }
+    },
+    codeInput(input){
+      const value = input.target.value;
+      const id = Number(input.target.id);
+
+      this.inputs[id-1].value = this.inputs[id-1].value.slice(0,1)
+      if(isNaN(value)){
+        this.inputs[id-1].value = value.replace(/\D/g, '');
+      }
+      if(this.inputs[id-1].value!=="" && id!==6){
+        document.getElementById(String(id+1)).focus();
+      }
+      let count = 0;
+      let code = '';
+      for(input of this.inputs){
+        if(input.value!=="") {
+          count++;
+          code+=input.value;
+        }
+      }
+      if(count===6){
+        this.code = code;
+        this.verify();
+      }
+      else {
+        count = 0;
+        code = '';
+      }
     },
   },
   computed: {
@@ -454,6 +511,24 @@ label {
   border-radius: 5px;
   padding: 5px;
 
+}
+.code-inputs{
+  display: flex;
+  column-gap: 10px;
+  justify-content: center;
+  margin-top: 30px;
+  input{
+    font-size: 25px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid #aaaab3;
+    width:40px;
+  }
+  input.danger{
+    border-bottom: 2px solid #DA0916;
+  }
 }
 @media only screen and (max-width: 600px) {
   .modal {

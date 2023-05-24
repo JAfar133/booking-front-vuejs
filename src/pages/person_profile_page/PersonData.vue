@@ -1,5 +1,6 @@
 <template>
 	<div class="row booking-section">
+
 		<div class="persondata container col">
 			<div class="title text-center">
 				<h3 class="">Личная информация</h3>
@@ -216,7 +217,8 @@ export default {
             },
             changePhoneNumber: false,
 						loaderShow: false,
-						errorMessage: null
+						errorMessage: null,
+
         }
     },
     methods: {
@@ -313,19 +315,7 @@ export default {
 </script>
 
 <style scoped>
-.booking-section{
-}
-.persondata {
-    margin-top: 100px;
-    min-height: 100vh;
-    max-width: 800px;
-}
-.main-info{
-    padding: 20px;
-}
-.contact-info{
-    padding: 20px;
-}
+
 >>> {
     --vs-controls-color: #ebebeb;
     --vs-border-color: #ebebeb;
@@ -333,13 +323,28 @@ export default {
     --vs-dropdown-option-padding: 12px;
     --vs-search-input-placeholder-color: #707079;
 }
-.select-invalid {
+</style>
+<style scoped lang="scss">
+  .booking-section{
+  }
+  .persondata {
+    margin-top: 100px;
+    min-height: 100vh;
+    max-width: 800px;
+  }
+  .main-info{
+    padding: 20px;
+  }
+  .contact-info{
+    padding: 20px;
+  }
+  .select-invalid {
     --vs-border-color: red;
-}
-.select-valid {
+  }
+  .select-valid {
     --vs-border-color: green;
-}
-input[type="text"] {
+  }
+  input[type="text"] {
     position: relative;
     display: block;
     width:100%;
@@ -350,39 +355,39 @@ input[type="text"] {
     color: #19191a;
     font-weight: 500;
     padding-left: 20px;
-}
-label {
+  }
+  label {
     font-size: 14px;
     color: #707079;
     display: block;
     margin-bottom: 5px;
     margin-top: 15px;
-}
+  }
 
-.phone {
-}
-.saveButton {
+  .phone {
+  }
+  .saveButton {
     width: 300px
-}
-.menu {
+  }
+  .menu {
     max-width: 300px;
-}
-.menu li{
+  }
+  .menu li{
     color: #707079;
     text-decoration: none;
     padding: 14px;
     list-style: none;
     margin-top: 2px;
-}
+  }
 
-@media only screen and (max-width: 991px) {
+  @media only screen and (max-width: 991px) {
     .phone {
-        max-width: 100%;
+      max-width: 100%;
     }
     .saveButton {
-        width: 100%;
+      width: 100%;
     }
 
-}
+  }
 
 </style>
