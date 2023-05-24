@@ -56,6 +56,15 @@ input:focus, select:focus, button:focus, textarea:focus {
   height: 100vh;
   overflow-y: hidden !important;
 }
+.calendar-month__weekday.none{
+  display: none !important;
+}
+.fa-chevron-left.none{
+  display: none !important;
+}
+.calendar-month__weekday.none span {
+  font-size: 10px !important;
+}
 /*.modal-enter, .modal-leave-to {*/
 /*    transform: translateX(10px);*/
 /*    opacity: 0;*/

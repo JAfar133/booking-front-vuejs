@@ -72,7 +72,7 @@ export default {
           scrollToHour: 5,
         },
         month: {
-
+          showTrailingAndLeadingDates: true
         },
         day: {
 
@@ -123,15 +123,17 @@ export default {
         this.activeDayCell()
       },100);
     },
+    // updatePeriod(e){
+    //   if(e.end.getMonth()===new Date().getMonth()){
+    //     document.querySelector('.fa-chevron-left').classList.add('none')
+    //   }
+    //   else document.querySelector('.fa-chevron-left').classList.remove('none')
+    // },
+
     addDisabledClass(){
           const currentDate = new Date();
-
-          const weeks = document.querySelectorAll('.calendar-month__weeks');
-
-          weeks.forEach(function(week) {
-            const weekdays = week.querySelectorAll('.calendar-month__weekday');
-
-            weekdays.forEach(function(weekday) {
+          const weekdays = this.getWeekdaySelectors();
+              weekdays.forEach(function(weekday) {
               const id = weekday.getAttribute('id');
 
               if (id) {
@@ -139,12 +141,16 @@ export default {
                 const dayDate = new Date(day);
                 currentDate.setHours(0)
 
-                if (dayDate.getTime() < currentDate.getTime() || dayDate.getDay() === 0) {
-                  weekday.classList.add('disabled');
+                if(dayDate.getTime() < currentDate.getTime() && window.innerWidth<992 && dayDate.getMonth()===currentDate.getMonth()){
+                  weekday.classList.add('none')
+                  weekday.classList.add('disabled')
+                }
+                else if ((dayDate.getTime() < currentDate.getTime() || dayDate.getDay() === 0) && window.innerWidth>991) {
+                  weekday.classList.add('disabled')
+
                 }
               }
             });
-          });
     },
     filtered(){
       this.events=[]
@@ -171,12 +177,24 @@ export default {
       const bookingForm = document.getElementById('booking-form');
       bookingForm.focus();
     },
+    getWeekdaySelectors(){
+      const weekDaySelectors = []
+      const weeks = document.querySelectorAll('.calendar-month__weeks');
+      weeks.forEach(function(week) {
+        const weekdays = week.querySelectorAll('.calendar-month__weekday');
+        weekdays.forEach(function(weekday) {
+          weekDaySelectors.push(weekday)
+        })
+      })
+      return weekDaySelectors;
+    },
   },
   mounted() {
     this.$nextTick(() =>{
       this.qalendarIsLoading = true;
       this.addDisabledClass();
       this.qalendarIsLoading = false;
+
     })
   },
   updated() {
@@ -190,6 +208,7 @@ export default {
       booking: state => state.booking.booking,
       bookingDate: state => state.booking.booking.date
     }),
+
   },
   watch: {
     place() {
@@ -218,6 +237,10 @@ export default {
     this.$watch('bookingDate', (newValue) => {
       this.dayClicked = newValue
     });
+    if(window.innerWidth<992){
+      this.config.defaultMode = 'day';
+    }
+
   }
 }
 </script>

@@ -82,10 +82,8 @@
 
 <script>
 import {mapState} from "vuex";
-import axios from "axios";
 import moment from "moment";
-import BASE_URL from '@/config.js';
-import {deleteAllBookings} from "@/api/personApi";
+import {deleteSelecedBookings, getPersonBookings} from "@/api/personApi";
 export default {
   name: "BookingList",
   components:{
@@ -101,7 +99,7 @@ export default {
   },
   methods: {
     deleteBooking(){
-      deleteAllBookings(this.selectBookings)
+      deleteSelecedBookings(this.selectBookings)
           .then(()=>{
             this.getBookings()
             this.selectBookings = []
@@ -110,19 +108,14 @@ export default {
             console.log(error)
           })
     },
+    getBookings() {
+      getPersonBookings(this.personId)
+          .then(bookings=>this.bookings = bookings)
+          .catch(()=>this.bookings = [])
+    },
     allSelectedInput(){
       this.selectBookings = [...this.bookings];
       if(!this.allSelected) this.selectBookings = [];
-    },
-    getBookings() {
-      axios.get(`${BASE_URL}/person/get-bookings/${this.personId}`)
-          .then(response => {
-            this.bookings = response.data.sort(this.bookingSort)
-          })
-          .catch(error => {
-            this.bookings = []
-            console.log(error)
-          })
     },
     cartClick(booking){
       const idx = this.selectBookings.indexOf(booking)
@@ -143,12 +136,6 @@ export default {
     isSelected(booking){
       return this.selectBookings.includes(booking)
     },
-    bookingSort(a, b) {
-      if (a.confirmed !== b.confirmed) {
-        return -1;
-      }
-      return 1;
-    }
   },
   computed: {
     ...mapState({
