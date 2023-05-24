@@ -19,7 +19,7 @@ export function deleteAllBookings(bookings) {
         });
 }
 export function changePersonData(person) {
-    return axios.post(`http://localhost:8080/person`,person,getAuthorizationHeader())
+    return axios.post(`${BASE_URL}/person`,person,getAuthorizationHeader())
         .then(response=> {
             console.log("response: "+ response.data)
             return response.data

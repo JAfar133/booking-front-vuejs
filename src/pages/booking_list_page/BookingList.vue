@@ -104,13 +104,14 @@ export default {
       deleteAllBookings(this.selectBookings)
           .then(()=>{
             this.getBookings()
+            this.selectBookings = []
           })
           .catch(error=>{
             console.log(error)
           })
     },
     allSelectedInput(){
-      this.selectBookings = this.bookings;
+      this.selectBookings = [...this.bookings];
       if(!this.allSelected) this.selectBookings = [];
     },
     getBookings() {
@@ -125,8 +126,16 @@ export default {
     },
     cartClick(booking){
       const idx = this.selectBookings.indexOf(booking)
-      if(idx!==-1) this.selectBookings.splice(idx,1);
-      else this.selectBookings.push(booking);
+      if(idx!==-1) {
+        this.selectBookings.splice(idx,1);
+        this.allSelected = false;
+      }
+      else {
+        this.selectBookings.push(booking);
+        if(this.selectBookings.length===this.bookings.length){
+          this.allSelected = true;
+        }
+      }
     },
     normalizeDate(date){
       return moment(new Date(date[0],date[1]-1,date[2])).locale('ru').format("Do MMM YYYY")
@@ -157,6 +166,14 @@ export default {
   watch: {
     personId(){
       this.getBookings()
+    },
+    selectBookings(){
+      if(this.selectBookings.length===this.bookings.length){
+        this.allSelected = true;
+      }
+      else {
+        this.allSelected = false;
+      }
     }
   }
 }
