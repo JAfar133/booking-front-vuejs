@@ -20,13 +20,8 @@ export function deleteAllBookings(bookings) {
 }
 export function changePersonData(person) {
     return axios.post(`${BASE_URL}/person`,person,getAuthorizationHeader())
-        .then(response=> {
-            console.log("response: "+ response.data)
-            return response.data
-        })
+        .then(response=> response.data)
         .catch(error => {
-            console.log("error:" + error)
-            console.log("error:" + error.response.data)
             throw new Error(error.response.data)
         });
 }
