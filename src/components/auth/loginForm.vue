@@ -65,6 +65,7 @@
                         @keydown="inputKeyDown"
                         @input="codeInput"
                         :class="{'danger': clientError.code}"
+                        @paste="pasteCode"
                     >
                   </template>
                 </div>
@@ -223,7 +224,7 @@ export default {
     ...mapActions({
       saveTokenToCookie: 'saveTokenToCookie',
     }),
-     
+
     yandexAuthorizated(){
       window.location=`${BASE_URL}/oauth2/authorize/yandex`;
       localStorage.setItem('currHref',window.location.pathname)
@@ -375,6 +376,16 @@ export default {
       else {
         count = 0;
         code = '';
+      }
+    },
+    pasteCode(event){
+      const inputId = Number(event.target.id);
+      const inputData = event.clipboardData.getData('text/plain');
+      let pos = 0;
+      for (let i = inputId-1; i < inputData.length+inputId-1; i++) {
+        this.inputs[i].value = inputData.slice(pos,pos+1)
+        document.getElementById(String(i+1)).focus();
+        pos++;
       }
     },
   },

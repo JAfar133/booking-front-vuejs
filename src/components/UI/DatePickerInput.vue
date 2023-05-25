@@ -35,7 +35,8 @@ export default {
     return {
       format: "dd MMMM, yyyy",
     }
-  }
+  },
+
 }
 </script>
 

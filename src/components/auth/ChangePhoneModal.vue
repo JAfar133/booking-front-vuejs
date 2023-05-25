@@ -60,6 +60,7 @@
                         :id="input.id"
                         @keydown="inputKeyDown"
                         @input="codeInput"
+                        @paste="pasteCode"
                         :class="{'danger': clientError.code}"
                     >
                   </template>
@@ -181,6 +182,17 @@ export default {
       }
       else {
         this.code = '';
+      }
+    },
+    pasteCode(event){
+      const inputId = Number(event.target.id);
+      const inputData = event.clipboardData.getData('text/plain');
+      let pos = 0;
+      for (let i = inputId-1; i < inputData.length+inputId-1; i++) {
+        this.inputs[i].value = inputData.slice(pos,pos+1)
+        console.log("id="+i+"value:"+this.inputs[i].value)
+        document.getElementById(String(i+1)).focus();
+        pos++;
       }
     },
     sendSmsCode() {
