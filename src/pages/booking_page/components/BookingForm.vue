@@ -74,10 +74,9 @@ import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import SuccessModal from "@/pages/booking_page/components/SuccessModal.vue";
 import '@vuepic/vue-datepicker/dist/main.css'
 import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
-import axios from 'axios'
 import {ref} from 'vue'
 import {mapMutations, mapState} from "vuex";
-import BASE_URL from '@/config.js';
+import {checkBookingIsValid} from "@/api/personApi";
 
 export default {
 
@@ -132,38 +131,17 @@ export default {
     getNormalizedDate(date){
       return new Date(date[0], date[1] - 1, date[2] + 1).toISOString().slice(0, 10)
     },
-    async valid(){
+    valid(){
       this.loaderShow = true;
       this.bookingError = []
-      axios.post(`${BASE_URL}/booking/valid-booking`, this.booking)
+      checkBookingIsValid(this.booking)
           .then(() =>{
               this.$emit('bookingIsValid')
               this.loaderShow = false;
           })
           .catch(error => {
-            console.log(error)
-            this.bookingError.push(error.response.data)
+            this.bookingError.push(error)
             this.loaderShow = false;
-          })
-    },
-    async submitBooking(customer, comment){
-      this.bookingError = []
-      this.booking.customer = customer;
-      this.booking.comment = comment;
-      axios.post(`${BASE_URL}/booking/save`, this.booking,
-          {
-            headers: {
-              'Authorization': 'Bearer ' + this.access_token
-            }
-          }
-      )
-          .then((response) =>{
-            this.booking.date = this.getNormalizedDate(response.data.date)
-            this.successModal = true;
-          })
-          .catch(error => {
-            console.log(error)
-            this.bookingError.push(error.response.data)
           })
     },
     pushMarker(booking) {

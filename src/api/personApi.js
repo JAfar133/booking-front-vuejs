@@ -9,6 +9,14 @@ export async function submitBooking(booking) {
             throw new Error(error.response.data)
         });
 }
+export async function checkBookingIsValid(booking) {
+    return axios.post(`${BASE_URL}/booking/valid-booking`, booking)
+        .then((response) => response.data)
+        .catch(error => {
+            throw new Error(error.response.data)
+        });
+    
+}
 export async function deleteSelecedBookings(bookings) {
     return axios.post(`${BASE_URL}/booking/delete-all`, bookings, getAuthorizationHeader())
         .then(response => response.data)
@@ -16,14 +24,14 @@ export async function deleteSelecedBookings(bookings) {
             throw new Error(error.response.data)
         });
 }
-export function sendSms(phoneNumber, changePhone=false) {
+export async function sendSms(phoneNumber, changePhone=false) {
     return axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(phoneNumber)}&changePhoneNumber=${changePhone}`)
         .then(response => response.data)
         .catch(error => {
             throw new Error(error.response.data)
         });
 }
-export function verifyCode(code, phoneNumber) {
+export async function verifyCode(code, phoneNumber) {
     return axios.post(`${BASE_URL}/sms/verifyCode?code=${code}&phoneNumber=${encodeURIComponent(phoneNumber)}`,{},getAuthorizationHeader())
         .then(response => response.data)
         .catch(error => {

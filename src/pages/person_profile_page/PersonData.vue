@@ -195,10 +195,10 @@
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import VueSelect from 'vue-select';
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
-import axios from "axios";
 import ChangePhoneModal from "@/components/auth/ChangePhoneModal.vue";
 import validate from "@/utils/validation";
 import {changePersonData} from "@/api/personApi";
+
 export default {
     name: "PersonData",
     components: {ChangePhoneModal, VueSelect, PhoneNumberInput},
