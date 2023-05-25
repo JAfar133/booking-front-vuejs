@@ -11,13 +11,7 @@ export function loginByEmail(authData) {
             return error.response.data;
         })
 }
-export function sendSms(phoneNumber) {
-    return axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(phoneNumber)}`,  )
-        .then(response => response.data)
-        .catch(error => {
-            throw new Error(error.response.data)
-        });
-}
+
 export function verifyAndAuth(code, phoneNumber) {
     return axios.post(`${BASE_URL}/sms/verifyCode-and-auth?code=${code}&phoneNumber=${encodeURIComponent(phoneNumber)}` )
         .then((response) => {

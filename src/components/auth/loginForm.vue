@@ -36,7 +36,7 @@
           <v-alert v-if="errorMessage"
                    type="warning"
                    variant="tonal"
-                   class="mt-4">
+                   class="my-5">
             <span> {{ errorMessage }} </span>
           </v-alert>
           <div class="phone-login-form" v-if="phoneLogin">
@@ -173,9 +173,9 @@
 <script>
 import PhoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapActions, mapMutations, mapState} from "vuex";
-import VueCookies from "vue-cookies";
 import BASE_URL from '@/config.js';
-import {loginByEmail, sendSms, verifyAndAuth} from "@/api/authApi";
+import {loginByEmail, verifyAndAuth} from "@/api/authApi";
+import {sendSms} from "@/api/personApi";
 
 export default {
   name: "loginForm",
@@ -192,7 +192,7 @@ export default {
         password: null,
         email: null
       },
-      errorMessage:null,
+      errorMessage: null,
       isCodeInputShow: false,
       code: null,
       authPerson: {
@@ -247,7 +247,7 @@ export default {
       this.validateEmail();
       this.validatePassword();
       if(this.clientError.email || this.clientError.password) return;
-      this.errorMessage = "";
+      this.errorMessage = null;
       this.loaderShow = true;
       loginByEmail(this.authPerson)
           .then(()=> {
@@ -299,10 +299,12 @@ export default {
               setTimeout(()=>{
                 alert(`Ваш код из СМС: ${smsCode.code}`)
                 this.smsCode = smsCode;
+                document.getElementById("1").focus();
               },500)
-              this.errorMessage = '';
+
               this.loaderShow = false;
-              document.getElementById("1").focus();
+              this.isCodeInputShow = true;
+              this.errorMessage = null;
             })
             .catch((error)=>{
               this.errorMessage = error;
@@ -325,7 +327,7 @@ export default {
     next(){
       if(this.person.phoneNumber!==null && this.clientError.phoneNumber==null){
         this.sendSmsCode();
-        this.isCodeInputShow = true;
+
       }
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },

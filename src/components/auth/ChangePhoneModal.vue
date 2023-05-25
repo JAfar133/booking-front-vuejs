@@ -101,8 +101,7 @@
 <script>
 import phoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
 import {mapMutations, mapState} from "vuex";
-import axios from "axios";
-import BASE_URL from '@/config.js';
+import {sendSms, verifyCode} from "@/api/personApi";
 
 export default {
   name: "changePhone",
@@ -197,18 +196,21 @@ export default {
     },
     sendSmsCode() {
         this.loaderShow = true;
-      axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,  )
-          .then((response) => {
-            this.smsCode = response.data;
-            alert(`Ваш код из СМС: ${response.data.code}`)
-            this.errorMessage = '';
-            this.loaderShow = false;
-            document.getElementById("1").focus();
-          })
-          .catch(() => {
-            this.errorMessage = 'Error sending SMS code';
+        sendSms(this.person.phoneNumber,true)
+            .then((smsCode)=>{
+              setTimeout(()=>{
+                alert(`Ваш код из СМС: ${smsCode.code}`)
+                this.smsCode = smsCode;
+                document.getElementById("1").focus();
+              },500)
+              this.errorMessage = '';
               this.loaderShow = false;
-          });
+              this.isCodeInputShow = true;
+            })
+            .catch(()=>{
+              this.errorMessage = 'Error sending SMS code';
+              this.loaderShow = false;
+            })
     },
     close(){
       this.isCodeInputShow = false;
@@ -220,35 +222,22 @@ export default {
     next(){
       if(this.person.phoneNumber!==null && this.clientError.phoneNumber==null){
         this.sendSmsCode();
-        this.isCodeInputShow = true;
       }
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
     verify(){
-      this.loaderShow = true;
-      axios.post(`${BASE_URL}/sms/verifyCode?code=${this.code}&phoneNumber=${encodeURIComponent(this.person.phoneNumber)}`,{},
-      {
-        headers: {
-          'Authorization': 'Bearer ' + this.access_token
-        }
-      }
-      )
-          .then((response) => {
-            // response.data = Person
-            this.setPhoneNumber(response.data.phoneNumber)
-            this.setPhoneNumberConfirmed(response.data.phoneNumber_confirmed)
+      verifyCode(this.code,this.person.phoneNumber)
+          .then((person) => {
+            this.setPhoneNumber(person.phoneNumber)
+            this.setPhoneNumberConfirmed(person.phoneNumber_confirmed)
             this.close()
           })
           .catch((error) => {
-            this.clientError.code = error.response.data;
-            console.log(error.response.data);
-            this.errorMessage = error.response.data;
+            this.clientError.code = error;
+            this.errorMessage = error;
             this.loaderShow = false;
           });
     },
-    // codeInput() {
-    //   this.clientError.code = null;
-    // },
     validatePhoneNumber(){
       const regex = /^(\+7|7|8)?[\s-]?\(?[3489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/;
       if (!regex.test(this.person.phoneNumber)) {

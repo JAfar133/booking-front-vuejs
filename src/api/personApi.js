@@ -16,6 +16,20 @@ export async function deleteSelecedBookings(bookings) {
             throw new Error(error.response.data)
         });
 }
+export function sendSms(phoneNumber, changePhone=false) {
+    return axios.post(`${BASE_URL}/sms/sendSms?phoneNumber=${encodeURIComponent(phoneNumber)}&changePhoneNumber=${changePhone}`)
+        .then(response => response.data)
+        .catch(error => {
+            throw new Error(error.response.data)
+        });
+}
+export function verifyCode(code, phoneNumber) {
+    return axios.post(`${BASE_URL}/sms/verifyCode?code=${code}&phoneNumber=${encodeURIComponent(phoneNumber)}`,{},getAuthorizationHeader())
+        .then(response => response.data)
+        .catch(error => {
+            throw new Error(error.response.data)
+        });
+}
 export async function changePersonData(person) {
     return axios.post(`${BASE_URL}/person`, person,getAuthorizationHeader())
         .then(response=> response.data)
