@@ -10,7 +10,6 @@
 import {mapActions} from "vuex";
 import MyHeader from "@/components/MyHeader.vue";
 import MyFooter from "@/components/MyFooter.vue";
-import '../src/utils/header'
 export default {
     components: {MyFooter, MyHeader},
     methods: {
@@ -33,6 +32,9 @@ export default {
 @import "public/css/variables";
 h1{
 	font-family: $title_font;
+}
+body{
+  overflow-x: hidden;
 }
 .body.paddingTop{
   padding-top:75px;

@@ -1,15 +1,15 @@
 <template>
   <HeroSection :places="places" :bookings="bookings" :place="place" @bookingIsValid="bookingIsValid"/>
   <div class="main-section ">
-
-    <div class="qalendar-title">
-      <h3 id="title" class="text-center">Календарь бронирований</h3>
-      <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
-    </div>
+      <div class="qalendar-title">
+        <h3 id="title" class="text-center">Календарь бронирований</h3>
+        <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
+      </div>
     <hr class="w-100">
-
     <div class="qalendar container">
+      <img src="/img/wave.svg" class="wave" id="wave1" alt="">
       <my-qalendar :places="places" :bookings="bookings"></my-qalendar>
+      <img src="/img/wave.svg" class="wave" id="wave2" alt="">
     </div>
   </div>
 </template>
@@ -46,6 +46,9 @@ export default {
     ...mapActions({
       saveTokenToCookie: 'saveTokenToCookie',
     }),
+    onScroll(e){
+      console.log(e.target.scrollTop)
+    },
     bookingIsValid(){
       localStorage.setItem('booking', JSON.stringify(this.booking));
       this.$router.push('/booking');
@@ -80,7 +83,6 @@ export default {
 
 <style>
 .qalendar-title {
-    width: 100%;
 }
 hr{
   color: #216DDF;
@@ -99,5 +101,15 @@ hr{
     padding: 20px 10px;
   }
 }
+.wave{
+  position: absolute;
+  width: 100%;
+  right: 0;
 
+}
+#wave2{
+  width: 100vw;
+  left: 0;
+  transform: scaleX(-1)
+}
 </style>

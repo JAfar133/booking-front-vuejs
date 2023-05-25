@@ -9,7 +9,11 @@ import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
+import('./utils/header')
 
+if(window.location.pathname==='/'){
+    import('./utils/wave')
+}
 loadFonts()
 window.$ = require('jquery')
 window.JQuery = require('jquery')

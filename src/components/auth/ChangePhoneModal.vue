@@ -14,7 +14,7 @@
             class="modal-header"
             id="modalTitle"
         >
-          <h4 class="text-center">Подтвердите номер телефона</h4>
+          <h4 class="text-center"><slot name="header"></slot></h4>
         <button
             type="button"
             class="btn-close"

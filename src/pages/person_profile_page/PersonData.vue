@@ -1,6 +1,5 @@
 <template>
-	<div class="row booking-section">
-
+	<div class="row booking-section py-5">
 		<div class="persondata container col">
 			<div class="title text-center">
 				<h3 class="">Личная информация</h3>
@@ -188,7 +187,11 @@
 	<change-phone-modal
 			v-show="changePhoneNumber"
 			@close="changePhoneNumber=false"
-	/>
+  >
+    <template v-slot:header>
+      Смена номера телефона
+    </template>
+  </change-phone-modal>
 </template>
 
 <script>
@@ -389,5 +392,6 @@ export default {
     }
 
   }
+
 
 </style>
