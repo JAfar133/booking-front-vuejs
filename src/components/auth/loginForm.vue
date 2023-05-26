@@ -56,18 +56,9 @@
               <div v-if="isCodeInputShow" class="mt-3">
                 <label for="">Введите смс код, который мы отправили вам на номер телефона</label>
                 <div class="code-inputs">
-                  <template :key="input.id" v-for="input in inputs">
-                    <input
-                        type="tel"
-                        :ref="input.id"
-                        v-model="input.value"
-                        :id="input.id"
-                        @keydown="inputKeyDown"
-                        @input="codeInput"
-                        :class="{'danger': clientError.code}"
-                        @paste="pasteCode"
-                    >
-                  </template>
+                  <div class="code-inputs">
+                    <code-input :clientError="clientError" @showCode="verify"></code-input>
+                  </div>
                 </div>
                 <div class="mt-4 text-danger text-center" v-if="clientError.code"
                 >{{ clientError.code }}</div>
@@ -121,16 +112,6 @@
             >
               Получить код
             </v-btn>
-            <v-btn
-                v-else
-                type="button"
-                @click="verify"
-                variant="outlined"
-                color="blue-darken-3"
-                :loading="loaderShow"
-            >
-              Подтвердить
-            </v-btn>
           </div>
           <div class="password-footer w-100" v-else>
             <v-btn
@@ -176,10 +157,11 @@ import {mapActions, mapMutations, mapState} from "vuex";
 import BASE_URL from '@/config.js';
 import {loginByEmail, verifyAndAuth} from "@/api/authApi";
 import {sendSms} from "@/api/personApi";
+import CodeInput from "@/components/UI/CodeInput.vue";
 
 export default {
   name: "loginForm",
-  components: {PhoneNumberInput},
+  components: {CodeInput, PhoneNumberInput},
   emits: {
     close: null,
     signin: null,
@@ -194,7 +176,6 @@ export default {
       },
       errorMessage: null,
       isCodeInputShow: false,
-      code: null,
       authPerson: {
         email: null,
         password: null
@@ -254,7 +235,7 @@ export default {
             this.close()
           })
           .catch((error)=>{
-            this.errorMessage = error;
+            this.errorMessage = error.message;
             this.loaderShow = false;
           })
     },
@@ -264,7 +245,6 @@ export default {
     close(){
       this.isCodeInputShow = false;
       this.smsCode = null;
-      this.code = null;
       this.$emit('close');
       document.body.classList.remove('modal-open');
     },
@@ -307,20 +287,18 @@ export default {
               this.errorMessage = null;
             })
             .catch((error)=>{
-              this.errorMessage = error;
+              this.errorMessage = error.message;
               this.loaderShow = false
             })
     },
-    verify(){
+    verify(code){
       this.loaderShow = true;
-      verifyAndAuth(this.code, this.person.phoneNumber)
-          .then((response)=> {
-            console.log(response)
+      verifyAndAuth(code, this.person.phoneNumber)
+          .then(()=> {
             this.close()
           })
           .catch(error=>{
-            console.log(error)
-            this.clientError.code = "Неверный код"
+            this.clientError.code = error.message;
             this.loaderShow = false;
           })
     },
@@ -331,65 +309,8 @@ export default {
       }
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
-    inputKeyDown(event){
-      const inputId = Number(event.target.id)
-      if (event.keyCode === 8) {
-        if(inputId>1){
-          if(this.inputs[inputId-1].value!==""){
-            this.inputs[inputId-1].value=""
-          }
-          else document.getElementById(String(inputId-1)).focus();
-        }
-      }
-      if(event.keyCode === 37){
-        if(inputId>0){
-          document.getElementById(String(inputId-1)).focus();
-        }
-      }
-      if(event.keyCode === 39){
-        if(inputId<6){
-          document.getElementById(String(inputId+1)).focus();
-        }
-      }
-    },
-    codeInput(input){
-      const value = input.target.value;
-      const id = Number(input.target.id);
 
-      this.inputs[id-1].value = this.inputs[id-1].value.slice(0,1)
-      if(isNaN(value)){
-        this.inputs[id-1].value = value.replace(/\D/g, '');
-      }
-      if(this.inputs[id-1].value!=="" && id!==6){
-        document.getElementById(String(id+1)).focus();
-      }
-      let count = 0;
-      let code = '';
-      for(input of this.inputs){
-        if(input.value!=="") {
-          count++;
-          code+=input.value;
-        }
-      }
-      if(count===6){
-        this.code = code;
-        this.verify();
-      }
-      else {
-        count = 0;
-        code = '';
-      }
-    },
-    pasteCode(event){
-      const inputId = Number(event.target.id);
-      const inputData = event.clipboardData.getData('text/plain');
-      let pos = 0;
-      for (let i = inputId-1; i < inputData.length+inputId-1; i++) {
-        this.inputs[i].value = inputData.slice(pos,pos+1)
-        document.getElementById(String(i+1)).focus();
-        pos++;
-      }
-    },
+
   },
   computed: {
     ...mapState({

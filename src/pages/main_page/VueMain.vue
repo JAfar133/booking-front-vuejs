@@ -5,7 +5,7 @@
         <h3 id="title" class="text-center">Календарь бронирований</h3>
         <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
       </div>
-    <hr class="w-100">
+<!--    <hr class="w-100">-->
     <div class="qalendar container">
       <img src="/img/wave.svg" class="wave" id="wave1" alt="">
       <my-qalendar :places="places" :bookings="bookings"></my-qalendar>

@@ -41,32 +41,11 @@
               ></phone-number-input>
               <div v-if="isCodeInputShow" class="mt-3">
                 <label for="">Введите смс код, который мы отправили вам на номер телефона</label>
-<!--                <input-->
-<!--                    type="text"-->
-<!--                    v-model="code"-->
-<!--                    class="form-control"-->
-<!--                    :class="{-->
-<!--                      'is-invalid border-danger' : clientError.code,-->
-<!--                    }"-->
-<!--                    @input="codeInput"-->
-<!--                    @keydown.enter="verify"-->
-<!--                >-->
                 <div class="code-inputs">
-                  <template :key="input.id" v-for="input in inputs">
-                    <input
-                        type="tel"
-                        :ref="input.id"
-                        v-model="input.value"
-                        :id="input.id"
-                        @keydown="inputKeyDown"
-                        @input="codeInput"
-                        @paste="pasteCode"
-                        :class="{'danger': clientError.code}"
-                    >
-                  </template>
+                  <code-input :clientError="clientError" @showCode="verify"></code-input>
                 </div>
                 <div class="mt-4 text-danger text-center" v-if="clientError.code"
-                >{{ errorMessage }}</div>
+                >{{ clientError.code }}</div>
               </div>
             </div>
           </div>
@@ -83,14 +62,6 @@
             >
               Получить код
             </button>
-            <button
-                v-else
-                type="button"
-                class="btn btn-outline-primary"
-                @click="verify"
-            >
-              Подтвердить
-            </button>
           </div>
         </footer>
       </div>
@@ -100,12 +71,14 @@
 
 <script>
 import phoneNumberInput from "@/components/UI/PhoneNumberInput.vue";
+import CodeInput from "@/components/UI/CodeInput.vue";
 import {mapMutations, mapState} from "vuex";
 import {sendSms, verifyCode} from "@/api/personApi";
 
 export default {
   name: "changePhone",
   components:{
+    CodeInput,
     phoneNumberInput
   },
   emits: {
@@ -119,17 +92,8 @@ export default {
       },
       errorMessage:null,
       isCodeInputShow: false,
-      code: '',
       smsCode: null,
       loaderShow: false,
-      inputs:[
-        {id:"1",value:""},
-        {id:"2",value:""},
-        {id:"3",value:""},
-        {id:"4",value:""},
-        {id:"5",value:""},
-        {id:"6",value:""},
-      ],
     }
   },
   methods:{
@@ -138,62 +102,7 @@ export default {
       setPhoneNumber: 'setPhoneNumber',
       setPhoneNumberConfirmed: 'setPhoneNumberConfirmed'
     }),
-    inputKeyDown(event){
-      const inputId = Number(event.target.id)
-      if (event.keyCode === 8) {
-        if(inputId>1){
-            if(this.inputs[inputId-1].value!==""){
-              this.inputs[inputId-1].value=""
-            }
-            else document.getElementById(String(inputId-1)).focus();
-        }
-      }
-      if(event.keyCode === 37){
-        if(inputId>0){
-          document.getElementById(String(inputId-1)).focus();
-        }
-      }
-      if(event.keyCode === 39){
-        if(inputId<6){
-          document.getElementById(String(inputId+1)).focus();
-        }
-      }
-    },
-    codeInput(input){
-      const value = input.target.value;
-      const id = Number(input.target.id);
 
-      this.inputs[id-1].value = this.inputs[id-1].value.slice(0,1)
-      if(isNaN(value)){
-        this.inputs[id-1].value = value.replace(/\D/g, '');
-      }
-      if(this.inputs[id-1].value!=="" && id!==this.inputs.length){
-        document.getElementById(String(id+1)).focus();
-      }
-
-      for(input of this.inputs){
-        if(input.value!=="") {
-          this.code+=input.value;
-        }
-      }
-      if(this.code.length===this.inputs.length){
-        this.verify();
-      }
-      else {
-        this.code = '';
-      }
-    },
-    pasteCode(event){
-      const inputId = Number(event.target.id);
-      const inputData = event.clipboardData.getData('text/plain');
-      let pos = 0;
-      for (let i = inputId-1; i < inputData.length+inputId-1; i++) {
-        this.inputs[i].value = inputData.slice(pos,pos+1)
-        console.log("id="+i+"value:"+this.inputs[i].value)
-        document.getElementById(String(i+1)).focus();
-        pos++;
-      }
-    },
     sendSmsCode() {
         this.loaderShow = true;
         sendSms(this.person.phoneNumber,true)
@@ -207,15 +116,14 @@ export default {
               this.loaderShow = false;
               this.isCodeInputShow = true;
             })
-            .catch(()=>{
-              this.errorMessage = 'Error sending SMS code';
+            .catch((error)=>{
+              this.errorMessage = error.message;
               this.loaderShow = false;
             })
     },
     close(){
       this.isCodeInputShow = false;
       this.smsCode = null;
-      this.code = null;
       this.$emit('close');
       document.body.classList.remove('modal-open');
     },
@@ -225,16 +133,16 @@ export default {
       }
       else this.clientError.phoneNumber='Номер телефона не корректный';
     },
-    verify(){
-      verifyCode(this.code,this.person.phoneNumber)
+    verify(code){
+      verifyCode(code,this.person.phoneNumber)
           .then((person) => {
             this.setPhoneNumber(person.phoneNumber)
             this.setPhoneNumberConfirmed(person.phoneNumber_confirmed)
             this.close()
           })
           .catch((error) => {
-            this.clientError.code = error;
-            this.errorMessage = error;
+            this.clientError.code = error.message;
+            this.errorMessage = error.message;
             this.loaderShow = false;
           });
     },
@@ -344,17 +252,5 @@ label {
   column-gap: 10px;
   justify-content: center;
   margin-top: 30px;
-  input{
-    font-size: 25px;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-    border: none;
-    border-bottom: 2px solid #aaaab3;
-    width:40px;
-  }
-  input.danger{
-    border-bottom: 2px solid #DA0916;
-  }
 }
 </style>

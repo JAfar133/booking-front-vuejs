@@ -140,7 +140,7 @@ export default {
               this.loaderShow = false;
           })
           .catch(error => {
-            this.bookingError.push(error)
+            this.bookingError.push(error.message)
             this.loaderShow = false;
           })
     },

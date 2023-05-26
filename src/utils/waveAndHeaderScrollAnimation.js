@@ -3,7 +3,6 @@ function headerScrollHandler() {
     const wWidth = window.innerWidth;
     const menu_item = document.querySelector('.menu-item');
     const body =  document.querySelector('.body');
-    console.log(scrollPos);
     if (wWidth > 991 && menu_item!==null && body!==null) {
         if (scrollPos >= 50) {
             menu_item.classList.add('fixed');

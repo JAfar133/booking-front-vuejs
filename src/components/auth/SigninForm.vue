@@ -144,8 +144,7 @@ export default {
             this.close()
           })
           .catch(error=>{
-            console.log(error)
-            this.errorMessage = error;
+            this.errorMessage = error.message;
             this.loaderShow = false;
           })
     },

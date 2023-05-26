@@ -288,15 +288,13 @@ export default {
 						this.loaderShow = true;
             changePersonData(this.person)
                 .then((person)=>{
-                  console.log(person)
                   this.setPerson(person)
                   this.loaderShow = false
                   alert('Данные сохранены')
                 })
                 .catch((error)=>{
                   this.loaderShow = false;
-                  this.errorMessage = error;
-                  console.log(error)
+                  this.errorMessage = error.message;
                 })
         },
     },
