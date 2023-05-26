@@ -15,7 +15,7 @@
       >Удалить выбранное</button>
       <div
           class="card-item"
-          v-for="(booking,idx) in bookings"
+          v-for="(booking, idx) in bookings"
           :key="booking.id"
       >
         <v-checkbox :value="booking" v-model="selectBookings" color="info"></v-checkbox>
