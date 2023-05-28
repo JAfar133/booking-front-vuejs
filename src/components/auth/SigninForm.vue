@@ -177,7 +177,7 @@ export default {
     },
     close(){
       this.$emit('close')
-      document.body.classList.remove('modal-open');
+      document.querySelector('html').classList.remove('modal-open');
     }
   },
   mounted() {

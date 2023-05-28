@@ -96,7 +96,7 @@ export default {
 <style scoped>
 .rooms-section {
   padding-top: 100px;
-    margin-top: 40px;
+  margin-top: 40px;
   padding-bottom: 80px;
 }
 .room-item {

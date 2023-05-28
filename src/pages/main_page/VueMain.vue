@@ -1,10 +1,10 @@
 <template>
   <HeroSection :places="places" :bookings="bookings" :place="place" @bookingIsValid="bookingIsValid"/>
   <div class="main-section ">
-      <div class="qalendar-title">
-        <h3 id="title" class="text-center">Календарь бронирований</h3>
-        <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
-      </div>
+    <div class="qalendar-title">
+      <h3 id="title" class="text-center">Календарь бронирований</h3>
+      <p class="text-center">Здесь вы можете посмотреть свободные помещения на нужную дату</p>
+    </div>
 <!--    <hr class="w-100">-->
     <div class="qalendar container">
       <img src="/img/wave.svg" class="wave" id="wave1" alt="">
@@ -17,8 +17,9 @@
 <script>
 import HeroSection from "@/pages/main_page/components/HeroSection.vue";
 import MyQalendar from "@/pages/main_page/components/MyQalendar.vue";
-import {mapActions, mapMutations, mapState} from "vuex";
-import { getRoomHalls, getBookings} from '@/api/mainApi';
+import {mapState} from "vuex";
+import {getBookings, getRoomHalls} from '@/api/mainApi';
+
 export default {
   name: 'VueMain',
   components: {
@@ -35,20 +36,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setCustomer: 'setPerson',
-      setPersonId: 'setPersonId',
-      setIsAuthorized: 'setIsAuthorized',
-      setLoginFormShow: 'setLoginFormShow',
-      setAccessToken: 'setAccessToken',
-      setRefreshToken: 'setRefreshToken'
-    }),
-    ...mapActions({
-      saveTokenToCookie: 'saveTokenToCookie',
-    }),
-    onScroll(e){
-      console.log(e.target.scrollTop)
-    },
     bookingIsValid(){
       localStorage.setItem('booking', JSON.stringify(this.booking));
       this.$router.push('/booking');

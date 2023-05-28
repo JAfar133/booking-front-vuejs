@@ -25,6 +25,12 @@
             class="modal-body"
             id="modalDescription"
         >
+          <v-alert v-if="errorMessage"
+                   type="warning"
+                   variant="tonal"
+                   class="my-5">
+            <span> {{ errorMessage }} </span>
+          </v-alert>
           <div class="phone-login-form">
             <div class="mb-3 text-center" v-if="!isCodeInputShow" >Мы отправим на номер SMS-сообщение с кодом подтверждения</div>
             <div>
@@ -125,7 +131,7 @@ export default {
       this.isCodeInputShow = false;
       this.smsCode = null;
       this.$emit('close');
-      document.body.classList.remove('modal-open');
+      document.querySelector('html').classList.remove('modal-open');
     },
     next(){
       if(this.person.phoneNumber!==null && this.clientError.phoneNumber==null){
@@ -142,6 +148,7 @@ export default {
           })
           .catch((error) => {
             this.clientError.code = error.message;
+            console.error(error)
             this.errorMessage = error.message;
             this.loaderShow = false;
           });
@@ -164,7 +171,7 @@ export default {
   },
   mounted() {
     if(this.modalOpen){
-      document.body.classList.add('modal-open');
+      document.querySelector('html').classList.add('modal-open');
     }
   }
 }

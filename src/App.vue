@@ -1,9 +1,9 @@
 <template>
-	<my-header/>
+	<my-header v-if="!isAdminRoute"/>
 	<div class="body">
 		<router-view></router-view>
 	</div>
-	<my-footer/>
+	<my-footer v-if="!isAdminRoute"/>
 </template>
 
 <script>
@@ -24,6 +24,11 @@ export default {
         })
     },
     created() {
+    },
+    computed: {
+      isAdminRoute() {
+        return this.$route.path === '/admin';
+      }
     }
 }
 </script>

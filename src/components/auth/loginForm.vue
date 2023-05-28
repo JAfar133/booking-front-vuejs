@@ -1,6 +1,6 @@
 <template>
   <transition name="fade-transition">
-    <div class="modal-backdrop overflow-hidden" @click.prevent="close">
+    <div class="modal-backdrop overflow-hidden" @click="close">
       <div class="modal"
            :class="{ 'alert alert-success':isAuthorized }"
            role="dialog"
@@ -246,7 +246,7 @@ export default {
       this.isCodeInputShow = false;
       this.smsCode = null;
       this.$emit('close');
-      document.body.classList.remove('modal-open');
+      document.querySelector('html').classList.remove('modal-open');
     },
     loginPhone() {
       this.phoneLogin = true

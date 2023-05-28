@@ -46,7 +46,7 @@ export async function changePersonData(person) {
         });
 }
 export async function getPersonBookings(personId) {
-    return axios.get(`${BASE_URL}/person/get-bookings/${personId}`)
+    return axios.get(`${BASE_URL}/person/get-bookings/${personId}`, getAuthorizationHeader())
         .then(response => response.data.sort(bookingSortByConfirm))
         .catch(error => {
             throw new Error(error.response.data)

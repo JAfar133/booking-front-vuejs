@@ -1,7 +1,6 @@
 <template>
         <section
-            class="modal-body"
-            id="modalDescription"
+            class="person-details"
         >
           <div class="checkout-section contact-data">
             <div class="title">
@@ -179,14 +178,14 @@ export default {
     return {
       comment: null,
       clientError: {
-          lastName: null,
-          firstName: null,
-          middleName: null,
-          phoneNumber: null,
-          post: null,
-          institute: null,
-          course: null,
-          structure: null,
+        lastName: null,
+        firstName: null,
+        middleName: null,
+        phoneNumber: null,
+        post: null,
+        institute: null,
+        course: null,
+        structure: null,
       },
       contactFill: true,
     }
@@ -204,12 +203,12 @@ export default {
     }),
     hasError() {
 
-        for (const key in this.clientError) {
-            if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
-                return true;
-            }
+      for (const key in this.clientError) {
+        if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
+          return true;
         }
-        return false;
+      }
+      return false;
     },
     ...validate,
     validateFirstName(){
@@ -239,18 +238,18 @@ export default {
       this.clientError.course = this.getCourseError(this.person)
     },
     validateAll(){
-        this.validateFirstName();
-        this.validateLastName();
-        this.validateMiddleName();
-        this.validatePhoneNumber();
-        this.validateInstitute();
-        this.validateStructure();
-        this.validatePost();
-        this.validateCourse();
+      this.validateFirstName();
+      this.validateLastName();
+      this.validateMiddleName();
+      this.validatePhoneNumber();
+      this.validateInstitute();
+      this.validateStructure();
+      this.validatePost();
+      this.validateCourse();
     },
     showLoginForm(){
       this.setLoginFormShow(true)
-      document.body.classList.add('modal-open');
+      document.querySelector('html').classList.add('modal-open');
     },
     personDetailsIsValid(){
       this.validateAll();
@@ -271,30 +270,30 @@ export default {
         getPhoneNumber: 'phoneNumber'
     }),
     isContactFill() {
-        return this.person.lastName
-            && this.person.firstName
-            && this.person.middleName
-            && this.person.phoneNumber
-            && this.contactFill
+      return this.person.lastName
+        && this.person.firstName
+        && this.person.middleName
+        && this.person.phoneNumber
+        && this.contactFill
     },
     formattedPhoneNumber() {
-        // Извлекаем только цифры из номера телефона
-        const phoneNumberDigits = this.person.phoneNumber.replace(/\D/g, '');
+      // Извлекаем только цифры из номера телефона
+      const phoneNumberDigits = this.person.phoneNumber.replace(/\D/g, '');
 
-        // Форматирование номера телефона в соответствии с требуемым форматом
-        const phoneNumberFormatted = `+${phoneNumberDigits.slice(0, 1)} (${phoneNumberDigits.slice(1, 4)}) ${phoneNumberDigits.slice(4, 7)}-${phoneNumberDigits.slice(7, 9)}-${phoneNumberDigits.slice(9)}`;
+      // Форматирование номера телефона в соответствии с требуемым форматом
+      const phoneNumberFormatted = `+${phoneNumberDigits.slice(0, 1)} (${phoneNumberDigits.slice(1, 4)}) ${phoneNumberDigits.slice(4, 7)}-${phoneNumberDigits.slice(7, 9)}-${phoneNumberDigits.slice(9)}`;
 
-        return phoneNumberFormatted;
+      return phoneNumberFormatted;
     },
 
   },
   mounted() {
     setTimeout(()=>{
-        this.contactFill =
-            this.person.lastName
-            && this.person.firstName
-            && this.person.middleName
-            && this.person.phoneNumber;
+      this.contactFill =
+        this.person.lastName
+        && this.person.firstName
+        && this.person.middleName
+        && this.person.phoneNumber;
     },400)
   },
   watch: {
@@ -309,6 +308,11 @@ export default {
 </script>
 
 <style scoped>
+  .person-details{
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+  }
   label {
     margin-top: 15px;
   }
@@ -350,25 +354,23 @@ export default {
   .checkout-section{
       display: flex;
       justify-content: space-between;
+      column-gap: 90px;
       flex-wrap: wrap;
-      margin-bottom: 40px;
   }
   .title {
       display: flex;
-      justify-content: space-between;
-      width: 100px;
-      margin-bottom: 10px;
-      margin-right: 15px;
+      justify-content: start;
+      width: 10%;
       font-size: 20px;
+    column-gap: 20px;
   }
   .title i {
-      margin-right: 16px;
       margin-top: 6px;
   }
   .form-section {
       background: #fff;
       padding: 25px;
-      width:600px;
+      width: min(600px,100%);
       position: relative;
   }
   .form-section button {
@@ -376,11 +378,19 @@ export default {
       right: 0;
       bottom: 7px;
   }
+  @media only screen and (max-width: 1400px) {
+    .form-section{
+      width: 400px;
+    }
+  }
   @media only screen and (max-width: 991px) {
-      .title {
-          width: 100%;
-          justify-content: start;
-      }
+    .title {
+        width: 100%;
+        justify-content: start;
+    }
+    .form-section{
+      width: 100%;
+    }
   }
 
 </style>

@@ -3,7 +3,7 @@ import VueCookies from "vue-cookies";
 import BASE_URL from '@/config.js';
 export const personModule = {
     state: () => ({
-        personId:null,
+        personId: null,
         person: {
             id: null,
             lastName: null,
@@ -82,11 +82,7 @@ export const personModule = {
                 if (cookieAccessToken) {
                     commit('setAccessToken', cookieAccessToken)
                     commit('setRefreshToken', cookieRefreshToken)
-                    axios.get(`${BASE_URL}/person/showInfo`, {
-                            headers: {
-                                'Authorization': 'Bearer ' + cookieAccessToken
-                            }
-                        })
+                    axios.get(`${BASE_URL}/person/showInfo`, getAuthorizationHeader())
                         .then((response) =>{
                             const person = {
                                 id: response.data.id,
@@ -133,11 +129,7 @@ export const personModule = {
         },
         refreshToken({commit, dispatch}) {
             const cookieRefreshToken = VueCookies.get('refresh_token')
-            axios.post(`${BASE_URL}/auth/refresh-token`, {},{
-                headers: {
-                    'Authorization': 'Bearer ' + cookieRefreshToken
-                }
-            })
+            axios.post(`${BASE_URL}/auth/refresh-token`, {},getAuthorizationHeader())
                 .then(response=>{
                     commit('setAccessToken',response.data.access_token)
                     commit('setRefreshToken',response.data.refresh_token)
@@ -174,12 +166,8 @@ export const personModule = {
             dispatch('logout')
 
         },
-        logout({state, dispatch}){
-            axios.post(`${BASE_URL}/auth/logout`, {},{
-                headers: {
-                    'Authorization': 'Bearer ' + state.access_token
-                }
-            })
+        logout({dispatch}){
+            axios.post(`${BASE_URL}/auth/logout`, {},getAuthorizationHeader())
                 .then(response=>{
                     dispatch('deletePersonFromCookie')
                     console.log(response)
@@ -189,4 +177,7 @@ export const personModule = {
                 })
         }
     }
+}
+function getAuthorizationHeader(){
+    return {headers: {'Authorization': 'Bearer ' + VueCookies.get('access_token')}}
 }

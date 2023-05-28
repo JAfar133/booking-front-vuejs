@@ -38,6 +38,7 @@
             </div>
           </v-card-title>
           <v-card-subtitle>
+
             {{ new Date(booking.bookedAt).toLocaleString() }}
           </v-card-subtitle>
           <v-card-text>
@@ -146,21 +147,17 @@ export default {
 
   },
   mounted() {
-    this.$nextTick(function (){
-      this.getBookings()
-    })
+
+  },
+  created() {
+    this.getBookings()
   },
   watch: {
     personId(){
       this.getBookings()
     },
     selectBookings(){
-      if(this.selectBookings.length===this.bookings.length){
-        this.allSelected = true;
-      }
-      else {
-        this.allSelected = false;
-      }
+      this.allSelected = this.selectBookings.length === this.bookings.length;
     }
   }
 }

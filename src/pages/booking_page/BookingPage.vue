@@ -95,7 +95,7 @@ export default {
 				if(isValid){
 					if(!this.isAuthorized) {
             this.setLoginFormShow(true)
-            document.body.classList.add('modal-open');
+            document.querySelector('html').classList.add('modal-open');
           }
 					else if(!this.person.phoneNumber_confirmed) this.changePhoneNumber = true
 					else {
@@ -138,30 +138,52 @@ export default {
     })
   }
 }
+
 </script>
 
 <style scoped>
   .booking-form {
-    width: 450px;
+    min-width: 400px;
     max-width: 100%;
     height: 100%;
     padding: 25px 25px 50px;
   }
   .person-details{
-      margin-right: 40px;
-      width: 700px;
+      width: 800px;
       max-width: 100%;
   }
   .booking{
     padding-top: 70px;
-      padding-bottom: 40px;
+    padding-bottom: 40px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    row-gap: 60px;
+  }
+  @media only screen and (max-width: 1400px) {
+    .person-details{
+      width: 600px;
+    }
+  }
+  @media only screen and (max-width: 1200px) {
+    .person-details{
+      width: 400px;
+    }
   }
   @media only screen and (max-width: 991px) {
       .booking-form {
           padding: 25px 25px 50px;
       }
+      .booking{
+        width:100%;
+      }
+      .booking-form {
+        width:100%;
+      }
+    .person-details{
+      width: 100%;
+    }
+
   }
+
 </style>

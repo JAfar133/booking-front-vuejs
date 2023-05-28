@@ -11,7 +11,7 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 
 import './utils/waveAndHeaderScrollAnimation'
-
+import '/public/css/style.css'
 loadFonts()
 window.$ = require('jquery')
 window.JQuery = require('jquery')

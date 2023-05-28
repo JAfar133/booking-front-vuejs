@@ -181,13 +181,13 @@ export default {
     showLoginForm() {
       this.menu=false;
       this.setLoginFormShow(true)
-      document.body.classList.add('modal-open');
+      document.querySelector('html').classList.add('modal-open');
     },
 
     signin(){
       this.setLoginFormShow(false)
       this.signinFormShow = true;
-      document.body.classList.add('modal-open');
+      document.querySelector('html').classList.add('modal-open');
     },
     logout(){
       this.deletePersonFromCookie();

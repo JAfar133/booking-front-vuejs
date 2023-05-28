@@ -40,7 +40,7 @@
 export default {
   name: "SuccessModal",
   emits: {
-      close: null,
+    close: null,
   },
   methods: {
     close() {
