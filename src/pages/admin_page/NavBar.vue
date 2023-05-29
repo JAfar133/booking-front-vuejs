@@ -51,7 +51,7 @@ export default defineComponent({
         ['mdi-calendar-question', 'Бронирования', '/admin'],
         ['mdi-account-group', 'Пользователи', '/admin/users'],
         ['mdi-calendar-check', 'Подтвержденные', '/admin/confirmed'],
-        ['mdi-delete', 'Отказы', '/admin/rejected'],
+        ['mdi-delete', 'Отклоненные', '/admin/rejected'],
       ],
     }
   },

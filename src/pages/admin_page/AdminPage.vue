@@ -11,6 +11,16 @@
             <v-expansion-panel v-for="(booking, index) in bookings">
               <v-expansion-panel-title v-slot="{ open }">
                 <v-row no-gutters>
+                  <v-col cols="2">
+                    <div  class="mx-3 text-success" v-if="booking.confirmed">
+                      <v-icon icon="mdi-check-outline"></v-icon>
+                      Подтверждено
+                    </div>
+                    <div v-else  class="mx-3 text-danger">
+                      <v-icon icon="mdi-close-octagon"></v-icon>
+                      Не подтверждено
+                    </div>
+                  </v-col>
                   <v-col cols="6" class="d-flex justify-start">
                     <v-icon class="mx-3" icon="mdi-map-marker-outline"></v-icon>
                     <div class="flex-column">
@@ -18,7 +28,7 @@
                       <span >{{ new Date(booking.bookedAt).toLocaleString() }}</span>
                     </div>
                   </v-col>
-                  <v-col cols="6" class="text--secondary">
+                  <v-col cols="4" class="text--secondary">
                     <v-fade-transition leave-absolute>
                       <v-row no-gutters style="width: 100%">
                         <v-col cols="6" class="d-flex justify-start">
@@ -34,10 +44,9 @@
                 </v-row>
               </v-expansion-panel-title>
               <v-expansion-panel-text class="info-panel">
-                <div class="main-details mt-4">
                   <v-tooltip
                     location="end"
-                >
+                  >
                   <template v-slot:activator="{ props }">
                     <v-chip
                         pill
@@ -46,11 +55,12 @@
                         size="large"
                     >
                       <v-icon icon="mdi-calendar-account" style="margin-right: 10px"></v-icon>
-                      {{ booking.customer.lastName }} {{ booking.customer.firstName[0] }} {{ booking.customer.middleName[0] }}
+                      {{ booking.customer.lastName }} {{ booking.customer.firstName }} {{ booking.customer.middleName }}
                     </v-chip>
                   </template>
                   <span>{{ booking.customer.lastName }} {{ booking.customer.firstName }} {{ booking.customer.middleName }}</span>
                 </v-tooltip>
+                <div class="main-details mt-4">
                   <div><a class="text-h6" :href="'tel:'+booking.customer.phoneNumber"><v-icon size="small" icon="mdi-phone"></v-icon>{{ booking.customer.phoneNumber }}</a></div>
                   <div><a :href = "'mailto:'+ booking.customer.email"><v-icon size="small" icon="mdi-email"></v-icon>{{ booking.customer.email }}</a></div>
                   <div>
@@ -70,9 +80,9 @@
                 </div>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn variant="text" color="secondary">Подтвердить</v-btn>
+                  <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
                   <v-btn variant="text" color="primary">Изменить дату</v-btn>
-                  <v-btn variant="text" color="danger">Отклонить</v-btn>
+                  <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
                 </v-card-actions>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -88,6 +98,7 @@ import {getBookings} from "@/api/mainApi";
 import {mapState} from "vuex";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 import moment from "moment/moment";
+import {confirmBooking, rejectBooking} from "@/api/adminApi";
 
 export default {
   components: {NavBar},
@@ -102,7 +113,7 @@ export default {
   },
   methods: {
     normalizeDate(date){
-      return moment(this.getDateObject(date)).locale('ru').format("Do MMM YYYY")
+      return moment(this.getDateObject(date)).locale('ru').format("DD.MM.YYYY")
     },
     getDateObject(date){
       return new Date(date[0],date[1]-1,date[2])
@@ -113,11 +124,23 @@ export default {
             this.bookings = data.sort(this.sortByDate);
           });
     },
-    deleteBooking(booking) {
-
+    rejectBooking(booking, index) {
+      rejectBooking(booking.id)
+          .then(responseBooking=>{
+            this.bookings[index] = responseBooking
+          })
+          .catch(error=>{
+            console.log(error)
+          })
     },
-    confirmBooking(booking) {
-
+    confirmBooking(booking, index) {
+      confirmBooking(booking.id)
+          .then(responseBooking=>{
+            this.bookings[index] = responseBooking
+          })
+          .catch(error=>{
+            console.log(error)
+          })
     },
     editBookingDate(booking) {
 
@@ -125,7 +148,6 @@ export default {
     sortByDate(b1, b2){
       const dateA = this.getDateObject(b1.date);
       const dateB = this.getDateObject(b2.date);
-      console.log(dateA)
       if (dateA.getTime()< dateB.getTime()) {
         return -1;
       }
@@ -153,9 +175,8 @@ export default {
   .main-details{
     color: #4d4d4d;
     display: flex;
-    max-width: 250px;
     flex-direction: column;
-    row-gap: 7px;
+    row-gap: 5px;
   }
   .mdi{
     margin-right: 15px;
