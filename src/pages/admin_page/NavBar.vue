@@ -12,15 +12,16 @@
     </v-sheet>
 
     <v-list>
-      <v-list-item v-for="link in links" :key="link.icon" link :class="{
+      <v-list-item  @click="goToLink(link.link)" v-for="link in links" :key="link.icon" link :class="{
         'current_link_dark': isCurrentPage(link.link) && theme.global.name.value==='dark',
-        'current_link_light': isCurrentPage(link.link) && theme.global.name.value==='light'
+        'current_link_light': isCurrentPage(link.link) && theme.global.name.value==='light',
+        'exit': isExitLink(link.link)
         }">
         <template v-slot:prepend>
           <v-icon>{{ link.icon }}</v-icon>
         </template>
 
-        <v-list-item-title @click="goToLink(link.link)">
+        <v-list-item-title>
           {{ link.text }}
         </v-list-item-title>
       </v-list-item>
@@ -58,6 +59,9 @@ export default defineComponent({
     const isCurrentPage = (link)=> {
       return route.path === link;
     }
+    const isExitLink = (link)=>{
+      return '/' === link;
+    }
     const goHome = () => {
       router.push('/');
     };
@@ -74,7 +78,8 @@ export default defineComponent({
       goHome,
       goToLink,
       isCurrentPage,
-      theme
+      isExitLink,
+      theme,
     };
   },
 });
@@ -86,5 +91,8 @@ export default defineComponent({
 }
 .current_link_light{
   background: #EDEDED;
+}
+.exit{
+  background: #3699DF;
 }
 </style>

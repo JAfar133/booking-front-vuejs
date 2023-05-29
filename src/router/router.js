@@ -62,6 +62,16 @@ const routes = [
         beforeEnter: adminEndPoints
     },
     {
+        path: '/admin/rejected',
+        component: AdminPage,
+        beforeEnter: adminEndPoints
+    },
+    {
+        path: '/admin/users',
+        component: AdminPage,
+        beforeEnter: adminEndPoints
+    },
+    {
         path: '/oauth',
         component: VueMain,
         beforeEnter: (to, from, next) => {

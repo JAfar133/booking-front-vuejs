@@ -23,13 +23,15 @@
             style="width:100%"
             v-ripple @click="cartClick(booking)"
             :class="{'card-selected':isSelected(booking)}"
+            theme="light"
         >
           <v-card-title>
             <div class="flex-row">
 
               <div>
                 <v-icon v-if="booking.confirmed" icon="mdi-timeline-check-outline" color="green"></v-icon>
-                <v-icon v-else icon="mdi-timeline-alert-outline" color="red"></v-icon>
+                <v-icon v-else-if="booking.rejected" icon="mdi-timeline-check-outline" color="danger"></v-icon>
+                <v-icon v-else icon="mdi-timeline-alert-outline" color="primary"></v-icon>
                 {{ booking.place.name }}, {{ booking.place.address }}
               </div>
               <div>
@@ -68,8 +70,9 @@
                  </div>
                </v-timeline-item>
              </v-timeline>
-            <div v-if="!booking.confirmed" class="text-danger">Бронь не подтверждена</div>
-            <div v-else class="text-success">Бронь подтверждена</div>
+            <div v-if="booking.confirmed" class="text-success">Бронь подтверждена</div>
+            <div v-else-if="booking.rejected" class="text-danger">Бронь отклонена</div>
+            <div v-else class="text-primary">Бронь не подтверждена</div>
           </v-card-text>
         </v-card>
       </div>

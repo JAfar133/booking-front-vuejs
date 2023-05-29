@@ -9,7 +9,8 @@ export const bookingModule = {
             comment: '',
             customer: null,
             confirmed: false,
-            bookedAt: null
+            bookedAt: null,
+            rejected: false
         },
     }),
     getters: {

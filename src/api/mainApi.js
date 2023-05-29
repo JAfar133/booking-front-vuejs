@@ -1,6 +1,6 @@
 import axios from 'axios';
 import BASE_URL from '@/config.js';
-function getRoomHalls() {
+export function getRoomHalls() {
     return axios.get(`${BASE_URL}/roomHall`)
         .then(response => response.data)
         .catch(error => {
@@ -9,7 +9,15 @@ function getRoomHalls() {
         });
 }
 
-function getBookings() {
+export function getBookings() {
+    return axios.get(`${BASE_URL}/booking/get-all-not-rejected`)
+        .then(response => response.data.sort(bookingSort))
+        .catch(error => {
+            console.log(error);
+            return [];
+        });
+}
+export function getAllBookings() {
     return axios.get(`${BASE_URL}/booking`)
         .then(response => response.data.sort(bookingSort))
         .catch(error => {
@@ -36,4 +44,3 @@ function bookingSort(a, b) {
     return 0;
 }
 
-export { getRoomHalls, getBookings, bookingSort };

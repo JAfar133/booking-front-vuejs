@@ -7,17 +7,39 @@
           fluid
       >
         <v-row>
-          <v-expansion-panels>
+          <v-col cols="1">
+
+          </v-col>
+          <v-col cols="2">
+            По Статусу
+          </v-col>
+          <v-col cols="6">
+            По помещению
+          </v-col>
+          <v-col cols="2">
+            По Дате
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-expansion-panels v-if="bookings.length">
             <v-expansion-panel v-for="(booking, index) in bookings">
+
               <v-expansion-panel-title v-slot="{ open }">
                 <v-row no-gutters>
+                  <v-col cols="1">
+                    <v-chip class="index_chip">{{ index }}</v-chip>
+                  </v-col>
                   <v-col cols="2">
-                    <div  class="mx-3 text-success" v-if="booking.confirmed">
+                    <div class="text-success" v-if="booking.confirmed">
                       <v-icon icon="mdi-check-outline"></v-icon>
                       Подтверждено
                     </div>
-                    <div v-else  class="mx-3 text-danger">
-                      <v-icon icon="mdi-close-octagon"></v-icon>
+                    <div class="text-danger" v-else-if="booking.rejected">
+                      <v-icon icon="mdi-delete"></v-icon>
+                      Отклонено
+                    </div>
+                    <div v-else class="text-primary">
+                      <v-icon icon="mdi-exclamation-thick"></v-icon>
                       Не подтверждено
                     </div>
                   </v-col>
@@ -28,7 +50,7 @@
                       <span >дата заказа: {{ new Date(booking.bookedAt).toLocaleString() }}</span>
                     </div>
                   </v-col>
-                  <v-col cols="4" class="text--secondary">
+                  <v-col cols="2" class="text--secondary">
                     <v-fade-transition leave-absolute>
                       <v-row no-gutters style="width: 100%">
                         <v-col cols="6" class="d-flex justify-start">
@@ -122,6 +144,7 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
+          <h3 v-else>Пусто</h3>
         </v-row>
       </v-container>
     </v-main>
@@ -129,7 +152,7 @@
 </template>
 
 <script>
-import {getBookings} from "@/api/mainApi";
+import {getAllBookings} from "@/api/mainApi";
 import {mapState} from "vuex";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 import moment from "moment/moment";
@@ -178,19 +201,25 @@ export default {
       return new Date(date[0],date[1]-1,date[2])
     },
     fetchBookings() {
-      getBookings()
+      getAllBookings()
           .then(data => {
             const path = this.$route.path
             switch (path){
               case '/admin':
-                this.bookings = data.sort(this.sortByDate);
+                this.bookings = data.filter(booking=>!booking.rejected).sort(this.sortByBookedAt);
                 break;
               case '/admin/confirmed':
-                this.bookings = data.filter(booking=>booking.confirmed).sort(this.sortByDate)
+                this.bookings = data.filter(booking=>booking.confirmed && !booking.rejected).sort(this.sortByBookedAt)
                 break;
               case '/admin/unconfirmed':
-                this.bookings = data.filter(booking=>!booking.confirmed).sort(this.sortByDate)
+                this.bookings = data.filter(booking=>!booking.confirmed && !booking.rejected).sort(this.sortByBookedAt)
                 break;
+              case '/admin/rejected':
+                this.bookings = data.filter(booking=>!booking.confirmed && booking.rejected).sort(this.sortByBookedAt)
+                break;
+              default:
+                this.bookings = [];
+                break
             }
           });
     },
@@ -244,6 +273,15 @@ export default {
         return 1;
       }
       return 0;
+    },
+    sortByBookedAt(b1, b2){
+      if (b1.bookedAt > b2.bookedAt) {
+        return -1;
+      }
+      if (b1.bookedAt < b2.bookedAt) {
+        return 1;
+      }
+      return 0;
     }
   },
   computed:{
@@ -285,6 +323,9 @@ export default {
   .dialog{
     width: 500px;
     height: 500px;
+  }
+  .v-row{
+    align-items: center;
   }
   @media only screen and (max-width: 991px) {
     .right-side{

@@ -21,6 +21,7 @@
 			transition="dialog-top-transition"
 			width="auto"
 			v-model="successModal"
+      theme="light"
 	>
 		<template v-slot:default="{ isActive }">
 			<v-card>
