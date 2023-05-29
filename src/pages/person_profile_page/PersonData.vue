@@ -148,12 +148,12 @@
 					/>
 					<button class="btn btn-link"
 					        v-if="!person.phoneNumber_confirmed"
-					        @click="changePhoneNumber=true"
+					        @click="confirmPhone()"
 					>Подтвердить
 					</button>
 					<button class="btn btn-link"
 					        v-else
-					        @click="changePhoneNumber=true"
+					        @click="changePhone()"
 					><i class="fa fa-edit">&nbsp;Изменить</i>
 					</button>
 
@@ -187,6 +187,7 @@
 	<change-phone-modal
 			v-show="changePhoneNumber"
 			@close="changePhoneNumber=false"
+      :change="needToChange"
   >
     <template v-slot:header>
       Смена номера телефона
@@ -207,80 +208,89 @@ export default {
     components: {ChangePhoneModal, VueSelect, PhoneNumberInput},
     data(){
         return {
-            clientError: {
-                lastName: null,
-                firstName: null,
-                middleName: null,
-                phoneNumber: null,
-                email: null,
-                post: null,
-                institute: null,
-                course: null,
-                structure:null
-            },
-            changePhoneNumber: false,
-						loaderShow: false,
-						errorMessage: null,
+          clientError: {
+              lastName: null,
+              firstName: null,
+              middleName: null,
+              phoneNumber: null,
+              email: null,
+              post: null,
+              institute: null,
+              course: null,
+              structure:null
+          },
+          changePhoneNumber: false,
+          needToChange: false,
+          loaderShow: false,
+          errorMessage: null,
 
         }
     },
     methods: {
-        ...mapMutations({
-            setPerson: 'setPerson',
-            setPersonId: 'setPersonId',
-            setPhoneNumber: 'setPhoneNumber'
-        }),
-        ...mapActions({
-            deletePersonFromCookie: 'deletePersonFromCookie',
-        }),
-        ...mapGetters({
-            getPerson: 'phoneNumber_confirmed'
-        }),
-        hasError() {
-            for (const key in this.clientError) {
-                if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        ...validate,
-        validateFirstName(){
-            this.clientError.firstName = this.getNameError(this.person.firstName)
-        },
-        validateLastName(){
-            this.clientError.lastName = this.getNameError(this.person.lastName)
-        },
-        validateMiddleName(){
-            this.clientError.middleName = this.getNameError(this.person.middleName)
-        },
-        validatePhoneNumber() {
-            this.clientError.phoneNumber = this.getPhoneError(this.person.phoneNumber)
-        },
-        validateInstitute(){
-            this.clientError.institute = this.getInstituteError(this.person)
-        },
-        validateStructure(){
-            this.clientError.structure = this.getStructureError(this.person)
+      ...mapMutations({
+        setPerson: 'setPerson',
+        setPersonId: 'setPersonId',
+        setPhoneNumber: 'setPhoneNumber'
+      }),
+      ...mapActions({
+        deletePersonFromCookie: 'deletePersonFromCookie',
+      }),
+      ...mapGetters({
+        getPerson: 'phoneNumber_confirmed'
+      }),
+      confirmPhone(){
+        this.needToChange = false;
+        this.changePhoneNumber = true;
+      },
+      changePhone(){
+        this.needToChange = true;
+        this.changePhoneNumber = true;
+      },
+      hasError() {
+          for (const key in this.clientError) {
+              if (this.clientError[key] !== null && this.clientError[key] !== undefined) {
+                  return true;
+              }
+          }
+          return false;
+      },
+      ...validate,
+      validateFirstName(){
+          this.clientError.firstName = this.getNameError(this.person.firstName)
+      },
+      validateLastName(){
+          this.clientError.lastName = this.getNameError(this.person.lastName)
+      },
+      validateMiddleName(){
+          this.clientError.middleName = this.getNameError(this.person.middleName)
+      },
+      validatePhoneNumber() {
+          this.clientError.phoneNumber = this.getPhoneError(this.person.phoneNumber)
+      },
+      validateInstitute(){
+          this.clientError.institute = this.getInstituteError(this.person)
+      },
+      validateStructure(){
+          this.clientError.structure = this.getStructureError(this.person)
 
-        },
-        validatePost(){
-            this.clientError.post = this.getPostError(this.person.post)
-        },
-        validateCourse(){
-            this.clientError.course = this.getCourseError(this.person)
-        },
-        validateAll(){
-            this.validateFirstName();
-            this.validateLastName();
-            this.validateMiddleName();
-            this.validatePhoneNumber();
-            this.validateInstitute();
-            this.validateStructure();
-            this.validatePost();
-            this.validateCourse();
-        },
-        saveChange(){
+      },
+      validatePost(){
+          this.clientError.post = this.getPostError(this.person.post)
+      },
+      validateCourse(){
+          this.clientError.course = this.getCourseError(this.person)
+      },
+      validateAll(){
+          this.validateFirstName();
+          this.validateLastName();
+          this.validateMiddleName();
+          this.validatePhoneNumber();
+          this.validateInstitute();
+          this.validateStructure();
+          this.validatePost();
+          this.validateCourse();
+      },
+      saveChange(){
             this.validateAll();
             if (this.hasError()) {
                 return;
@@ -302,11 +312,11 @@ export default {
 
     },
     computed: {
-        ...mapState({
-            personId: state => state.person.personId,
-            person: state => state.person.person,
-            access_token: state => state.person.access_token,
-        })
+      ...mapState({
+          personId: state => state.person.personId,
+          person: state => state.person.person,
+          access_token: state => state.person.access_token,
+      })
     },
     mounted() {
 

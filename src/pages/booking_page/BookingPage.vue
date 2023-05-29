@@ -16,7 +16,9 @@
     <change-phone-modal
             v-show="changePhoneNumber"
             @close="closeConfirmModal"
-    >Подтвердите номер телефона</change-phone-modal>
+            :change="false"
+    >Подтвердите номер телефона
+    </change-phone-modal>
 	<v-dialog
 			transition="dialog-top-transition"
 			width="auto"

@@ -55,7 +55,10 @@ export default defineComponent({
 
     const person = computed(() => store.state.person.person);
 
-    const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
+    const toggleTheme = () => {
+      theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
+      localStorage.setItem('theme',theme.global.name.value);
+    }
     const isCurrentPage = (link)=> {
       return route.path === link;
     }

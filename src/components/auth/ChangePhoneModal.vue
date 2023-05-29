@@ -87,6 +87,9 @@ export default {
     CodeInput,
     phoneNumberInput
   },
+  props:{
+    change: Boolean
+  },
   emits: {
     close: null,
   },
@@ -111,7 +114,7 @@ export default {
 
     sendSmsCode() {
         this.loaderShow = true;
-        sendSms(this.person.phoneNumber,true)
+        sendSms(this.person.phoneNumber, this.change)
             .then((smsCode)=>{
               setTimeout(()=>{
                 alert(`Ваш код из СМС: ${smsCode.code}`)
