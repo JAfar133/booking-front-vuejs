@@ -25,7 +25,7 @@
                     <v-icon class="mx-3" icon="mdi-map-marker-outline"></v-icon>
                     <div class="flex-column">
                       <div>{{ booking.place.name }}, {{ booking.place.address }}</div>
-                      <span >{{ new Date(booking.bookedAt).toLocaleString() }}</span>
+                      <span >дата заказа: {{ new Date(booking.bookedAt).toLocaleString() }}</span>
                     </div>
                   </v-col>
                   <v-col cols="4" class="text--secondary">
@@ -44,52 +44,88 @@
                 </v-row>
               </v-expansion-panel-title>
               <v-expansion-panel-text class="info-panel">
-                  <v-tooltip
-                    location="end"
-                  >
-                  <template v-slot:activator="{ props }">
-                    <v-chip
-                        pill
-                        link
-                        v-bind="props"
-                        size="large"
-                    >
-                      <v-icon icon="mdi-calendar-account" style="margin-right: 10px"></v-icon>
-                      {{ booking.customer.lastName }} {{ booking.customer.firstName }} {{ booking.customer.middleName }}
-                    </v-chip>
-                  </template>
-                  <span>{{ booking.customer.lastName }} {{ booking.customer.firstName }} {{ booking.customer.middleName }}</span>
-                </v-tooltip>
-                <div class="main-details mt-4">
-                  <div><a class="text-h6" :href="'tel:'+booking.customer.phoneNumber"><v-icon size="small" icon="mdi-phone"></v-icon>{{ booking.customer.phoneNumber }}</a></div>
-                  <div><a :href = "'mailto:'+ booking.customer.email"><v-icon size="small" icon="mdi-email"></v-icon>{{ booking.customer.email }}</a></div>
+                <div class="left-side">
                   <div>
-                    {{ booking.customer.post }}
-                    <template v-if="booking.customer.post==='Студент'">
-                      {{ booking.customer.course }} курса {{ booking.customer.institute }}
-                    </template>
-                    <template v-else>
-                      {{ booking.customer.structure }}
-                    </template>
+                    ФИО: <span>{{ booking.customer.lastName }} {{ booking.customer.firstName }} {{ booking.customer.middleName }} </span><br>
+                    Тел: <a :href="'tel:'+booking.customer.phoneNumber">{{booking.customer.phoneNumber}}</a><br>
+                    Email: <a :href="'mailto:'+booking.customer.email">{{booking.customer.email}}</a>
+                  </div>
+                  <div>
+                    Должность: {{ booking.customer.post }}
+                    <div v-if="booking.customer.post==='Студент'">
+                      Курс: <span>{{ booking.customer.course }}</span><br>
+                      Институт: <span>{{ booking.customer.institute }}</span>
+                    </div>
+                    <div v-else>
+                      Структура: <span>{{ booking.customer.structure }}</span>
+                    </div>
+                  </div>
+                  <div>
+                    Комментарий: <span v-if="booking.comment"> {{booking.comment }} </span>
+                    <span v-else>пусто</span>
                   </div>
                 </div>
-                <div class="comment" v-if="booking.comment">
-                  <div><v-icon size="small" icon="mdi-comment-text"></v-icon>
-                    {{ booking.comment }}
+                <div class="right-side">
+                  <div class="buttons">
+                    <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
+                    <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
+                    <v-btn variant="text" color="primary" @click="editBookingDate(booking,index)">Изменить дату</v-btn>
+                    <v-dialog
+                        v-model="changeDateDialogOpen"
+                        activator="parsent"
+                        width="auto"
+                    >
+                      <template v-slot:default="{ isActive }">
+                        <v-card class="dialog">
+                          <v-toolbar
+                              color="primary"
+                              title="Изменить дату"
+                          ></v-toolbar>
+                          <v-card-text>
+                            <div class="">
+                              <label for="date-in">Дата:</label>
+                              <date-picker-input v-model="bookingDate.date"/>
+                            </div>
+                            <div class="check-date">
+                              <label for="time-start">Начало:</label>
+                              <time-picker-input
+                                  v-model="bookingDate.timeStart"
+                                  placeholder="Выберите время начала"
+                              />
+                            </div>
+                            <div class="check-date">
+                              <label for="time-end">Конец:</label>
+                              <time-picker-input
+                                  v-model="bookingDate.timeEnd"
+                                  placeholder="Выберите время окончания"
+                              />
+                            </div>
+                            <v-alert v-if="changeDateError"
+                                     type="warning"
+                                     variant="tonal"
+                                     class="mt-4">
+                              <span> {{ changeDateError }}</span>
+                            </v-alert>
+                          </v-card-text>
+                          <v-card-actions class="justify-end">
+                            <v-btn
+                                variant="text"
+                                @click="closeDialog"
+                            >Закрыть</v-btn>
+                            <v-btn variant="text" color="primary" @click="changeDate(booking,index)">Изменить дату</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </template>
+                    </v-dialog>
                   </div>
                 </div>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
-                  <v-btn variant="text" color="primary">Изменить дату</v-btn>
-                  <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
-                </v-card-actions>
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-row>
       </v-container>
     </v-main>
+
   </v-app>
 </template>
 
@@ -98,22 +134,41 @@ import {getBookings} from "@/api/mainApi";
 import {mapState} from "vuex";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 import moment from "moment/moment";
-import {confirmBooking, rejectBooking} from "@/api/adminApi";
+import {confirmBooking, rejectBooking, updateBooking} from "@/api/adminApi";
+import TimePickerInput from "@/components/UI/TimePickerInput.vue";
+import DatePickerInput from "@/components/UI/DatePickerInput.vue";
+import ChangeDateModal from "@/pages/admin_page/ChangeDateModal.vue";
 
 export default {
-  components: {NavBar},
+  components: {ChangeDateModal, DatePickerInput, TimePickerInput, NavBar},
   data() {
       return {
-
-        bookings: []
+        bookings: [],
+        date: null,
+        timeStart:null,
+        timeEnd:null,
+        changeDateDialogOpen: false,
+        bookingDate:{
+          date: null,
+          timeStart: null,
+          timeEnd: null
+        },
+        changeDateError: null
       };
   },
   created() {
     this.fetchBookings();
   },
   methods: {
+    closeDialog(){
+      this.changeDateError = null;
+      this.changeDateDialogOpen = false;
+    },
     normalizeDate(date){
-      return moment(this.getDateObject(date)).locale('ru').format("DD.MM.YYYY")
+      return moment(this.getDateObject(date)).locale('ru').format("DD-MM-YYYY")
+    },
+    modelDate(date){
+      return moment(this.getDateObject(date)).locale('ru').format("YYYY-MM-DD")
     },
     getDateObject(date){
       return new Date(date[0],date[1]-1,date[2])
@@ -131,6 +186,7 @@ export default {
           })
           .catch(error=>{
             console.log(error)
+
           })
     },
     confirmBooking(booking, index) {
@@ -143,7 +199,26 @@ export default {
           })
     },
     editBookingDate(booking) {
+      this.bookingDate.date = this.modelDate(booking.date)
+      this.bookingDate.timeStart = booking.timeStart.substring(0, 5)
+      this.bookingDate.timeEnd = booking.timeEnd.substring(0, 5)
+      this.changeDateDialogOpen = true;
+    },
+    changeDate(booking,idx){
+      let requestBooking = JSON.parse(JSON.stringify(booking));
+      requestBooking.date = this.bookingDate.date
+      requestBooking.timeStart = this.bookingDate.timeStart
+      requestBooking.timeEnd = this.bookingDate.timeEnd
+      updateBooking(requestBooking)
+          .then(responseBooking=>{
+            this.bookings[idx] = responseBooking
+            this.changeDateDialogOpen = false;
 
+          })
+          .catch(error=>{
+            console.log(error)
+            this.changeDateError = error.message
+          })
     },
     sortByDate(b1, b2){
       const dateA = this.getDateObject(b1.date);
@@ -167,28 +242,45 @@ export default {
 <style scoped lang="scss">
   a{
     text-decoration: none;
-    color: #4d4d4d;
     &:hover{
       color: #1B77FD;
     }
-  }
-  .main-details{
-    color: #4d4d4d;
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
   }
   .mdi{
     margin-right: 15px;
   }
   .info-panel{
-    display: flex;
-    flex-direction: row;
+    .right-side{
+      width:30%;
+      display: flex;
+      align-items: end;
+    }
+    .left-side{
+      width:70%;
+      display: flex;
+      column-gap: 50px;
+      flex-wrap: wrap;
+    }
   }
   .flex-column{
     span {
       font-size: 13px;
       color: #aaaab3;
+    }
+  }
+  .dialog{
+    width: 500px;
+    height: 500px;
+  }
+  @media only screen and (max-width: 991px) {
+    .right-side{
+      width:100%;
+    }
+    .left-side{
+      width:100%;
+    }
+    .dialog{
+      width: 300px;
     }
   }
 </style>

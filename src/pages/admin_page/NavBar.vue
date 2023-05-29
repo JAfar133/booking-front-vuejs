@@ -1,69 +1,73 @@
 <template>
-  <v-system-bar>
+  <v-system-bar window>
     <v-spacer></v-spacer>
-
-    <v-icon>mdi-square</v-icon>
-
-    <v-icon>mdi-circle</v-icon>
-
-    <v-icon @click="$router.push('/')">mdi-triangle</v-icon>
+    <v-btn icon="mdi-close" variant="text" class="ms-2" @click="goHome"></v-btn>
   </v-system-bar>
 
   <v-navigation-drawer v-model="drawer">
-    <v-sheet
-        color="grey-lighten-4"
-        class="pa-4"
-    >
-      <v-avatar
-          class="mb-4"
-          color="grey-darken-1"
-          size="64"
-      ></v-avatar>
+    <v-sheet color="grey-lighten-4" class="pa-4">
+      <v-avatar class="mb-4" color="grey-darken-1" size="64"></v-avatar>
 
       <div>{{ person.email }}</div>
     </v-sheet>
 
     <v-list>
-      <v-list-item
-          v-for="[icon, text, link] in links"
-          :key="icon"
-          link
-      >
+      <v-list-item v-for="link in links" :key="link.icon" link>
         <template v-slot:prepend>
-          <v-icon>{{ icon }}</v-icon>
+          <v-icon>{{ link.icon }}</v-icon>
         </template>
 
-        <v-list-item-title @click="$router.push(link)">{{ text }}</v-list-item-title>
+        <v-list-item-title @click="goToLink(link.link)">{{ link.text }}</v-list-item-title>
       </v-list-item>
+      <v-btn class="mt-5" @click="toggleTheme">Сменить тему</v-btn>
     </v-list>
   </v-navigation-drawer>
 </template>
+
 <script>
-import {defineComponent} from 'vue'
-import {mapState} from "vuex";
+import { defineComponent, computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import router from "@/router/router";
+import {useTheme} from "vuetify";
 
 export default defineComponent({
-  name: "NavBar",
-  data(){
+  name: 'NavBar',
+  setup() {
+    const store = useStore();
+    const drawer = ref(null);
+    const theme = useTheme();
+    const links = [
+      { icon: 'mdi-calendar-question', text: 'Все', link: '/admin' },
+      { icon: 'mdi-calendar-check', text: 'Подтвержденные', link: '/admin' },
+      { icon: 'mdi-calendar-alert', text: 'Не подтвержденные', link: '/admin/unconfirmed' },
+      { icon: 'mdi-delete', text: 'Отклоненные', link: '/admin/rejected' },
+      { icon: 'mdi-account-group', text: 'Пользователи', link: '/admin/users' },
+      { icon: 'mdi-logout-variant', text: 'Выйти из панели', link: '/' },
+    ];
+
+    const person = computed(() => store.state.person.person);
+
+    const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
+
+    const goHome = () => {
+      router.push('/');
+    };
+
+    const goToLink = (link) => {
+      router.push(link);
+    };
+
     return {
-      drawer: null,
-      links: [
-        ['mdi-calendar-question', 'Бронирования', '/admin'],
-        ['mdi-account-group', 'Пользователи', '/admin/users'],
-        ['mdi-calendar-check', 'Подтвержденные', '/admin/confirmed'],
-        ['mdi-delete', 'Отклоненные', '/admin/rejected'],
-      ],
-    }
+      drawer,
+      links,
+      person,
+      toggleTheme,
+      goHome,
+      goToLink,
+    };
   },
-  computed:{
-    ...mapState({
-      person: state => state.person.person
-    })
-  }
-})
+});
 </script>
 
-
 <style scoped>
-
 </style>

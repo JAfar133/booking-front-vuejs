@@ -79,3 +79,9 @@ input:focus, select:focus, button:focus, textarea:focus {
 .v-overlay__content {
   width:300px;
 }
+.v-expansion-panel-text__wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
