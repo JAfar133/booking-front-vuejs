@@ -86,14 +86,14 @@
                               <label for="date-in">Дата:</label>
                               <date-picker-input v-model="bookingDate.date"/>
                             </div>
-                            <div class="check-date">
+                            <div class="check-date mt-4">
                               <label for="time-start">Начало:</label>
                               <time-picker-input
                                   v-model="bookingDate.timeStart"
                                   placeholder="Выберите время начала"
                               />
                             </div>
-                            <div class="check-date">
+                            <div class="check-date mt-4">
                               <label for="time-end">Конец:</label>
                               <time-picker-input
                                   v-model="bookingDate.timeEnd"
@@ -125,7 +125,6 @@
         </v-row>
       </v-container>
     </v-main>
-
   </v-app>
 </template>
 
@@ -159,6 +158,11 @@ export default {
   created() {
     this.fetchBookings();
   },
+  watch: {
+    '$route'() {
+      this.fetchBookings();
+    }
+  },
   methods: {
     closeDialog(){
       this.changeDateError = null;
@@ -176,7 +180,18 @@ export default {
     fetchBookings() {
       getBookings()
           .then(data => {
-            this.bookings = data.sort(this.sortByDate);
+            const path = this.$route.path
+            switch (path){
+              case '/admin':
+                this.bookings = data.sort(this.sortByDate);
+                break;
+              case '/admin/confirmed':
+                this.bookings = data.filter(booking=>booking.confirmed).sort(this.sortByDate)
+                break;
+              case '/admin/unconfirmed':
+                this.bookings = data.filter(booking=>!booking.confirmed).sort(this.sortByDate)
+                break;
+            }
           });
     },
     rejectBooking(booking, index) {
@@ -186,7 +201,6 @@ export default {
           })
           .catch(error=>{
             console.log(error)
-
           })
     },
     confirmBooking(booking, index) {

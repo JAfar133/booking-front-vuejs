@@ -90,7 +90,7 @@
                   <li><router-link to="/">Главная</router-link></li>
                   <li class="rooms-li"><router-link to="/rooms">Помещения</router-link></li>
                   <li v-if="!isAuthorized">
-                    <v-btn @click="showLoginForm" size="small" prepend-icon="mdi-login">
+                    <v-btn @click="showLoginForm" size="small" prepend-icon="mdi-login" theme="light">
                       Войти
                     </v-btn>
                   </li>

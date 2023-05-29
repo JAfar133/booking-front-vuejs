@@ -27,7 +27,7 @@ export default {
     },
     computed: {
       isAdminRoute() {
-        return this.$route.path === '/admin';
+        return this.$route.path.includes('/admin');
       }
     }
 }
