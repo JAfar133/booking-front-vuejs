@@ -89,9 +89,14 @@
                 </div>
                 <div class="right-side">
                   <div class="buttons">
-                    <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
-                    <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
-                    <v-btn variant="text" color="primary" @click="editBookingDate(booking,index)">Изменить дату</v-btn>
+                    <template v-if="!booking.rejected">
+                      <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
+                      <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
+                      <v-btn variant="text" color="primary" @click="editBookingDate(booking,index)">Изменить дату</v-btn>
+                    </template>
+                    <template v-else>
+                      <v-btn variant="text" color="secondary" @click="restore(booking, index)">Восстановить</v-btn>
+                    </template>
                     <v-dialog
                         v-model="changeDateDialogOpen"
                         activator="parsent"
@@ -156,7 +161,7 @@ import {getAllBookings} from "@/api/mainApi";
 import {mapState} from "vuex";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 import moment from "moment/moment";
-import {confirmBooking, rejectBooking, updateBooking} from "@/api/adminApi";
+import {cancelBookingRejection, confirmBooking, rejectBooking, updateBooking} from "@/api/adminApi";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import ChangeDateModal from "@/pages/admin_page/ChangeDateModal.vue";
@@ -263,6 +268,15 @@ export default {
             this.changeDateError = error.message
           })
     },
+    restore(booking, index){
+      cancelBookingRejection(booking.id)
+          .then(responseBooking=>{
+            this.bookings[index] = responseBooking
+          })
+          .catch(error=>{
+            console.log(error)
+          })
+    },
     sortByDate(b1, b2){
       const dateA = this.getDateObject(b1.date);
       const dateB = this.getDateObject(b2.date);
@@ -306,6 +320,7 @@ export default {
       width:30%;
       display: flex;
       align-items: end;
+      justify-content: end;
     }
     .left-side{
       width:70%;

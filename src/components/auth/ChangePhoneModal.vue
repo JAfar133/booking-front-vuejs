@@ -88,7 +88,8 @@ export default {
     phoneNumberInput
   },
   props:{
-    change: Boolean
+    change: Boolean,
+    default: false
   },
   emits: {
     close: null,

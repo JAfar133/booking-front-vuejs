@@ -19,6 +19,13 @@ export function rejectBooking(bookingId) {
             throw new Error(error.response.data)
         })
 }
+export function cancelBookingRejection(bookingId) {
+    return axios.post(`${BASE_URL}/admin/booking-cancel-rejection/${bookingId}`,{}, getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error=>{
+            throw new Error(error.response.data)
+        })
+}
 export function updateBooking(booking) {
     console.log(booking)
     return axios.post(`${BASE_URL}/admin/booking-update/${booking.id}`,booking, getAuthorizationHeader())
