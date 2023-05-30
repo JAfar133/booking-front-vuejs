@@ -17,7 +17,7 @@
             hide-no-data
             hide-details
             variant="underlined"
-            label="Найти по заказщику"
+            label="Найти по заказчику"
             style="max-width: 500px; margin-bottom:20px"
         ></v-autocomplete>
         <v-row>
@@ -117,6 +117,7 @@
                     </template>
                     <template v-else>
                       <v-btn variant="text" color="secondary" @click="restore(booking, index)">Восстановить</v-btn>
+                      <v-btn variant="text" color="danger" @click="deleteBooking(booking, index)">Удалить</v-btn>
                     </template>
                     <v-dialog
                         v-model="changeDateDialogOpen"
@@ -182,7 +183,7 @@ import {getAllBookings} from "@/api/mainApi";
 import {mapState} from "vuex";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 import moment from "moment/moment";
-import {cancelBookingRejection, confirmBooking, rejectBooking, updateBooking} from "@/api/adminApi";
+import {cancelBookingRejection, confirmBooking, deleteBooking, rejectBooking, updateBooking} from "@/api/adminApi";
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import ChangeDateModal from "@/pages/admin_page/ChangeDateModal.vue";
@@ -296,6 +297,16 @@ export default {
       cancelBookingRejection(booking.id)
           .then(responseBooking=>{
             this.bookings[index] = responseBooking
+          })
+          .catch(error=>{
+            console.log(error)
+          })
+    },
+    deleteBooking(booking, index){
+      deleteBooking(booking)
+          .then(response=>{
+            console.log(response)
+            this.bookings.splice(index,1)
           })
           .catch(error=>{
             console.log(error)

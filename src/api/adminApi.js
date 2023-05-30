@@ -27,8 +27,14 @@ export function cancelBookingRejection(bookingId) {
         })
 }
 export function updateBooking(booking) {
-    console.log(booking)
     return axios.post(`${BASE_URL}/admin/booking-update/${booking.id}`,booking, getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error=>{
+            throw new Error(error.response.data)
+        })
+}
+export function deleteBooking(booking) {
+    return axios.delete(`${BASE_URL}/admin/${booking.id}`, getAuthorizationHeader())
         .then(response=> response.data)
         .catch(error=>{
             throw new Error(error.response.data)
