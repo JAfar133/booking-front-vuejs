@@ -1,6 +1,7 @@
 import axios from "axios";
 import BASE_URL from "@/config";
 import VueCookies from "vue-cookies";
+import {sortByStatus} from "@/utils/bookingSort";
 
 export async function submitBooking(booking) {
     return axios.post(`${BASE_URL}/booking/save`, booking, getAuthorizationHeader())
@@ -47,7 +48,7 @@ export async function changePersonData(person) {
 }
 export async function getPersonBookings(personId) {
     return axios.get(`${BASE_URL}/person/get-bookings/${personId}`, getAuthorizationHeader())
-        .then(response => response.data.sort(bookingSortByConfirm))
+        .then(response => response.data.sort(sortByStatus))
         .catch(error => {
             throw new Error(error.response.data)
         });
@@ -55,13 +56,4 @@ export async function getPersonBookings(personId) {
 
 function getAuthorizationHeader(){
     return {headers: {'Authorization': 'Bearer ' + VueCookies.get('access_token')}}
-}
-function bookingSortByConfirm(a, b) {
-    if (a.confirmed !== b.confirmed) {
-        return -1;
-    }
-    if(a.rejected !== b.rejected){
-        return -1;
-    }
-    return 1;
 }

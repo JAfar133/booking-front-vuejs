@@ -2,32 +2,53 @@
   <v-app id="inspire">
     <nav-bar></nav-bar>
     <v-main>
+
       <v-container
           class="py-8 px-6"
           fluid
       >
+        <v-autocomplete
+            v-model="selectCustomer"
+            v-model:search="search"
+            :loading="loading"
+            :items="customers"
+            density="comfortable"
+            clearable
+            hide-no-data
+            hide-details
+            variant="underlined"
+            label="Найти по заказщику"
+            style="max-width: 500px; margin-bottom:20px"
+        ></v-autocomplete>
         <v-row>
-          <v-col cols="1">
-
-          </v-col>
           <v-col cols="2">
-            По Статусу
+            <v-btn size="small" @click="sortByBookedAtClick" :append-icon="sortIcon('byBookedAt')">
+              По дате заказа
+            </v-btn>
           </v-col>
-          <v-col cols="6">
-            По помещению
+          <v-col cols="2" class="px-4">
+            <v-btn size="small" @click="sortByStatusClick" :append-icon="sortIcon('byStatus')">
+              По статусу
+            </v-btn>
           </v-col>
-          <v-col cols="2">
-            По Дате
+          <v-col cols="4">
+            <v-btn size="small" @click="sortByPlaceClick" :append-icon="sortIcon('byPlace')">
+              По помещению
+            </v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-btn size="small" @click="sortByDateClick" :append-icon="sortIcon('byDate')">
+              По дате
+            </v-btn>
           </v-col>
         </v-row>
         <v-row>
           <v-expansion-panels v-if="bookings.length">
             <v-expansion-panel v-for="(booking, index) in bookings">
-
               <v-expansion-panel-title v-slot="{ open }">
                 <v-row no-gutters>
-                  <v-col cols="1">
-                    <v-chip class="index_chip">{{ index }}</v-chip>
+                  <v-col cols="2">
+                    <span>{{ new Date(booking.bookedAt).toLocaleString() }}</span>
                   </v-col>
                   <v-col cols="2">
                     <div class="text-success" v-if="booking.confirmed">
@@ -43,14 +64,14 @@
                       Не подтверждено
                     </div>
                   </v-col>
-                  <v-col cols="6" class="d-flex justify-start">
+                  <v-col cols="4" class="d-flex justify-start">
                     <v-icon class="mx-3" icon="mdi-map-marker-outline"></v-icon>
                     <div class="flex-column">
                       <div>{{ booking.place.name }}, {{ booking.place.address }}</div>
-                      <span >дата заказа: {{ new Date(booking.bookedAt).toLocaleString() }}</span>
+
                     </div>
                   </v-col>
-                  <v-col cols="2" class="text--secondary">
+                  <v-col cols="4" class="text--secondary">
                     <v-fade-transition leave-absolute>
                       <v-row no-gutters style="width: 100%">
                         <v-col cols="6" class="d-flex justify-start">
@@ -90,7 +111,7 @@
                 <div class="right-side">
                   <div class="buttons">
                     <template v-if="!booking.rejected">
-                      <v-btn variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
+                      <v-btn v-if="!booking.confirmed" variant="text" color="secondary" @click="confirmBooking(booking,index)">Подтвердить</v-btn>
                       <v-btn variant="text" color="danger" @click="rejectBooking(booking, index)">Отклонить</v-btn>
                       <v-btn variant="text" color="primary" @click="editBookingDate(booking,index)">Изменить дату</v-btn>
                     </template>
@@ -165,12 +186,18 @@ import {cancelBookingRejection, confirmBooking, rejectBooking, updateBooking} fr
 import TimePickerInput from "@/components/UI/TimePickerInput.vue";
 import DatePickerInput from "@/components/UI/DatePickerInput.vue";
 import ChangeDateModal from "@/pages/admin_page/ChangeDateModal.vue";
+import {sortByBookedAt, sortByDate, sortByPlace, sortByStatus} from "@/utils/bookingSort";
 
 export default {
   components: {ChangeDateModal, DatePickerInput, TimePickerInput, NavBar},
   data() {
       return {
         bookings: [],
+        constBookings: [],
+        customers: [],
+        loading: false,
+        selectCustomer: null,
+        search: null,
         date: null,
         timeStart:null,
         timeEnd:null,
@@ -180,16 +207,12 @@ export default {
           timeStart: null,
           timeEnd: null
         },
-        changeDateError: null
+        changeDateError: null,
+        sorts:'byBookedAt'
       };
   },
   created() {
     this.fetchBookings();
-  },
-  watch: {
-    '$route'() {
-      this.fetchBookings();
-    }
   },
   methods: {
     closeDialog(){
@@ -211,21 +234,22 @@ export default {
             const path = this.$route.path
             switch (path){
               case '/admin':
-                this.bookings = data.filter(booking=>!booking.rejected).sort(this.sortByBookedAt);
+                this.bookings = data.filter(booking=>!booking.rejected).sort(sortByBookedAt);
                 break;
               case '/admin/confirmed':
-                this.bookings = data.filter(booking=>booking.confirmed && !booking.rejected).sort(this.sortByBookedAt)
+                this.bookings = data.filter(booking=>booking.confirmed && !booking.rejected).sort(sortByBookedAt)
                 break;
               case '/admin/unconfirmed':
-                this.bookings = data.filter(booking=>!booking.confirmed && !booking.rejected).sort(this.sortByBookedAt)
+                this.bookings = data.filter(booking=>!booking.confirmed && !booking.rejected).sort(sortByBookedAt)
                 break;
               case '/admin/rejected':
-                this.bookings = data.filter(booking=>!booking.confirmed && booking.rejected).sort(this.sortByBookedAt)
+                this.bookings = data.filter(booking=>!booking.confirmed && booking.rejected).sort(sortByBookedAt)
                 break;
               default:
                 this.bookings = [];
                 break
             }
+            this.constBookings = this.bookings;
           });
     },
     rejectBooking(booking, index) {
@@ -277,32 +301,67 @@ export default {
             console.log(error)
           })
     },
-    sortByDate(b1, b2){
-      const dateA = this.getDateObject(b1.date);
-      const dateB = this.getDateObject(b2.date);
-      if (dateA.getTime()< dateB.getTime()) {
-        return -1;
-      }
-      if (dateA.getTime()> dateB.getTime()) {
-        return 1;
-      }
-      return 0;
+    sortByDateClick(){
+      this.bookings = this.bookings.sort(sortByDate)
+      this.sorts = 'byDate'
     },
-    sortByBookedAt(b1, b2){
-      if (b1.bookedAt > b2.bookedAt) {
-        return -1;
+    sortByPlaceClick(){
+      this.bookings = this.bookings.sort(sortByPlace)
+      this.sorts = 'byPlace'
+    },
+    sortByStatusClick(){
+      this.bookings = this.bookings.sort(sortByStatus)
+      this.sorts = 'byStatus'
+    },
+    sortByBookedAtClick(){
+      this.bookings = this.bookings.sort(sortByBookedAt)
+      this.sorts = 'byBookedAt'
+    },
+    sortIcon(name){
+      return name === this.sorts?'mdi-arrow-down':'';
+    },
+    querySelections(v) {
+      this.customers = this.getCustomers.filter(e=>{
+        return (e || '').toLowerCase().indexOf((v||'').toLowerCase()) > -1;
+      })
+    },
+    filterByCustomer(){
+      if(!this.selectCustomer || this.selectCustomer==='') this.bookings = [...this.constBookings]
+      else {
+        const bookings = this.bookings.filter(booking => this.selectCustomer === `${booking.customer.lastName} ${booking.customer.firstName} ${booking.customer.middleName}`)
+        this.bookings = bookings.length ? bookings : this.constBookings
       }
-      if (b1.bookedAt < b2.bookedAt) {
-        return 1;
-      }
-      return 0;
     }
+
   },
   computed:{
     ...mapState({
       person: state => state.person.person
-    })
-  }
+    }),
+    getCustomers(){
+      const customers = this.bookings.map(booking => `${booking.customer.lastName} ${booking.customer.firstName} ${booking.customer.middleName}`)
+      console.log(customers)
+      return customers.filter((name, index) => {
+        return customers.indexOf(name) === index;
+      });
+    }
+  },
+  watch: {
+    '$route'() {
+      this.fetchBookings();
+      this.sorts = 'byBookedAt'
+      this.selectCustomer = null
+    },
+    sorts(){
+      console.log(this.sorts)
+    },
+    search(val){
+      val && val !== this.selectCustomer && this.querySelections(val)
+    },
+    selectCustomer(){
+      this.filterByCustomer()
+    }
+  },
 };
 </script>
 <style scoped lang="scss">
