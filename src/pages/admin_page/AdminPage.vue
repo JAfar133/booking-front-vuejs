@@ -340,7 +340,6 @@ export default {
     }),
     getCustomers(){
       const customers = this.bookings.map(booking => `${booking.customer.lastName} ${booking.customer.firstName} ${booking.customer.middleName}`)
-      console.log(customers)
       return customers.filter((name, index) => {
         return customers.indexOf(name) === index;
       });
@@ -352,9 +351,7 @@ export default {
       this.sorts = 'byBookedAt'
       this.selectCustomer = null
     },
-    sorts(){
-      console.log(this.sorts)
-    },
+
     search(val){
       val && val !== this.selectCustomer && this.querySelections(val)
     },
