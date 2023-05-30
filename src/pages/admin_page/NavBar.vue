@@ -5,9 +5,10 @@
   </v-system-bar>
 
   <v-navigation-drawer v-model="drawer">
-    <v-sheet color="grey-lighten-4" class="pa-4">
-      <v-avatar class="mb-4" color="grey-darken-1" size="64"></v-avatar>
-
+    <v-sheet class="pa-4">
+      <v-avatar class="mb-4" color="grey-darken-1" size="64">
+        <v-icon size="x-large">mdi-security</v-icon>
+      </v-avatar>
       <div>{{ person.email }}</div>
     </v-sheet>
 

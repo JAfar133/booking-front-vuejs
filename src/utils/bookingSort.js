@@ -40,11 +40,9 @@ export function sortByPlace(a, b) {
     return 0;
 }
 export function sortByStatus(a,b){
-    if (a.confirmed !== b.confirmed) {
-        return -1;
-    }
-    if(a.rejected !== b.rejected){
-        return -1;
-    }
-    return 1;
+    if (a.confirmed && !b.confirmed) return -1;
+    if (!a.confirmed && b.confirmed) return 1;
+    if (a.rejected && !b.rejected) return -1;
+    if (!a.rejected && b.rejected) return 1;
+    return 0;
 }
