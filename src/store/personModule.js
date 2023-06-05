@@ -138,8 +138,9 @@ export const personModule = {
                     dispatch('showPersonInfo')
                 })
                 .catch(error=>{
-                    localStorage.removeItem("role")
-                    localStorage.removeItem("isAuthorized")
+                    // localStorage.removeItem("isAuthorized")
+                    // localStorage.removeItem("role")
+                    dispatch('deletePersonFromCookie')
                     console.log(error)
                 })
         },

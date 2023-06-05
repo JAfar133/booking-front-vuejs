@@ -17,28 +17,28 @@
             hide-no-data
             hide-details
             variant="underlined"
-            label="Найти по заказчику"
+            label="Найти по ФИО заказчика"
             style="max-width: 500px; margin-bottom:20px"
         ></v-autocomplete>
         <v-row>
           <v-col cols="2">
             <v-btn size="small" @click="sortByBookedAtClick" :append-icon="sortIcon('byBookedAt')">
-              По дате заказа
+              Дата заказа
             </v-btn>
           </v-col>
           <v-col cols="2" class="px-4">
             <v-btn size="small" @click="sortByStatusClick" :append-icon="sortIcon('byStatus')">
-              По статусу
+              Статус
             </v-btn>
           </v-col>
           <v-col cols="4">
             <v-btn size="small" @click="sortByPlaceClick" :append-icon="sortIcon('byPlace')">
-              По помещению
+              Помещение
             </v-btn>
           </v-col>
           <v-col cols="4">
             <v-btn size="small" @click="sortByDateClick" :append-icon="sortIcon('byDate')">
-              По дате
+              Дата бронирования
             </v-btn>
           </v-col>
         </v-row>

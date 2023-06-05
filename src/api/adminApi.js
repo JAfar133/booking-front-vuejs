@@ -40,3 +40,24 @@ export function deleteBooking(booking) {
             throw new Error(error.response.data)
         })
 }
+export function deletePerson(person) {
+    return axios.delete(`${BASE_URL}/admin/person/${person.id}`, getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error=>{
+            throw new Error(error.response.data)
+        })
+}
+export function makeAdmin(person) {
+    return axios.post(`${BASE_URL}/admin/make-admin/${person.id}`, getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error=>{
+            throw new Error(error.response.data)
+        })
+}
+export function getPersons() {
+    return axios.get(`${BASE_URL}/admin/get-all-person`, getAuthorizationHeader())
+        .then(response=> response.data)
+        .catch(error=>{
+            throw new Error(error.response.data)
+        })
+}

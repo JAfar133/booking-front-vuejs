@@ -8,6 +8,7 @@ import BookingPage from "@/pages/booking_page/BookingPage.vue";
 import store from "@/store";
 import VueCookies from "vue-cookies";
 import AdminPage from "@/pages/admin_page/AdminPage.vue";
+import PersonTablePage from "@/pages/admin_page/PersonTablePage.vue";
 async function authorizedEndPoints(to, from, next) {
     const isAuthorized = localStorage.getItem("isAuthorized")
     if (isAuthorized)
@@ -68,7 +69,7 @@ const routes = [
     },
     {
         path: '/admin/users',
-        component: AdminPage,
+        component: PersonTablePage,
         beforeEnter: adminEndPoints
     },
     {
