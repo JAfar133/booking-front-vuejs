@@ -24,7 +24,7 @@
               <td>{{ person.structure }}</td>
               <td>{{ person.institute }}</td>
               <td>{{ person.course!==0?person.course:'' }}</td>
-              <td>
+              <td v-if="person.id!==personId">
                 <v-btn variant="outlined" color="danger" style="margin-right: 10px" @click="deletePerson(person, idx)">Удалить</v-btn>
                 <v-btn v-if="person.role==='USER'" variant="outlined" color="warning" @click="makeAdmin(person, idx)">Сделать админом</v-btn>
                 <v-btn v-if="person.role==='ADMIN'" variant="outlined" color="warning" @click="makeUser(person, idx)">Забрать права</v-btn>
@@ -41,6 +41,7 @@
 import {defineComponent} from 'vue'
 import {deletePerson, getPersons, makeAdmin, makeUser} from "@/api/adminApi";
 import NavBar from "@/pages/admin_page/NavBar.vue";
+import {mapState} from "vuex";
 
 export default defineComponent({
   name: "PersonTablePage",
@@ -89,6 +90,11 @@ export default defineComponent({
               console.log(error)
           )
     }
+  },
+  computed: {
+    ...mapState({
+      personId : state => state.person.person.id
+    })
   },
   created() {
     this.getPersons()
