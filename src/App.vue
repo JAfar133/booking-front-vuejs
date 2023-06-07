@@ -40,6 +40,7 @@ h1{
 }
 body{
   overflow-x: hidden;
+  min-height: 100vh;
 }
 .body.paddingTop{
   padding-top:75px;

@@ -1,96 +1,114 @@
 <template>
-  <div class="container booking-list" >
-    <div class="" v-if="bookings.length">
-      <v-checkbox
-             v-model="allSelected"
-             @change="allSelectedInput"
-             color="info"
-             label="Выбрать все"
+  <v-app id="inspire" theme="light">
+    <v-main>
+      <v-container
+          class="py-8 px-6"
+          fluid
       >
-      </v-checkbox>
-      <button
-          v-if="selectBookings.length>0"
-          class="btn btn-outline-danger mx-3"
-          @click="deleteBooking"
-      >Удалить выбранное</button>
-      <div
-          class="card-item"
-          v-for="(booking, idx) in bookings"
-          :key="booking.id"
-      >
-        <v-checkbox :value="booking" v-model="selectBookings" color="info"></v-checkbox>
-        <v-card
-            style="width:100%"
-            v-ripple @click="cartClick(booking)"
-            :class="{'card-selected':isSelected(booking)}"
-            theme="light"
-        >
-          <v-card-title>
-            <div class="flex-row">
+        <template class="circular-container" v-if="circular">
+          <v-progress-circular
+              :size="50"
+              color="primary"
+              indeterminate
+              class="circular"
+          ></v-progress-circular>
+        </template>
+        <div class="container booking-list" v-else>
+          <div class="" v-if="bookings.length">
+            <v-checkbox
+                   v-model="allSelected"
+                   @change="allSelectedInput"
+                   color="info"
+                   label="Выбрать все"
+            >
+            </v-checkbox>
+            <button
+                v-if="selectBookings.length>0"
+                class="btn btn-outline-danger mx-3"
+                @click="deleteBooking"
+            >Удалить выбранное</button>
+            <div
+                class="card-item"
+                v-for="(booking, idx) in bookings"
+                :key="booking.id"
+            >
+              <v-checkbox :value="booking" v-model="selectBookings" color="info"></v-checkbox>
+              <v-card
+                  style="width:100%"
+                  v-ripple @click="cartClick(booking)"
+                  :class="{'card-selected':isSelected(booking)}"
+                  theme="light"
+              >
+                <v-card-title>
+                  <div class="flex-row">
 
-              <div>
-                <v-icon v-if="booking.confirmed" icon="mdi-timeline-check-outline" color="green"></v-icon>
-                <v-icon v-else-if="booking.rejected" icon="mdi-timeline-check-outline" color="danger"></v-icon>
-                <v-icon v-else icon="mdi-timeline-alert-outline" color="primary"></v-icon>
-                {{ booking.place.name }}, {{ booking.place.address }}
-              </div>
-              <div>
-                № {{ idx }}
-              </div>
+                    <div>
+                      <v-icon v-if="booking.confirmed" icon="mdi-timeline-check-outline" color="green"></v-icon>
+                      <v-icon v-else-if="booking.rejected" icon="mdi-timeline-check-outline" color="danger"></v-icon>
+                      <v-icon v-else icon="mdi-timeline-alert-outline" color="primary"></v-icon>
+                      {{ booking.place.name }}, {{ booking.place.address }}
+                    </div>
+                    <div>
+                      № {{ idx }}
+                    </div>
+                  </div>
+                </v-card-title>
+                <v-card-subtitle>
+
+                  {{ new Date(booking.bookedAt).toLocaleString() }}
+                </v-card-subtitle>
+                <v-card-text>
+                   <div class="font-weight-normal">
+                     <strong>{{ normalizeDate(booking.date) }}</strong>
+                   </div>
+                   <v-timeline density="compact" style="max-width: 200px">
+
+                     <v-timeline-item
+                         size="small"
+                         dot-color="blue-darken-3"
+                         icon="mdi-clock-time-seven-outline"
+                     >
+                       <div><strong>Начало</strong></div>
+                       <div class="">
+                         <div>{{ booking.timeStart.substring(0,5) }}</div>
+                       </div>
+                     </v-timeline-item>
+                     <v-timeline-item
+                         size="small"
+                         dot-color="blue-darken-3"
+                         icon="mdi-clock-time-ten-outline"
+                     >
+                       <div><strong>Конец</strong></div>
+                       <div class="">
+                         <div>{{ booking.timeEnd.substring(0,5) }}</div>
+                       </div>
+                     </v-timeline-item>
+                   </v-timeline>
+                  <div v-if="booking.confirmed" class="text-success">Бронь подтверждена</div>
+                  <div v-else-if="booking.rejected" class="text-danger">Бронь отклонена</div>
+                  <div v-else class="text-primary">Бронь не подтверждена</div>
+                </v-card-text>
+              </v-card>
             </div>
-          </v-card-title>
-          <v-card-subtitle>
-
-            {{ new Date(booking.bookedAt).toLocaleString() }}
-          </v-card-subtitle>
-          <v-card-text>
-             <div class="font-weight-normal">
-               <strong>{{ normalizeDate(booking.date) }}</strong>
-             </div>
-             <v-timeline density="compact" style="max-width: 200px">
-
-               <v-timeline-item
-                   size="small"
-                   dot-color="blue-darken-3"
-                   icon="mdi-clock-time-seven-outline"
-               >
-                 <div><strong>Начало</strong></div>
-                 <div class="">
-                   <div>{{ booking.timeStart.substring(0,5) }}</div>
-                 </div>
-               </v-timeline-item>
-               <v-timeline-item
-                   size="small"
-                   dot-color="blue-darken-3"
-                   icon="mdi-clock-time-ten-outline"
-               >
-                 <div><strong>Конец</strong></div>
-                 <div class="">
-                   <div>{{ booking.timeEnd.substring(0,5) }}</div>
-                 </div>
-               </v-timeline-item>
-             </v-timeline>
-            <div v-if="booking.confirmed" class="text-success">Бронь подтверждена</div>
-            <div v-else-if="booking.rejected" class="text-danger">Бронь отклонена</div>
-            <div v-else class="text-primary">Бронь не подтверждена</div>
-          </v-card-text>
-        </v-card>
-      </div>
-    </div>
-    <div class="container" style="min-height: 95vh" v-else>
-      <h1>У вас нет забронированных помещений</h1>
-    </div>
-  </div>
-
+          </div>
+          <div class="container" style="min-height: 95vh" v-else>
+            <h5>У вас нет забронированных помещений</h5>
+          </div>
+        </div>
+    </v-container>
+  </v-main>
+</v-app>
 </template>
 
 <script>
 import {mapState} from "vuex";
 import moment from "moment";
 import {deleteSelecedBookings, getPersonBookings} from "@/api/personApi";
+import NavBar from "@/pages/admin_page/NavBar.vue";
 export default {
   name: "BookingList",
   components:{
+    NavBar
 
   },
   data(){
@@ -98,7 +116,8 @@ export default {
       bookings: [],
       selectBookings: [],
       allSelected: false,
-      skeletonLoader: true
+      skeletonLoader: true,
+      circular: true
     }
   },
   methods: {
@@ -113,9 +132,16 @@ export default {
           })
     },
     getBookings() {
+      this.circular = true;
       getPersonBookings(this.personId)
-          .then(bookings=>this.bookings = bookings)
-          .catch(()=>this.bookings = [])
+          .then(bookings=>{
+            this.bookings = bookings;
+            this.circular = false;
+          })
+          .catch(()=>{
+            this.bookings = []
+            this.circular = false;
+          })
     },
     allSelectedInput(){
       this.selectBookings = [...this.bookings];
@@ -198,5 +224,13 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+  }
+  .circular{
+    position: absolute;
+    right: 50%;
+    top: 30%;
+  }
+  .circular-container{
+    height: 100vh;
   }
 </style>

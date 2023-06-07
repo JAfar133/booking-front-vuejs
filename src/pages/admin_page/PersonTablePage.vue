@@ -26,7 +26,8 @@
               <td>{{ person.course!==0?person.course:'' }}</td>
               <td>
                 <v-btn variant="outlined" color="danger" style="margin-right: 10px" @click="deletePerson(person, idx)">Удалить</v-btn>
-                <v-btn variant="outlined" color="warning" @click="makeAdmin(person, idx)">Сделать админом</v-btn>
+                <v-btn v-if="person.role==='USER'" variant="outlined" color="warning" @click="makeAdmin(person, idx)">Сделать админом</v-btn>
+                <v-btn v-if="person.role==='ADMIN'" variant="outlined" color="warning" @click="makeUser(person, idx)">Забрать права</v-btn>
               </td>
             </tr>
           </tbody>
@@ -38,7 +39,7 @@
 </template>
 <script>
 import {defineComponent} from 'vue'
-import {deletePerson, getPersons, makeAdmin} from "@/api/adminApi";
+import {deletePerson, getPersons, makeAdmin, makeUser} from "@/api/adminApi";
 import NavBar from "@/pages/admin_page/NavBar.vue";
 
 export default defineComponent({
@@ -72,7 +73,16 @@ export default defineComponent({
     },
     makeAdmin(person, idx){
       makeAdmin(person)
-          .catch(responsePerson=>{
+          .then(responsePerson=>{
+            this.persons[idx] = responsePerson
+          })
+          .catch(error=>
+              console.log(error)
+          )
+    },
+    makeUser(person, idx){
+      makeUser(person)
+          .then(responsePerson=>{
             this.persons[idx] = responsePerson
           })
           .catch(error=>
