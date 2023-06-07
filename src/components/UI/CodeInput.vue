@@ -110,6 +110,7 @@ export default defineComponent({
 
 <style scoped>
 input{
+  color: #000;
   font-size: 25px;
   padding-left: 0;
   padding-right: 0;

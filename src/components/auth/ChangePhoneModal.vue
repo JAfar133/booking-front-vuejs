@@ -25,12 +25,12 @@
             class="modal-body"
             id="modalDescription"
         >
-          <v-alert v-if="errorMessage"
-                   type="warning"
-                   variant="tonal"
-                   class="my-5">
-            <span> {{ errorMessage }} </span>
-          </v-alert>
+<!--          <v-alert v-if="errorMessage"-->
+<!--                   type="warning"-->
+<!--                   variant="tonal"-->
+<!--                   class="my-5">-->
+<!--            <span> {{ errorMessage }} </span>-->
+<!--          </v-alert>-->
           <div class="phone-login-form">
             <div class="mb-3 text-center" v-if="!isCodeInputShow" >Мы отправим на номер SMS-сообщение с кодом подтверждения</div>
             <div>
