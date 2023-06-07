@@ -69,6 +69,9 @@ export const personModule = {
         },
         setPhoneNumberConfirmed(state, confirmed){
             state.person.phoneNumber_confirmed = confirmed
+        },
+        serPersonRole(state, role){
+            state.person.role = role
         }
 
 
@@ -114,6 +117,7 @@ export const personModule = {
                             reject(false)
                         })
                 } else {
+                    dispatch('deletePersonFromCookie')
                     reject(false)
                 }
             })
@@ -128,8 +132,7 @@ export const personModule = {
             },1000*60*60*12)
         },
         refreshToken({commit, dispatch}) {
-            const cookieRefreshToken = VueCookies.get('refresh_token')
-            axios.post(`${BASE_URL}/auth/refresh-token`, {},getAuthorizationHeader())
+            axios.post(`${BASE_URL}/auth/refresh-token`, {},getRefreshAuthorizationHeader())
                 .then(response=>{
                     commit('setAccessToken',response.data.access_token)
                     commit('setRefreshToken',response.data.refresh_token)
@@ -138,8 +141,6 @@ export const personModule = {
                     dispatch('showPersonInfo')
                 })
                 .catch(error=>{
-                    // localStorage.removeItem("isAuthorized")
-                    // localStorage.removeItem("role")
                     dispatch('deletePersonFromCookie')
                     console.log(error)
                 })
@@ -166,7 +167,6 @@ export const personModule = {
                 structure:null
             })
             commit('setIsAuthorized', false)
-            dispatch('logout')
 
         },
         logout({dispatch}){
@@ -183,4 +183,7 @@ export const personModule = {
 }
 function getAuthorizationHeader(){
     return {headers: {'Authorization': 'Bearer ' + VueCookies.get('access_token')}}
+}
+function getRefreshAuthorizationHeader(){
+    return {headers: {'Authorization': 'Bearer ' + VueCookies.get('refresh_token')}}
 }
